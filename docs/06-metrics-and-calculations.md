@@ -5,7 +5,7 @@
 После этого урока вы должны уметь:
 
 - отличать физический столбец, `Calculated column`, временную `ad hoc metric` и сохранённую `Metric`;
-- использовать основные агрегирования `SUM`, `COUNT`, `COUNT DISTINCT` и `AVG`;
+- использовать основные агрегирования `SUM`, `COUNT`, `COUNT_DISTINCT` и `AVG`;
 - понимать, как `NULL` влияет на `COUNT`;
 - создать вычисляемый столбец на уровне строки;
 - создать сохранённую метрику на уровне группы строк;
@@ -314,7 +314,7 @@ manager
 COUNT_DISTINCT
 ```
 
-В интерфейсе подпись может отображаться как `COUNT DISTINCT` или `COUNT_DISTINCT`.
+В Superset 6.1.0 этот вариант в списке агрегирований называется именно `COUNT_DISTINCT`.
 
 Смысл выражения:
 
@@ -340,8 +340,8 @@ COUNT(DISTINCT manager)
 Сравните:
 
 ```text
-COUNT(manager)          = 11
-COUNT DISTINCT(manager) = 4
+COUNT(manager)                 = 11
+COUNT(DISTINCT manager)        = 4
 ```
 
 Первое выражение отвечает:
@@ -391,7 +391,7 @@ AVG(revenue)
 ```text
 SUM            → сумма
 COUNT          → количество непустых значений
-COUNT DISTINCT → количество разных непустых значений
+COUNT_DISTINCT → количество разных непустых значений
 AVG            → среднее
 ```
 
@@ -792,7 +792,7 @@ Group by:   пусто
 | `SUM(quantity)` | 31 |
 | `COUNT(sale_id)` | 12 |
 | `COUNT(manager)` | 11 |
-| `COUNT DISTINCT(manager)` | 4 |
+| `COUNT(DISTINCT manager)` | 4 |
 | `AVG(revenue)` | 333.75 |
 | `SUM(profit)` | 1530.00 |
 | сохранённая Metric `Прибыль` | 1530.00 |
@@ -822,7 +822,8 @@ AVG(cost)
 Посчитайте количество разных офисов:
 
 ```text
-COUNT DISTINCT(office)
+Column:      office
+Aggregation: COUNT_DISTINCT
 ```
 
 Ожидаемый результат:
@@ -1007,7 +1008,7 @@ SUM(revenue) - SUM(cost)
 
 В следующем уроке начнём выбирать визуализацию под конкретный вопрос, построим несколько основных Chart, сохраним их и научимся снова открывать для редактирования.
 
-→ [Урок 07. Строим графики](07-create-charts.md)
+→ [Урок 07. Строим и сохраняем Chart](07-create-charts.md)
 
 ## Официальные источники
 
@@ -1017,4 +1018,6 @@ SUM(revenue) - SUM(cost)
 - Superset 6.1.0 — Explore и агрегирование данных: <https://superset.apache.org/user-docs/6.1.0/using-superset/exploring-data/>
 - Superset 6.1.0 — схема ad hoc metric и поддерживаемые агрегирования: <https://superset.apache.org/developer-docs/6.1.0/api/schemas/chartdataadhocmetricschema/>
 - Superset 6.1.0 — Dataset API: <https://superset.apache.org/developer-docs/6.1.0/api/datasets/>
+- список агрегирований Explore в Superset 6.1.0 (`COUNT_DISTINCT`): <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/constants.ts>
+- отображение этих агрегирований в редакторе ad hoc metric: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/controls/MetricControl/AdhocMetricEditPopover/index.tsx>
 - исходный код редактора Dataset Apache Superset 6.1.0: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/components/Datasource/components/DatasourceEditor/DatasourceEditor.tsx>
