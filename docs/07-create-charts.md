@@ -111,8 +111,6 @@ Chart   → описывает конкретный аналитический �
 
 ## Три разных действия в Explore
 
-В Superset 6.1.0 нельзя смешивать выполнение конфигурации и сохранение объекта.
-
 ### `Create chart`
 
 Показывается для нового, ещё не сохранённого Chart.
@@ -141,7 +139,7 @@ Save as...
 Save (Overwrite)
 ```
 
-Поэтому модель такая:
+Рабочая последовательность:
 
 ```text
 настроили запрос
@@ -155,15 +153,13 @@ Save
 Save as... / Save (Overwrite)
 ```
 
-## Где в этих Chart задаётся временной фильтр
+## Временной фильтр
 
-В уроке 05 мы уже увидели реальный интерфейс Superset 6.1.0: для используемых здесь визуализаций временное ограничение задаётся через:
+Для используемых в этом уроке визуализаций временное ограничение задаётся через:
 
 ```text
 Filters
 ```
-
-а не через отдельное универсальное поле `Time Range`.
 
 Если в `Filters` отображается temporal-фильтр:
 
@@ -171,7 +167,7 @@ Filters
 sale_date (No filter)
 ```
 
-то для всех основных упражнений этого урока оставляем:
+для основных упражнений оставляем:
 
 ```text
 No filter
@@ -377,7 +373,7 @@ Datasets → sales
 Big Number
 ```
 
-У `Big Number` в Superset 6.1.0 основная секция `Query` содержит Metric и `Filters`.
+У `Big Number` основная секция `Query` содержит `Metric` и `Filters`.
 
 В качестве Metric выберите сохранённую метрику:
 
@@ -460,7 +456,7 @@ Dashboard пока не добавляем.
 
 > какой регион даёт больше выручки?
 
-В Superset 6.1.0 для такого сценария есть отдельная ECharts-визуализация:
+Для сравнения категорий используем:
 
 ```text
 Bar Chart
@@ -550,8 +546,6 @@ Create chart
 ```
 
 Теперь значения должны отображаться рядом со столбцами или на них.
-
-Не нужно менять цветовую схему, шрифты и десятки декоративных параметров.
 
 ## Сохраняем
 
@@ -669,7 +663,7 @@ Create chart
 
 На каждой месячной точке линии должен появиться маркер.
 
-Это безопасная настройка оформления: она не меняет расчёт и не меняет набор данных.
+Это настройка оформления: она не меняет расчёт и набор данных.
 
 ## Сохраняем
 
@@ -1121,7 +1115,7 @@ SUM(revenue)
 
 - Exploring Data in Superset: <https://superset.apache.org/user-docs/6.1.0/using-superset/exploring-data/>
 - API-схема Chart Superset 6.1.0: <https://superset.apache.org/developer-docs/6.1.0/api/schemas/chartdatarestapi-post/>
-- `Table` control panel и реальные `Dimensions` / `Filters`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/controlPanel.tsx>
+- `Table` control panel и `Dimensions` / `Filters`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/controlPanel.tsx>
 - ECharts `Bar Chart` в исходном коде 6.1.0: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/Regular/Bar/index.ts>
 - ECharts `Line Chart` в исходном коде 6.1.0: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/Regular/Line/index.ts>
 - Query controls ECharts Bar/Line Chart, включая `X Axis`, `Time grain`, `Metrics`, `Dimensions` и `Filters`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-chart-controls/src/sections/echartsTimeSeriesQuery.tsx>
@@ -1130,5 +1124,3 @@ SUM(revenue)
 - параметр `Marker` для Line Chart: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/Regular/Line/controlPanel.tsx>
 - кнопка выполнения Explore (`Create chart` / `Update chart`): <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/RunQueryButton/index.tsx>
 - диалог сохранения Chart с `Save as...` и `Save (Overwrite)`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/SaveModal.tsx>
-
-В Superset 6.1.0 `Bar Chart` и `Line Chart` являются отдельными ECharts-визуализациями. Для них не нужно искать отдельное поле `Series type`. Выполнение текущей конфигурации Explore и сохранение Chart остаются отдельными действиями: новый Chart выполняется через `Create chart`, существующий — через `Update chart`, а постоянный объект создаётся или обновляется через `Save`.
