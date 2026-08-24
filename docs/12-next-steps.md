@@ -643,7 +643,7 @@ sales_virtual
 
 После сохранения:
 
-- `sales_virtual` находится через `Data → Datasets`;
+- `sales_virtual` находится через `Datasets`;
 - исходный физический Dataset `sales` всё ещё существует отдельно;
 - Virtual Dataset содержит `profit`;
 - Virtual Dataset возвращает 12 учебных продаж;

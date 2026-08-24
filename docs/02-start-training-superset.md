@@ -174,6 +174,7 @@ docker compose exec superset superset version
 ```text
 schema.sql
 data.sql
+readonly.sql
 ```
 
 Они создают:
@@ -266,7 +267,7 @@ training
 training.sales
 ```
 
-После этого `data.sql` загрузил фиксированные строки.
+После этого `data.sql` загрузил фиксированные строки, а `readonly.sql` создал пользователя `superset_reader` для подключения Superset только на чтение.
 
 ### 2. Superset подготовил своё служебное состояние
 
@@ -404,7 +405,7 @@ docker compose up -d
 
 Затем снова запустите `check.sql`.
 
-PostgreSQL выполняет `schema.sql` и `data.sql` автоматически именно при создании нового volume с базой.
+PostgreSQL выполняет `schema.sql`, `data.sql` и `readonly.sql` автоматически именно при создании нового volume с базой.
 
 ### Windows
 

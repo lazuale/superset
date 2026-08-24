@@ -8,7 +8,7 @@
 - выполнить понятный SQL-запрос в `SQL Lab`;
 - открыть результат SQL в `Explore`;
 - сохранить SQL как постоянный `Virtual Dataset`;
-- найти созданный Virtual Dataset через `Data → Datasets`;
+- найти созданный Virtual Dataset через `Datasets`;
 - снова открыть его в `Explore`;
 - использовать столбцы Virtual Dataset так же, как столбцы обычного Dataset;
 - построить и сохранить Chart на виртуальном источнике;
@@ -390,7 +390,7 @@ query datasource
 Explore
 ```
 
-Это удобно для быстрой проверки результата, но нам нужен постоянный Dataset, который затем можно снова найти в `Data → Datasets`.
+Это удобно для быстрой проверки результата, но нам нужен постоянный Dataset, который затем можно снова найти в `Datasets`.
 
 ---
 
@@ -503,7 +503,7 @@ FROM training.sales
 Перейдите:
 
 ```text
-Data → Datasets
+Datasets
 ```
 
 Найдите:
@@ -1038,7 +1038,7 @@ Create a dataset
 Он сохраняется как объект Dataset и доступен через:
 
 ```text
-Data → Datasets
+Datasets
 ```
 
 Именно третий вариант нам нужен для повторного использования.
@@ -1089,7 +1089,7 @@ Generic Chart / Bar
 
 ## Задание 1
 
-Вернитесь в `Data → Datasets` и найдите одновременно:
+Вернитесь в `Datasets` и найдите одновременно:
 
 ```text
 sales
@@ -1278,7 +1278,7 @@ revenue - cost AS profit
 6. объяснить, почему в этот момент постоянного Dataset ещё может не быть;
 7. нажать `Create a dataset`;
 8. сохранить новый Dataset как `sales_virtual`;
-9. найти его через `Data → Datasets`;
+9. найти его через `Datasets`;
 10. объяснить разницу между `sales` и `sales_virtual`;
 11. открыть `sales_virtual` повторно в Explore;
 12. построить `region + SUM(profit)`;
