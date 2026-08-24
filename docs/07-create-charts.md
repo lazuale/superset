@@ -187,8 +187,8 @@ No filter
 |---|---|
 | сколько выручки и прибыли у каждого региона? | `Table` |
 | какова общая прибыль? | `Big Number` |
-| какой регион даёт больше выручки? | `Generic Chart`, ряд `Bar` |
-| как менялась выручка по месяцам? | `Generic Chart`, ряд `Line` |
+| какой регион даёт больше выручки? | `Bar Chart` |
+| как менялась выручка по месяцам? | `Line Chart` |
 
 Один и тот же Dataset используется для всех четырёх Chart.
 
@@ -460,13 +460,11 @@ Dashboard пока не добавляем.
 
 > какой регион даёт больше выручки?
 
-В Superset 6.1.0 актуальный ECharts-компонент для такого сценария называется:
+В Superset 6.1.0 для такого сценария есть отдельная ECharts-визуализация:
 
 ```text
-Generic Chart
+Bar Chart
 ```
-
-Он умеет отображать разные типы рядов, в том числе `Bar` и `Line`.
 
 ## Открываем новый Explore
 
@@ -479,7 +477,7 @@ Datasets → sales
 Выберите тип визуализации:
 
 ```text
-Generic Chart
+Bar Chart
 ```
 
 ## Настраиваем столбчатую диаграмму
@@ -488,8 +486,7 @@ Generic Chart
 
 ```text
 X Axis:      region
-Metric:      SUM(revenue)
-Series type: Bar
+Metrics:     SUM(revenue)
 Dimensions:  пусто
 Filters:     без активного ограничения
 ```
@@ -505,7 +502,6 @@ No filter
 ```text
 ось категорий = region
 высота столбца = сумма revenue
-тип ряда = Bar
 ```
 
 Выполните конфигурацию:
@@ -533,7 +529,7 @@ Create chart
 Table
 → удобнее читать точные значения
 
-Bar
+Bar Chart
 → удобнее сравнивать величины категорий
 ```
 
@@ -594,7 +590,7 @@ Datasets → sales
 Выберите:
 
 ```text
-Generic Chart
+Line Chart
 ```
 
 Настройте:
@@ -602,9 +598,8 @@ Generic Chart
 ```text
 X Axis:      sale_date
 Time grain:  Month
-Metric:      SUM(revenue)
+Metrics:     SUM(revenue)
 Dimensions:  пусто
-Series type: Line
 Filters:     без активного ограничения
 ```
 
@@ -747,13 +742,13 @@ Chart не должен существовать только в открыто�
 Проверьте, что сохранились основные настройки:
 
 ```text
-Dataset:     sales
-X Axis:      sale_date
-Time grain:  Month
-Metric:      SUM(revenue)
-Dimensions:  пусто
-Series type: Line
-Filters:     без активного ограничения
+Visualization: Line Chart
+Dataset:       sales
+X Axis:        sale_date
+Time grain:    Month
+Metrics:       SUM(revenue)
+Dimensions:    пусто
+Filters:       без активного ограничения
 ```
 
 и маркеры, которые мы включили перед сохранением.
@@ -882,8 +877,8 @@ Save (Overwrite)
 
 ```text
 Table: Dimensions = region
-Generic Chart: X Axis = region
-Generic Chart: X Axis = sale_date с Time grain = Month
+Bar Chart: X Axis = region
+Line Chart: X Axis = sale_date с Time grain = Month
 ```
 
 ### Metric
@@ -937,7 +932,7 @@ SUM(revenue)
 можно представить как:
 
 - строки Table;
-- два столбца Generic Chart.
+- два столбца Bar Chart.
 
 Но расчёт остаётся:
 
@@ -962,11 +957,11 @@ SUM(revenue)
 
 Используйте, когда главное — одно итоговое значение.
 
-### Bar
+### Bar Chart
 
 Используйте для сравнения отдельных категорий.
 
-### Line
+### Line Chart
 
 Используйте, когда ось X имеет естественный временной порядок и нужен тренд.
 
@@ -1127,11 +1122,13 @@ SUM(revenue)
 - Exploring Data in Superset: <https://superset.apache.org/user-docs/6.1.0/using-superset/exploring-data/>
 - API-схема Chart Superset 6.1.0: <https://superset.apache.org/developer-docs/6.1.0/api/schemas/chartdatarestapi-post/>
 - `Table` control panel и реальные `Dimensions` / `Filters`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/controlPanel.tsx>
-- ECharts `Generic Chart` в исходном коде 6.1.0: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/index.ts>
-- Query controls `Generic Chart`, включая `X Axis`, `Time grain`, `Metrics`, `Dimensions` и `Filters`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-chart-controls/src/sections/echartsTimeSeriesQuery.tsx>
+- ECharts `Bar Chart` в исходном коде 6.1.0: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/Regular/Bar/index.ts>
+- ECharts `Line Chart` в исходном коде 6.1.0: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/Regular/Line/index.ts>
+- Query controls ECharts Bar/Line Chart, включая `X Axis`, `Time grain`, `Metrics`, `Dimensions` и `Filters`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-chart-controls/src/sections/echartsTimeSeriesQuery.tsx>
 - `Big Number` control panel с `Metric` и `Filters`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/BigNumber/BigNumberTotal/controlPanel.ts>
-- параметры `Marker` и другие опции Generic Chart: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/Regular/Line/controlPanel.tsx>
+- параметр `Show value` для Bar Chart: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/Regular/Bar/controlPanel.tsx>
+- параметр `Marker` для Line Chart: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/Regular/Line/controlPanel.tsx>
 - кнопка выполнения Explore (`Create chart` / `Update chart`): <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/RunQueryButton/index.tsx>
 - диалог сохранения Chart с `Save as...` и `Save (Overwrite)`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/SaveModal.tsx>
 
-В Superset 6.1.0 выполнение текущей конфигурации Explore и сохранение Chart — отдельные действия. Новый Chart выполняется через `Create chart`, существующий — через `Update chart`, а постоянный объект создаётся или обновляется через `Save`.
+В Superset 6.1.0 `Bar Chart` и `Line Chart` являются отдельными ECharts-визуализациями. Для них не нужно искать отдельное поле `Series type`. Выполнение текущей конфигурации Explore и сохранение Chart остаются отдельными действиями: новый Chart выполняется через `Create chart`, существующий — через `Update chart`, а постоянный объект создаётся или обновляется через `Save`.
