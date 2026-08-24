@@ -1,0 +1,74 @@
+name: superset-training
+
+x-superset-environment: &superset-environment
+  SUPERSET_HOME: /app/superset_home
+  SUPERSET_SECRET_KEY: training-only-6-1-0-change-before-any-real-use
+  SUPERSET_ENV: development
+  FLASK_APP: superset.app:create_app()
+  SCARF_ANALYTICS: "false"
+
+services:
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: training
+      POSTGRES_USER: training
+      POSTGRES_PASSWORD: training
+    volumes:
+      - training_db:/var/lib/postgresql/data
+      - ./schema.sql:/docker-entrypoint-initdb.d/10-schema.sql:ro
+      - ./data.sql:/docker-entrypoint-initdb.d/20-data.sql:ro
+      - ./check.sql:/training/check.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U training -d training"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  superset-init:
+    image: apache/superset:6.1.0-dev
+    user: root
+    environment: *superset-environment
+    volumes:
+      - superset_home:/app/superset_home
+    depends_on:
+      db:
+        condition: service_healthy
+    command:
+      - /bin/bash
+      - -c
+      - |
+        set -e
+        superset db upgrade
+        superset fab create-admin \
+          --username admin \
+          --firstname Superset \
+          --lastname Admin \
+          --email admin@example.local \
+          --password admin || true
+        superset init
+
+  superset:
+    image: apache/superset:6.1.0-dev
+    user: root
+    restart: unless-stopped
+    environment: *superset-environment
+    volumes:
+      - superset_home:/app/superset_home
+    ports:
+      - "8088:8088"
+    depends_on:
+      db:
+        condition: service_healthy
+      superset-init:
+        condition: service_completed_successfully
+    command:
+      - /bin/bash
+      - -c
+      - |
+        exec superset run -h 0.0.0.0 -p 8088 --with-threads
+
+volumes:
+  training_db:
+  superset_home:
