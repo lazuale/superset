@@ -455,15 +455,32 @@ Calculated columns
 
 Добавьте новый элемент.
 
-Заполните:
+В строке нового элемента в колонке:
 
 ```text
-Column name:    profit
+Column
+```
+
+замените стандартное имя:
+
+```text
+<new column>
+```
+
+на:
+
+```text
+profit
+```
+
+Раскройте новый элемент и заполните:
+
+```text
 SQL expression: revenue - cost
 Data type:      NUMERIC
 ```
 
-Если интерфейс показывает дополнительные флаги и описания, для этого урока их можно оставить без изменения.
+Если интерфейс показывает дополнительные поля `Label`, `Description` и другие настройки, для этого урока их можно оставить без изменения.
 
 Смысл нового столбца:
 
@@ -1104,6 +1121,6 @@ SUM(revenue) - SUM(cost)
 - Superset 6.1.0 — Dataset API: <https://superset.apache.org/developer-docs/6.1.0/api/datasets/>
 - список агрегирований Explore в Superset 6.1.0 (`COUNT_DISTINCT`): <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/constants.ts>
 - отображение этих агрегирований в редакторе ad hoc metric: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/controls/MetricControl/AdhocMetricEditPopover/index.tsx>
-- Dataset Editor 6.1.0: вкладки `Source`, `Metrics`, `Columns`, `Calculated columns`, `Settings` и область действия замка Source: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/components/Datasource/components/DatasourceEditor/DatasourceEditor.tsx>
+- Dataset Editor 6.1.0: вкладки `Source`, `Metrics`, `Columns`, `Calculated columns`, `Settings`, колонка `Column` и поля `SQL expression`, `Label`, `Description`, `Data type`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/components/Datasource/components/DatasourceEditor/DatasourceEditor.tsx>
 - реальный control panel `Table`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/controlPanel.tsx>
 - кнопка выполнения Explore (`Create chart` / `Update chart`): <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/RunQueryButton/index.tsx>
