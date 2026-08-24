@@ -41,24 +41,24 @@
 
 При первом появлении термин обязательно объясняется по-русски.
 
-Каталоги репозитория называются по-английски: например, `docs/` и `training/`.
+Каталоги и имена файлов в репозитории называются по-английски и используют ASCII-slug: например, `docs/05-explore-basics.md` и `training/schema.sql`.
 
 ## Как устроен курс
 
 Уроки проходят строго по порядку:
 
-1. [Что такое Superset](docs/01-что-такое-superset.md)
-2. [Запускаем учебный Superset](docs/02-запуск-учебного-superset.md)
-3. [Подключаем PostgreSQL](docs/03-подключение-postgresql.md)
-4. [Создаём первый Dataset](docs/04-первый-dataset.md)
-5. [Осваиваем Explore](docs/05-основы-explore.md)
-6. [Метрики и расчёты](docs/06-метрики-и-расчёты.md)
-7. [Строим графики](docs/07-графики.md)
-8. [Собираем Dashboard](docs/08-dashboard.md)
-9. [Добавляем Native Filters](docs/09-фильтры-dashboard.md)
+1. [Что такое Superset](docs/01-what-is-superset.md)
+2. [Запускаем учебный Superset](docs/02-start-training-superset.md)
+3. [Подключаем PostgreSQL](docs/03-connect-postgresql.md)
+4. [Создаём первый Dataset](docs/04-create-dataset.md)
+5. [Осваиваем Explore](docs/05-explore-basics.md)
+6. [Метрики и расчёты](docs/06-metrics-and-calculations.md)
+7. [Строим графики](docs/07-create-charts.md)
+8. [Собираем Dashboard](docs/08-build-dashboard.md)
+9. [Добавляем Native Filters](docs/09-native-filters.md)
 10. [SQL Lab с нуля](docs/10-sql-lab.md)
-11. [Создаём Virtual Dataset](docs/11-virtual-dataset.md)
-12. [Что изучать дальше и итоговая проверка](docs/12-что-дальше.md)
+11. [Создаём Virtual Dataset](docs/11-create-virtual-dataset.md)
+12. [Что изучать дальше и итоговая проверка](docs/12-next-steps.md)
 
 ## Как пишется каждый урок
 
