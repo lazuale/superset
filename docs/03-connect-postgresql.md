@@ -7,6 +7,7 @@
 - открыть список подключений к базам данных в Superset;
 - создать подключение к PostgreSQL по готовым реквизитам;
 - понимать, что указывать в полях `Host`, `Port`, `Database name`, `Username` и `Password`;
+- понимать, почему Superset подключается отдельным read-only пользователем;
 - проверить соединение через `Test Connection`;
 - сохранить подключение;
 - снова найти его в Superset;
@@ -83,6 +84,42 @@ PostgreSQL уже существует и таблица `training.sales` уже
 
 Само подключение **не копирует строки из PostgreSQL в Superset**. Оно только даёт Superset возможность обращаться к базе и выполнять запросы к доступным объектам.
 
+## Два пользователя PostgreSQL в учебном стенде
+
+В стенде есть два разных пользователя, и смешивать их нельзя.
+
+### `training`
+
+Этот пользователь создаётся официальным PostgreSQL image как владелец учебной базы.
+
+Он нужен для:
+
+- первичной инициализации;
+- выполнения административных учебных проверок из терминала;
+- загрузки схемы и данных.
+
+Подключать Superset этим пользователем не нужно.
+
+### `superset_reader`
+
+Этот пользователь создаётся скриптом:
+
+```text
+training/readonly.sql
+```
+
+Ему выданы только права, необходимые для аналитического чтения:
+
+```text
+CONNECT к database training
+USAGE на schema training
+SELECT на таблицы schema training
+```
+
+Именно его используем в `Database Connection` Superset.
+
+Причина простая: BI-инструменту для нашего курса нужно читать данные, а не владеть базой и не изменять исходную таблицу.
+
 ## Реквизиты учебной базы
 
 Для курса используем следующие значения:
@@ -94,8 +131,8 @@ PostgreSQL уже существует и таблица `training.sales` уже
 | Host | `db` |
 | Port | `5432` |
 | Database name | `training` |
-| Username | `training` |
-| Password | `training` |
+| Username | `superset_reader` |
+| Password | `superset_reader` |
 | Схема с учебными данными | `training` |
 | Таблица | `sales` |
 
@@ -114,7 +151,7 @@ Superset и PostgreSQL запущены в **разных Docker-контейн�
 ```yaml
 services:
   db:
-    image: postgres:17
+    image: postgres:17.11
 ```
 
 Superset объявлен другим сервисом:
@@ -228,14 +265,22 @@ training
 ### Username
 
 ```text
-training
+superset_reader
 ```
 
 ### Password
 
 ```text
-training
+superset_reader
 ```
+
+Не используйте здесь:
+
+```text
+training / training
+```
+
+Это владелец учебной базы, а не аналитическая учётная запись Superset.
 
 Если форма отдельно запрашивает отображаемое имя подключения, укажите:
 
@@ -263,7 +308,7 @@ Superset
    ├── находит host db
    ├── подключается к port 5432
    ├── открывает database training
-   └── проходит аутентификацию как user training
+   └── проходит аутентификацию как user superset_reader
 ```
 
 Если Superset сообщает об успешном соединении, реквизиты подходят.
@@ -307,20 +352,20 @@ postgresql://username:password@host:port/database
 Подставим наши учебные реквизиты:
 
 ```text
-postgresql://training:training@db:5432/training
+postgresql://superset_reader:superset_reader@db:5432/training
 ```
 
 Разберём строку:
 
 ```text
-postgresql://training:training@db:5432/training
-│            │        │        │   │    │
-│            │        │        │   │    └── database
-│            │        │        │   └─────── port
-│            │        │        └─────────── host
-│            │        └──────────────────── password
-│            └───────────────────────────── username
-└────────────────────────────────────────── тип подключения
+postgresql://superset_reader:superset_reader@db:5432/training
+│            │               │               │   │    │
+│            │               │               │   │    └── database
+│            │               │               │   └─────── port
+│            │               │               └─────────── host
+│            │               └─────────────────────────── password
+│            └─────────────────────────────────────────── username
+└──────────────────────────────────────────────────────── тип подключения
 ```
 
 В этом курсе не нужно заучивать синтаксис SQLAlchemy URI.
@@ -392,7 +437,7 @@ Browser
 Superset
    │
    │ сохранённое Database connection
-   │
+   │ user: superset_reader
    ▼
 PostgreSQL service: db:5432
    │
@@ -465,10 +510,11 @@ database.table
 2. найдите `Training PostgreSQL`;
 3. откройте его для просмотра или редактирования;
 4. вспомните, почему `Host` равен `db`, а не `localhost`;
-5. вернитесь в `Datasets`;
-6. начните добавление Dataset;
-7. убедитесь, что для `Training PostgreSQL` доступны схема `training` и таблица `sales`;
-8. выйдите из формы, ничего не создавая.
+5. вспомните, почему `Username` равен `superset_reader`, а не `training`;
+6. вернитесь в `Datasets`;
+7. начните добавление Dataset;
+8. убедитесь, что для `Training PostgreSQL` доступны схема `training` и таблица `sales`;
+9. выйдите из формы, ничего не создавая.
 
 Если всё получилось, вы уже умеете отличать создание подключения к базе от создания Dataset.
 
@@ -535,11 +581,13 @@ docker compose logs db
 Проверьте значения без изменений:
 
 ```text
-Username: training
-Password: training
+Username: superset_reader
+Password: superset_reader
 ```
 
-Это учебные реквизиты из `training/compose.yaml`.
+Это аналитические реквизиты, которые создаёт `training/readonly.sql`.
+
+Если после старого запуска стенда вы только что обновили репозиторий и пользователя `superset_reader` ещё нет, выполните полный reset из урока 02: init-скрипты PostgreSQL выполняются при создании нового data volume.
 
 ### Ошибка, что база не существует
 
@@ -575,7 +623,13 @@ docker compose exec -T db \
 training
 ```
 
-а не к другой PostgreSQL-базе.
+и пользователь:
+
+```text
+superset_reader
+```
+
+а не другая PostgreSQL-база или другая учётная запись.
 
 ### Схема видна, но таблицы `sales` нет
 
@@ -619,9 +673,10 @@ docker compose up -d
 
 ## Что должно получиться
 
-К концу урока одновременно выполнены четыре условия:
+К концу урока одновременно выполнены пять условий:
 
 - в `Database Connections` есть `Training PostgreSQL`;
+- подключение использует `superset_reader`;
 - `Test Connection` для учебных реквизитов проходит успешно;
 - Superset показывает схему `training`;
 - внутри неё Superset показывает таблицу `sales`.
@@ -645,6 +700,7 @@ Dataset при этом ещё **не создан**.
 - подключение баз данных в Superset: <https://superset.apache.org/user-docs/6.1.0/databases/>
 - PostgreSQL в Superset и формат connection string: <https://superset.apache.org/user-docs/6.1.0/databases/supported/postgresql/>
 - архитектура Superset и различие между приложением, metadata database и источниками данных: <https://superset.apache.org/admin-docs/6.1.0/installation/architecture/>
+- рекомендации по отдельному Database user и минимальным правам: <https://superset.apache.org/admin-docs/6.1.0/security/securing_superset/>
 - сеть Docker Compose и обращение к сервисам по имени: <https://docs.docker.com/compose/how-tos/networking/>
 
-В учебном стенде реквизиты PostgreSQL задаются непосредственно в [`training/compose.yaml`](../training/compose.yaml).
+В учебном стенде реквизиты PostgreSQL и read-only роль задаются в [`training/`](../training/README.md).
