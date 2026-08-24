@@ -15,7 +15,7 @@
 - понимать, когда появляется и зачем нужен `Time grain`;
 - сгруппировать даты по месяцам;
 - ограничить число возвращаемых строк через `Row limit`;
-- выполнить запрос через реальную кнопку Explore в Superset 6.1.0;
+- выполнять текущую конфигурацию через `Create chart`;
 - прочитать результат и проверить его по контрольным значениям;
 - изменить условие и повторно выполнить тот же аналитический запрос.
 
@@ -140,26 +140,27 @@ Explore ≠ SQL Lab
 
 Мы задаём параметры запроса через интерфейс, а данные остаются в PostgreSQL.
 
-## Как называется кнопка выполнения в Superset 6.1.0
+## Выполняем конфигурацию Explore
 
-В старых материалах и во внутренних именах компонентов Superset можно встретить выражение `Run Query`.
-
-Но в пользовательском интерфейсе **Superset 6.1.0** кнопка внизу панели Explore подписана в зависимости от состояния Chart:
-
-```text
-новая, ещё не сохранённая визуализация → Create chart
-существующий сохранённый Chart       → Update chart
-```
-
-В этом уроке Chart ещё не сохранён, поэтому для выполнения текущей конфигурации нажимаем:
+Для нового, ещё не сохранённого Chart текущая конфигурация выполняется кнопкой:
 
 ```text
 Create chart
 ```
 
-Это **не сохраняет Chart в общий список автоматически**. Сохранение — отдельное действие `Save`, которое разберём в уроке 07.
+После сохранения Chart эта кнопка будет называться:
 
-Дальше формулировка «выполните запрос» означает: нажмите кнопку, которая сейчас отображается как `Create chart`.
+```text
+Update chart
+```
+
+В этом уроке Chart ещё не сохранён, поэтому после изменения параметров нажимаем:
+
+```text
+Create chart
+```
+
+`Create chart` выполняет текущую конфигурацию и обновляет результат на экране. Сохранение Chart как отдельного объекта выполняется через `Save`; это разберём в уроке 07.
 
 ## Выбираем Table
 
@@ -177,7 +178,7 @@ Table
 Table
 ```
 
-В `Table` Superset 6.1.0 в секции `Query` находятся, среди прочего:
+В секции `Query` доступны, среди прочего:
 
 ```text
 Query mode
@@ -190,13 +191,11 @@ Server pagination
 Row limit
 ```
 
-Именно эти реальные названия интерфейса используем дальше.
+Эти элементы используем дальше.
 
 ## Сначала проверяем Filters
 
-У `Table` в Superset 6.1.0 нет отдельного поля `Time Range` в панели `Query`.
-
-Временной диапазон задаётся через обычную секцию:
+В `Table` временной диапазон задаётся через секцию:
 
 ```text
 Filters
@@ -222,7 +221,7 @@ No filter
 2026-01-05 … 2026-03-24
 ```
 
-Поэтому при дальнейшем добавлении временного ограничения не выбирайте случайный относительный диапазон вроде `Last week`: для учебных дат он даст пустой результат.
+Для учебных данных используем `No filter` или конкретные даты 2026 года.
 
 ## Настраиваем Dimensions
 
@@ -253,9 +252,11 @@ region
 
 Поэтому итоговая таблица должна содержать две группы.
 
-`Dimensions` — это подпись поля интерфейса `Table`.
+`Dimensions` — подпись поля интерфейса `Table`. На уровне SQL эта настройка соответствует группировке по `region`, то есть концептуально:
 
-На уровне SQL такая настройка приводит к группировке данных, поэтому концептуально она соответствует `GROUP BY region`, но искать в `Table` отдельное поле с подписью `Group by` не нужно.
+```sql
+GROUP BY region
+```
 
 ## Добавляем временную метрику SUM(revenue)
 
@@ -323,7 +324,7 @@ Row limit
 100
 ```
 
-Здесь фактически вернутся только две строки, потому что у нас всего два региона.
+Здесь вернутся только две строки, потому что у нас всего два региона.
 
 `Row limit` задаёт верхнюю границу количества строк результата, которые Superset запрашивает для этой визуализации.
 
@@ -936,24 +937,6 @@ No filter
 Create chart
 ```
 
-### Не вижу кнопку `Run Query`
-
-В Superset 6.1.0 искать её не нужно.
-
-Для нового несохранённого Chart используется кнопка:
-
-```text
-Create chart
-```
-
-Для существующего сохранённого Chart:
-
-```text
-Update chart
-```
-
-`Run Query` может встречаться в старых инструкциях и внутренних названиях компонентов, но это не подпись кнопки текущего пользовательского интерфейса 6.1.0.
-
 ### Получается 4005 одной строкой вместо двух регионов
 
 Проверьте:
@@ -1100,9 +1083,7 @@ SUM(revenue) - SUM(cost)
 
 - Exploring Data in Superset: <https://superset.apache.org/user-docs/6.1.0/using-superset/exploring-data/>
 - Superset User Guide: <https://superset.apache.org/user-docs/6.1.0/intro/>
-- реальный control panel `Table` Superset 6.1.0: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/controlPanel.tsx>
+- control panel `Table` Superset 6.1.0: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/controlPanel.tsx>
 - подписи `Dimensions`, `Metrics` и `Filters` в shared controls Superset 6.1.0: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-chart-controls/src/shared-controls/dndControls.tsx>
 - кнопка выполнения Explore в Superset 6.1.0 (`Create chart` / `Update chart`): <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/RunQueryButton/index.tsx>
 - пользовательский временной диапазон, включая `Start (inclusive)` и `End (exclusive)`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/controls/DateFilterControl/components/CustomFrame.tsx>
-
-Внутреннее имя компонента `RunQueryButton` не следует путать с текстом кнопки интерфейса: для нового Chart в 6.1.0 пользователь видит `Create chart`, а для существующего — `Update chart`.
