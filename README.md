@@ -47,13 +47,13 @@
 
 Проходите уроки строго по порядку:
 
-1. [Что такое Superset](docs/01-what-is-superset.md)
+1. [Что такое Apache Superset](docs/01-what-is-superset.md)
 2. [Запускаем учебный Superset](docs/02-start-training-superset.md)
 3. [Подключаем PostgreSQL](docs/03-connect-postgresql.md)
 4. [Создаём первый Dataset](docs/04-create-dataset.md)
 5. [Осваиваем Explore](docs/05-explore-basics.md)
 6. [Метрики и расчёты](docs/06-metrics-and-calculations.md)
-7. [Строим графики](docs/07-create-charts.md)
+7. [Строим и сохраняем Chart](docs/07-create-charts.md)
 8. [Собираем Dashboard](docs/08-build-dashboard.md)
 9. [Добавляем Native Filters](docs/09-native-filters.md)
 10. [SQL Lab с нуля](docs/10-sql-lab.md)
@@ -74,7 +74,7 @@ training.sales
 
 ## Версия курса
 
-Курс пишется для **Apache Superset 6.1.0**. Готовые инструкции должны соответствовать этой версии и проверяться по официальным материалам Apache Superset.
+Курс зафиксирован для **Apache Superset 6.1.0**. Инструкции v1 должны соответствовать этой версии и сверяться с официальной документацией и исходным кодом Apache Superset 6.1.0.
 
 ## Когда базовый курс считается пройденным
 
