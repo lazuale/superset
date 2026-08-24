@@ -397,7 +397,6 @@ Dashboard отвечает за сборку панели, а не за испр
 ```
 
 ## Сохраняем Dashboard
-
 Когда четыре Chart добавлены и расположены, нажмите:
 
 ```text
@@ -834,5 +833,3 @@ Dataset
 - вкладки `Charts` и `Layout elements`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/BuilderComponentPane/index.tsx>
 - список сохранённых Chart в конструкторе и drag-and-drop: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/SliceAdder.tsx>
 - статус `Draft` / `Published`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/PublishedStatus/index.tsx>
-
-В документации и исходном коде могут встречаться исторические внутренние названия `slice`. Для пользователя в интерфейсе курса используем современный термин `Chart`.
