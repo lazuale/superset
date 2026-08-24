@@ -46,7 +46,7 @@ services:
           --firstname Superset \
           --lastname Admin \
           --email admin@example.local \
-          --password admin || true
+          --password admin
         superset init
 
   superset:
