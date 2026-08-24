@@ -135,8 +135,6 @@ Dashboards
 Add or edit filters and controls
 ```
 
-В Superset 6.1.0 это штатный пункт настройки Native Filters.
-
 Откроется окно конфигурации фильтров.
 
 Для каждого обычного фильтра здесь есть две принципиально разные части:
@@ -156,18 +154,14 @@ Scoping
 
 Эти понятия не смешиваем.
 
-## Как называются типы в интерфейсе 6.1.0
+## Типы фильтров
 
-В исходном коде фильтров встречаются внутренние названия вроде `Select filter` и `Time filter`, но в конфигураторе Superset 6.1.0 пользователь видит другие подписи.
-
-Для этого урока нужны:
+Для этого урока нужны два типа:
 
 ```text
 Value      → фильтр по значениям столбца
 Time range → фильтр временного диапазона
 ```
-
-Именно эти видимые названия используем в инструкции.
 
 ---
 
@@ -918,7 +912,7 @@ Apply filters
 
 На Dashboard `Учебные продажи` должны существовать три Native Filter:
 
-| Фильтр | Видимый тип в Superset 6.1.0 | Dataset / Column | Scope |
+| Фильтр | Тип | Dataset / Column | Scope |
 |---|---|---|---|
 | Период | `Time range` | временной диапазон | все 4 Chart |
 | Регион | `Value` | `sales.region` | все 4 Chart |
@@ -988,5 +982,5 @@ SQL Lab
 Материал урока сверяется с исходным кодом Apache Superset 6.1.0:
 
 - настройка Filter Bar и пункт `Add or edit filters and controls`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/nativeFilters/FilterBar/FilterBarSettings/index.tsx>
-- конфигуратор Native Filters, вкладки `Settings` / `Scoping` и видимые названия типов (`Value`, `Time range`): <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/nativeFilters/FiltersConfigModal/FiltersConfigForm/FiltersConfigForm.tsx>
+- конфигуратор Native Filters, вкладки `Settings` / `Scoping` и типы `Value`, `Time range`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/nativeFilters/FiltersConfigModal/FiltersConfigForm/FiltersConfigForm.tsx>
 - кнопки Filter Bar `Apply filters` / `Apply` и `Clear all`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/nativeFilters/FilterBar/ActionButtons/index.tsx>
