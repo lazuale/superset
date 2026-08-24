@@ -9,7 +9,7 @@
 - понимать, как `NULL` влияет на `COUNT`;
 - создать вычисляемый столбец на уровне строки;
 - создать сохранённую метрику на уровне группы строк;
-- понимать, что замок `Source` не требуется для работы с `Metrics` и `Calculated columns`;
+- понимать область действия замка `Source`;
 - повторно использовать сохранённую Metric в `Explore`;
 - проверить расчёты по известным контрольным значениям;
 - объяснить, почему агрегатные функции относятся к Metric, а не к Calculated column.
@@ -405,17 +405,15 @@ AVG            → среднее
 
 `MIN` и `MAX` тоже существуют, но отдельно разбирать их сейчас не требуется.
 
-## Замок Source здесь не нужен
+## Редактируем Calculated columns и Metrics
 
-Перед созданием Calculated column и Metric важно не повторить ошибочную модель из старых инструкций.
-
-В Dataset Editor Superset 6.1.0 замок находится на вкладке:
+Замок на вкладке:
 
 ```text
 Source
 ```
 
-и защищает смену источника:
+защищает изменение источника Dataset:
 
 ```text
 Physical / Virtual
@@ -424,16 +422,16 @@ Schema
 Table
 ```
 
-Для вкладок:
+Вкладки:
 
 ```text
 Calculated columns
 Metrics
 ```
 
-снимать этот замок не требуется.
+редактируются независимо от состояния замка `Source`.
 
-В этом уроке источник `Training PostgreSQL → training → sales` вообще не меняем.
+В этом уроке источник `Training PostgreSQL → training → sales` не меняем.
 
 ## Создаём Calculated column
 
@@ -450,8 +448,6 @@ Datasets
 ```text
 Calculated columns
 ```
-
-Не используйте для этого вкладку `Metrics`.
 
 Добавьте новый элемент.
 
@@ -480,7 +476,7 @@ SQL expression: revenue - cost
 Data type:      NUMERIC
 ```
 
-Если интерфейс показывает дополнительные поля `Label`, `Description` и другие настройки, для этого урока их можно оставить без изменения.
+Поля `Label`, `Description` и остальные настройки для этого упражнения оставьте без изменения.
 
 Смысл нового столбца:
 
@@ -640,8 +636,6 @@ Datasets
 ```text
 Metrics
 ```
-
-Замок `Source` для этого не снимаем.
 
 Добавьте новую Metric.
 
@@ -927,9 +921,7 @@ Datasets → sales
 
 ### Не получается добавить Calculated column или Metric
 
-Для этих вкладок не требуется снимать замок `Source`.
-
-Правильные маршруты:
+Используйте маршруты:
 
 ```text
 Datasets → Edit sales → Calculated columns
@@ -947,8 +939,6 @@ Datasets → Edit sales → Metrics
 Save
 ```
 
-Не меняйте `Source`, если задача этого не требует.
-
 ### Calculated column выдаёт ошибку
 
 Проверьте выражение:
@@ -957,13 +947,7 @@ Save
 revenue - cost
 ```
 
-Не используйте:
-
-```sql
-SUM(revenue) - SUM(cost)
-```
-
-в Calculated column.
+Calculated column должен содержать построчное выражение.
 
 ### Сохранённая Metric не появилась
 
@@ -993,22 +977,6 @@ manager = NULL
 ```
 
 `COUNT(manager)` считает только непустые значения.
-
-### Не вижу `Run Query`
-
-Это ожидаемо для Superset 6.1.0.
-
-Новый несохранённый Chart выполняется кнопкой:
-
-```text
-Create chart
-```
-
-После сохранения Chart эта же область будет использовать подпись:
-
-```text
-Update chart
-```
 
 ### Итоги отличаются от контрольных
 
@@ -1101,7 +1069,7 @@ SUM(revenue) - SUM(cost)
 
 Если показатель нужен повторно, сохраните его как Metric Dataset.
 
-Замок `Source` к созданию этих объектов отношения не имеет: он защищает смену источника Dataset.
+Замок `Source` защищает изменение источника Dataset и не влияет на создание `Calculated columns` и `Metrics`.
 
 ## Следующий урок
 
@@ -1122,5 +1090,5 @@ SUM(revenue) - SUM(cost)
 - список агрегирований Explore в Superset 6.1.0 (`COUNT_DISTINCT`): <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/constants.ts>
 - отображение этих агрегирований в редакторе ad hoc metric: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/controls/MetricControl/AdhocMetricEditPopover/index.tsx>
 - Dataset Editor 6.1.0: вкладки `Source`, `Metrics`, `Columns`, `Calculated columns`, `Settings`, колонка `Column` и поля `SQL expression`, `Label`, `Description`, `Data type`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/components/Datasource/components/DatasourceEditor/DatasourceEditor.tsx>
-- реальный control panel `Table`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/controlPanel.tsx>
+- control panel `Table`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/controlPanel.tsx>
 - кнопка выполнения Explore (`Create chart` / `Update chart`): <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/RunQueryButton/index.tsx>
