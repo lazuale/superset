@@ -828,7 +828,7 @@ Dataset
 
 Материал урока сверяется с документацией и исходным кодом Apache Superset 6.1.0:
 
-- официальный tutorial `Creating Your First Dashboard`: <https://superset.apache.org/user-docs/6.1.0/using-superset/creating-your-first-dashboard/>
+- официальный tutorial `Creating Your First Dashboard` из тега `6.1.0`: <https://github.com/apache/superset/blob/6.1.0/docs/docs/using-superset/creating-your-first-dashboard.mdx>
 - список Dashboard и создание через `+ Dashboard`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/pages/DashboardList/index.tsx>
 - конструктор Dashboard: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/DashboardBuilder/DashboardBuilder.tsx>
 - вкладки `Charts` и `Layout elements`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/BuilderComponentPane/index.tsx>
