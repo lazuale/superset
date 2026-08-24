@@ -1096,7 +1096,7 @@ Virtual Dataset
 - Apache Superset 6.1.0 — Securing Superset for Production: <https://superset.apache.org/admin-docs/6.1.0/security/securing_superset/>
 - Apache Superset 6.1.0 — Architecture: <https://superset.apache.org/admin-docs/6.1.0/installation/architecture/>
 - Apache Superset 6.1.0 — Caching: <https://superset.apache.org/admin-docs/6.1.0/configuration/cache/>
-- Apache Superset — Alerts and Reports: <https://superset.apache.org/admin-docs/configuration/alerts-reports/>
+- Apache Superset 6.1.0 — Alerts and Reports: <https://github.com/apache/superset/blob/6.1.0/docs/admin_docs/configuration/alerts-reports.mdx>
 - Apache Superset 6.1.0 — REST API Reference: <https://superset.apache.org/developer-docs/6.1.0/api/>
 - Apache Superset 6.1.0 — Embedding Superset: <https://superset.apache.org/user-docs/6.1.0/using-superset/embedding/>
 - Apache Superset 6.1.0 — Upgrading Superset: <https://superset.apache.org/admin-docs/6.1.0/installation/upgrading-superset/>
