@@ -94,8 +94,8 @@ Chart
 - тип визуализации;
 - выбранные измерения;
 - Metrics;
-- фильтры;
-- временные настройки;
+- Filters;
+- временная гранулярность;
 - параметры отображения.
 
 Chart **не является копией строк PostgreSQL**.
@@ -155,13 +155,31 @@ Save
 Save as... / Save (Overwrite)
 ```
 
+## Где в этих Chart задаётся временной фильтр
+
+В уроке 05 мы уже увидели реальный интерфейс Superset 6.1.0: для используемых здесь визуализаций временное ограничение задаётся через:
+
+```text
+Filters
+```
+
+а не через отдельное универсальное поле `Time Range`.
+
+Если в `Filters` отображается temporal-фильтр:
+
+```text
+sale_date (No filter)
+```
+
+то для всех основных упражнений этого урока оставляем:
+
+```text
+No filter
+```
+
+Нам нужны все учебные данные января–марта 2026 года.
+
 ## Сначала выбираем вопрос, потом график
-
-Не начинайте с вопроса:
-
-> какой красивый график построить?
-
-Начинайте с вопроса к данным.
 
 В этом уроке будут четыре разных задачи:
 
@@ -169,12 +187,10 @@ Save as... / Save (Overwrite)
 |---|---|
 | сколько выручки и прибыли у каждого региона? | `Table` |
 | какова общая прибыль? | `Big Number` |
-| какой регион даёт больше выручки? | столбчатая диаграмма |
-| как менялась выручка по месяцам? | временной график |
+| какой регион даёт больше выручки? | `Generic Chart`, ряд `Bar` |
+| как менялась выручка по месяцам? | `Generic Chart`, ряд `Line` |
 
 Один и тот же Dataset используется для всех четырёх Chart.
-
-Это нормальная модель Superset:
 
 ```text
 один Dataset
@@ -202,7 +218,7 @@ Save as... / Save (Overwrite)
 
 ## Открываем Dataset
 
-Перейдите в самостоятельный раздел:
+Перейдите:
 
 ```text
 Datasets
@@ -226,13 +242,7 @@ Table
 
 ## Настраиваем запрос
 
-Установите:
-
-```text
-Time Range: No Filter
-```
-
-В `Group by` добавьте:
+В `Dimensions` добавьте:
 
 ```text
 region
@@ -258,6 +268,23 @@ SUM(revenue)
 total_profit
 ```
 
+В `Filters` не должно быть активного ограничения по времени или региону.
+
+Если отображается `sale_date`, оставьте:
+
+```text
+No filter
+```
+
+Итоговая конфигурация:
+
+```text
+Visualization: Table
+Dimensions:    region
+Metrics:       SUM(revenue), Прибыль
+Filters:       без активного ограничения
+```
+
 Выполните конфигурацию кнопкой:
 
 ```text
@@ -277,15 +304,15 @@ Create chart
 
 ```text
 выручка: 1360 + 2645 = 4005
-прибыль:  520 + 1010  = 1530
+прибыль:  520 + 1010 = 1530
 ```
 
 Если числа отличаются, Chart пока не сохраняйте. Сначала проверьте:
 
 ```text
 Dataset    = sales
-Time Range = No Filter
-Group by   = region
+Dimensions = region
+Filters    = нет активных ограничений
 ```
 
 и используемые Metrics.
@@ -336,11 +363,9 @@ Dashboard пока не выбирайте и не создавайте.
 Big Number
 ```
 
-В Superset 6.1.0 `Big Number` — отдельный тип визуализации категории KPI.
-
 ## Создаём новый Chart
 
-Удобнее снова начать с Dataset:
+Снова начните с Dataset:
 
 ```text
 Datasets → sales
@@ -352,11 +377,7 @@ Datasets → sales
 Big Number
 ```
 
-Установите:
-
-```text
-Time Range: No Filter
-```
+У `Big Number` в Superset 6.1.0 основная секция `Query` содержит Metric и `Filters`.
 
 В качестве Metric выберите сохранённую метрику:
 
@@ -368,6 +389,12 @@ Time Range: No Filter
 
 ```text
 total_profit
+```
+
+В `Filters` оставьте данные без активного ограничения. Если отображается `sale_date`, оставьте:
+
+```text
+No filter
 ```
 
 Выполните конфигурацию:
@@ -395,8 +422,6 @@ SUM(revenue) - SUM(cost)
 `Big Number` не изменил формулу.
 
 Он изменил только **способ представления результата**.
-
-Это важный принцип:
 
 ```text
 Metric отвечает за смысл числа
@@ -435,8 +460,6 @@ Dashboard пока не добавляем.
 
 > какой регион даёт больше выручки?
 
-Точные значения можно прочитать в таблице, но для визуального сравнения двух категорий удобнее столбцы.
-
 В Superset 6.1.0 актуальный ECharts-компонент для такого сценария называется:
 
 ```text
@@ -444,10 +467,6 @@ Generic Chart
 ```
 
 Он умеет отображать разные типы рядов, в том числе `Bar` и `Line`.
-
-Это важное отличие от старых инструкций по Superset, где можно встретить отдельные названия старых chart plugins.
-
-Для курса ориентируемся на интерфейс и модель **Superset 6.1.0**.
 
 ## Открываем новый Explore
 
@@ -465,16 +484,23 @@ Generic Chart
 
 ## Настраиваем столбчатую диаграмму
 
-Нам нужны:
+Установите:
 
 ```text
-X Axis / X-axis: region
-Metric:          SUM(revenue)
-Series type:     Bar
-Time Range:      No Filter
+X Axis:      region
+Metric:      SUM(revenue)
+Series type: Bar
+Dimensions:  пусто
+Filters:     без активного ограничения
 ```
 
-Названия секций могут немного отличаться регистром, но смысл должен быть именно таким:
+Если в `Filters` отображается `sale_date`, оставьте:
+
+```text
+No filter
+```
+
+Смысл настройки:
 
 ```text
 ось категорий = region
@@ -531,8 +557,6 @@ Create chart
 
 Не нужно менять цветовую схему, шрифты и десятки декоративных параметров.
 
-Цель урока — научиться выбирать рабочую визуализацию, а не заниматься оформлением ради оформления.
-
 ## Сохраняем
 
 Нажмите `Save`, оставьте `Save as...` и сохраните Chart под именем:
@@ -576,16 +600,21 @@ Generic Chart
 Настройте:
 
 ```text
-X Axis / X-axis: sale_date
-Time Grain:      Month
-Metric:          SUM(revenue)
-Series type:     Line
-Time Range:      No Filter
+X Axis:      sale_date
+Time grain:  Month
+Metric:      SUM(revenue)
+Dimensions:  пусто
+Series type: Line
+Filters:     без активного ограничения
 ```
 
-`Group by` для основного упражнения оставьте пустым.
+Если отображается temporal-фильтр `sale_date`, оставьте:
 
-Нам нужна одна линия общей выручки.
+```text
+No filter
+```
+
+Нам нужна одна линия общей выручки, поэтому `Dimensions` для этого упражнения оставляем пустым.
 
 Выполните конфигурацию:
 
@@ -612,7 +641,7 @@ Create chart
 ```text
 sale_date
    ↓
-Time Grain = Month
+Time grain = Month
    ↓
 строки собираются по месяцам
    ↓
@@ -626,8 +655,6 @@ SUM(revenue)
 ```text
 январь → февраль → март
 ```
-
-Поэтому линия показывает изменение показателя во времени.
 
 ## Включаем маркеры
 
@@ -680,8 +707,6 @@ sales
 
 Но отвечают на разные вопросы.
 
-Схема теперь выглядит так:
-
 ```text
 Dataset sales
 │
@@ -705,8 +730,6 @@ Charts
 
 Найдите четыре созданных Chart по именам.
 
-Это важная проверка.
-
 Chart не должен существовать только в открытой вкладке браузера.
 
 После сохранения он является отдельным объектом Superset и должен находиться через общий список `Charts`.
@@ -726,10 +749,11 @@ Chart не должен существовать только в открыто�
 ```text
 Dataset:     sales
 X Axis:      sale_date
-Time Grain:  Month
+Time grain:  Month
 Metric:      SUM(revenue)
+Dimensions:  пусто
 Series type: Line
-Time Range:  No Filter
+Filters:     без активного ограничения
 ```
 
 и маркеры, которые мы включили перед сохранением.
@@ -751,8 +775,6 @@ Update chart
 Если настройки и результат сохранились, повторное открытие Chart работает правильно.
 
 ## Изменяем существующий Chart
-
-Теперь изменим один параметр уже сохранённого Chart.
 
 Оставьте все расчёты прежними и отключите:
 
@@ -817,8 +839,6 @@ Charts
 
 ## Save as... и Save (Overwrite) — разные действия
 
-При работе с существующим Chart важно различать два намерения.
-
 ### Нужен новый независимый Chart
 
 Используйте:
@@ -826,20 +846,6 @@ Charts
 ```text
 Save as...
 ```
-
-Например:
-
-```text
-Выручка по регионам — столбцы
-```
-
-и:
-
-```text
-Выручка по месяцам
-```
-
-должны быть разными Chart.
 
 ### Нужно изменить текущий Chart
 
@@ -858,8 +864,6 @@ Save (Overwrite)
 Выручка по месяцам final2
 ```
 
-Такой подход быстро превращает каталог Chart в мусор.
-
 Перед сохранением всегда задайте себе один вопрос:
 
 > я создаю новый аналитический объект или изменяю существующий?
@@ -877,8 +881,9 @@ Save (Overwrite)
 Примеры:
 
 ```text
-region
-sale_date с Time Grain = Month
+Table: Dimensions = region
+Generic Chart: X Axis = region
+Generic Chart: X Axis = sale_date с Time grain = Month
 ```
 
 ### Metric
@@ -922,8 +927,6 @@ SUM(revenue)
 
 ## Тип Chart не меняет смысл Metric
 
-Мы уже показали одни и те же значения разными способами.
-
 Например:
 
 ```text
@@ -934,7 +937,7 @@ SUM(revenue)
 можно представить как:
 
 - строки Table;
-- два столбца.
+- два столбца Generic Chart.
 
 Но расчёт остаётся:
 
@@ -943,22 +946,6 @@ SUM(revenue)
 ```
 
 Поэтому выбор визуализации и выбор расчёта — разные решения.
-
-Неправильно думать:
-
-```text
-"я выбрал Bar, значит Superset сам понял, что нужно считать"
-```
-
-Правильная модель:
-
-```text
-сначала определяем измерение и Metric
-        ↓
-получаем осмысленный результат
-        ↓
-выбираем способ его отображения
-```
 
 ## Когда использовать четыре типа из урока
 
@@ -971,45 +958,17 @@ SUM(revenue)
 - сравнение строк;
 - компактный аналитический срез.
 
-Пример:
-
-```text
-регион + выручка + прибыль
-```
-
 ### Big Number
 
 Используйте, когда главное — одно итоговое значение.
 
-Пример:
-
-```text
-общая прибыль = 1530
-```
-
-Не превращайте Big Number в попытку показать десятки категорий.
-
-### Столбцы
+### Bar
 
 Используйте для сравнения отдельных категорий.
 
-Пример:
-
-```text
-Север против Юга
-```
-
-Если категорий становится слишком много, диаграмма быстро теряет читаемость.
-
-### Линия
+### Line
 
 Используйте, когда ось X имеет естественный временной порядок и нужен тренд.
-
-Пример:
-
-```text
-январь → февраль → март
-```
 
 Не используйте линию для набора независимых категорий только потому, что линия выглядит аккуратно: соединение точек визуально подразумевает последовательность.
 
@@ -1020,26 +979,26 @@ SUM(revenue)
 Сначала проверьте:
 
 ```text
-Time Range
+Filters
 ```
 
 Учебные данные находятся в январе–марте 2026 года.
 
-Для упражнений этого урока используйте:
+Для упражнений этого урока временное ограничение не нужно. Если отображается `sale_date`, оставьте:
 
 ```text
-No Filter
+No filter
 ```
 
-### Получилось одно число вместо двух регионов
+### Получилось одно число вместо двух регионов в Table
 
-Проверьте измерение:
+Проверьте:
 
 ```text
-region
+Dimensions = region
 ```
 
-Без категории Superset агрегирует все строки вместе.
+Без измерения Superset агрегирует все строки вместе.
 
 ### Получилось 4005 вместо 1530
 
@@ -1058,10 +1017,10 @@ region
 Проверьте:
 
 ```text
-Time Grain = Month
+Time grain = Month
 ```
 
-или месячную гранулярность для временного `sale_date`.
+для `X Axis = sale_date`.
 
 ### После изменения появилось два почти одинаковых Chart
 
@@ -1077,13 +1036,9 @@ Save as...
 Save (Overwrite)
 ```
 
-Удаление лишних объектов в этом уроке не требуется. Главное — понять разницу на будущее.
-
 ### Chart исчез после закрытия вкладки
 
 Скорее всего, вы выполнили конфигурацию через `Create chart`, но не сохранили объект через `Save`.
-
-Это разные действия:
 
 ```text
 Create chart / Update chart
@@ -1095,19 +1050,9 @@ Save
 
 ## Попробуйте сами
 
-Не подглядывая в пошаговые инструкции, выполните ещё одно упражнение.
-
 Нужно ответить на вопрос:
 
 > Какова общая выручка по всем 12 строкам?
-
-Самостоятельно выберите подходящую визуализацию и Metric.
-
-Контрольный результат:
-
-```text
-4005.00
-```
 
 Наиболее естественный вариант для одного KPI:
 
@@ -1119,6 +1064,14 @@ Big Number
 
 ```text
 SUM(revenue)
+```
+
+В `Filters` не должно быть активных ограничений.
+
+Контрольный результат:
+
+```text
+4005.00
 ```
 
 Этот тренировочный Chart сохранять не обязательно.
@@ -1159,22 +1112,6 @@ SUM(revenue)
 - кастомные плагины визуализаций;
 - тонкая настройка темы и цветовых схем.
 
-Сейчас важно освоить фундаментальную цепочку:
-
-```text
-вопрос
-→ измерение
-→ Metric
-→ подходящая визуализация
-→ Create chart
-→ проверка результата
-→ Save as...
-→ повторное открытие
-→ изменение
-→ Update chart
-→ Save (Overwrite)
-```
-
 ## Следующий урок
 
 Теперь у нас есть несколько сохранённых Chart.
@@ -1189,9 +1126,11 @@ SUM(revenue)
 
 - Exploring Data in Superset: <https://superset.apache.org/user-docs/6.1.0/using-superset/exploring-data/>
 - API-схема Chart Superset 6.1.0: <https://superset.apache.org/developer-docs/6.1.0/api/schemas/chartdatarestapi-post/>
+- `Table` control panel и реальные `Dimensions` / `Filters`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/controlPanel.tsx>
 - ECharts `Generic Chart` в исходном коде 6.1.0: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/index.ts>
-- параметры `Generic Chart`, включая `Series type`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/constants.ts>
-- ECharts `Big Number` в исходном коде 6.1.0: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/BigNumber/BigNumberTotal/index.ts>
+- Query controls `Generic Chart`, включая `X Axis`, `Time grain`, `Metrics`, `Dimensions` и `Filters`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-chart-controls/src/sections/echartsTimeSeriesQuery.tsx>
+- `Big Number` control panel с `Metric` и `Filters`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/BigNumber/BigNumberTotal/controlPanel.ts>
+- параметры `Marker` и другие опции Generic Chart: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/Regular/Line/controlPanel.tsx>
 - кнопка выполнения Explore (`Create chart` / `Update chart`): <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/RunQueryButton/index.tsx>
 - диалог сохранения Chart с `Save as...` и `Save (Overwrite)`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/SaveModal.tsx>
 

@@ -6,7 +6,7 @@
 
 - открыть список подключений к базам данных в Superset;
 - создать подключение к PostgreSQL по готовым реквизитам;
-- понимать, что указывать в полях `Host`, `Port`, `Database name`, `Username` и `Password`;
+- понимать, что указывать в полях `Display Name`, `Host`, `Port`, `Database name`, `Username` и `Password`;
 - понимать, почему Superset подключается отдельным read-only пользователем;
 - проверить соединение через `Test Connection`;
 - сохранить подключение;
@@ -127,7 +127,7 @@ SELECT на таблицы schema training
 | Параметр | Значение |
 |---|---|
 | Тип базы | `PostgreSQL` |
-| Имя подключения в Superset | `Training PostgreSQL` |
+| Display Name | `Training PostgreSQL` |
 | Host | `db` |
 | Port | `5432` |
 | Database name | `training` |
@@ -136,7 +136,15 @@ SELECT на таблицы schema training
 | Схема с учебными данными | `training` |
 | Таблица | `sales` |
 
-Обратите внимание: имя подключения `Training PostgreSQL` мы придумываем сами. Это только понятная подпись внутри Superset.
+`Display Name` — обязательное поле формы подключения Superset 6.1.0. Это понятное имя, под которым подключение затем будет отображаться в `Database Connections`, `Datasets` и `SQL Lab`.
+
+Значение:
+
+```text
+Training PostgreSQL
+```
+
+мы задаём сами.
 
 А `training` в поле `Database name` — уже реальное имя базы PostgreSQL.
 
@@ -238,6 +246,14 @@ PostgreSQL
 
 В форме подключения заполните реквизиты учебной базы.
 
+### Display Name
+
+```text
+Training PostgreSQL
+```
+
+Это обязательное отображаемое имя подключения внутри Superset. Именно это значение будем использовать во всех следующих уроках.
+
 ### Host
 
 ```text
@@ -281,14 +297,6 @@ training / training
 ```
 
 Это владелец учебной базы, а не аналитическая учётная запись Superset.
-
-Если форма отдельно запрашивает отображаемое имя подключения, укажите:
-
-```text
-Training PostgreSQL
-```
-
-Это имя будем использовать во всех следующих уроках.
 
 ## Проверяем соединение
 
@@ -374,6 +382,8 @@ postgresql://superset_reader:superset_reader@db:5432/training
 
 Схема `training` в этот URI **не входит**. URI подключает нас к базе PostgreSQL `training`, а нужную схему внутри этой базы мы выбираем отдельно.
 
+`Display Name` в SQLAlchemy URI тоже не входит. Это только имя объекта подключения внутри Superset.
+
 ## Проверяем, что Superset видит схему и таблицу
 
 Одного сообщения `Test Connection` недостаточно для учебной проверки. Нам нужно убедиться, что через сохранённое подключение Superset действительно получает метаданные нужной таблицы.
@@ -437,6 +447,7 @@ Browser
 Superset
    │
    │ сохранённое Database connection
+   │ Display Name: Training PostgreSQL
    │ user: superset_reader
    ▼
 PostgreSQL service: db:5432
@@ -509,12 +520,13 @@ database.table
 1. откройте `Database Connections`;
 2. найдите `Training PostgreSQL`;
 3. откройте его для просмотра или редактирования;
-4. вспомните, почему `Host` равен `db`, а не `localhost`;
-5. вспомните, почему `Username` равен `superset_reader`, а не `training`;
-6. вернитесь в `Datasets`;
-7. начните добавление Dataset;
-8. убедитесь, что для `Training PostgreSQL` доступны схема `training` и таблица `sales`;
-9. выйдите из формы, ничего не создавая.
+4. вспомните, зачем нужен `Display Name`;
+5. вспомните, почему `Host` равен `db`, а не `localhost`;
+6. вспомните, почему `Username` равен `superset_reader`, а не `training`;
+7. вернитесь в `Datasets`;
+8. начните добавление Dataset;
+9. убедитесь, что для `Training PostgreSQL` доступны схема `training` и таблица `sales`;
+10. выйдите из формы, ничего не создавая.
 
 Если всё получилось, вы уже умеете отличать создание подключения к базе от создания Dataset.
 
@@ -588,6 +600,28 @@ Password: superset_reader
 Это аналитические реквизиты, которые создаёт `training/readonly.sql`.
 
 Если после старого запуска стенда вы только что обновили репозиторий и пользователя `superset_reader` ещё нет, выполните полный reset из урока 02: init-скрипты PostgreSQL выполняются при создании нового data volume.
+
+### Подключение сохранилось под неправильным именем
+
+Откройте его в:
+
+```text
+Settings → Data → Database Connections
+```
+
+и проверьте поле:
+
+```text
+Display Name
+```
+
+Для курса оно должно быть:
+
+```text
+Training PostgreSQL
+```
+
+Это важно, потому что следующие уроки ищут подключение именно под этим именем.
 
 ### Ошибка, что база не существует
 
@@ -673,9 +707,10 @@ docker compose up -d
 
 ## Что должно получиться
 
-К концу урока одновременно выполнены пять условий:
+К концу урока одновременно выполнены шесть условий:
 
 - в `Database Connections` есть `Training PostgreSQL`;
+- его `Display Name` равен `Training PostgreSQL`;
 - подключение использует `superset_reader`;
 - `Test Connection` для учебных реквизитов проходит успешно;
 - Superset показывает схему `training`;
@@ -699,6 +734,7 @@ Dataset при этом ещё **не создан**.
 
 - подключение баз данных в Superset: <https://superset.apache.org/user-docs/6.1.0/databases/>
 - PostgreSQL в Superset и формат connection string: <https://superset.apache.org/user-docs/6.1.0/databases/supported/postgresql/>
+- поле `Display Name` в форме Database Connection Superset 6.1.0: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/features/databases/DatabaseModal/DatabaseConnectionForm/CommonParameters.tsx>
 - архитектура Superset и различие между приложением, metadata database и источниками данных: <https://superset.apache.org/admin-docs/6.1.0/installation/architecture/>
 - рекомендации по отдельному Database user и минимальным правам: <https://superset.apache.org/admin-docs/6.1.0/security/securing_superset/>
 - сеть Docker Compose и обращение к сервисам по имени: <https://docs.docker.com/compose/how-tos/networking/>

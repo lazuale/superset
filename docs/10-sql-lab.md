@@ -160,10 +160,10 @@ table sales
 В верхнем меню откройте:
 
 ```text
-SQL Lab → SQL Lab
+SQL → SQL Lab
 ```
 
-В Superset 6.1.0 этот раздел открывает SQL Editor.
+В Superset 6.1.0 пункт `SQL Lab` находится внутри верхнего раздела `SQL` и открывает SQL Editor.
 
 ## Выбираем базу и схему
 
@@ -597,7 +597,7 @@ AND sale_date < DATE '2026-03-01'
 ```text
 дата не раньше 1 февраля
 И
-dата раньше 1 марта
+дата раньше 1 марта
 ```
 
 ---
@@ -803,11 +803,11 @@ SUM(revenue) - SUM(cost)
 
 ## Это тот же вопрос, что в Explore
 
-В уроках 05 и 07 мы уже строили:
+В уроках 05 и 07 мы уже строили через `Table`:
 
 ```text
-Group by = region
-Metric   = SUM(revenue)
+Dimensions = region
+Metrics    = SUM(revenue)
 ```
 
 В SQL это выглядит как:
@@ -1484,7 +1484,7 @@ revenue
 
 Урок можно считать пройденным, если вы без пошаговой подсказки можете:
 
-1. открыть `SQL Lab`;
+1. открыть `SQL → SQL Lab`;
 2. выбрать `Training PostgreSQL`;
 3. выбрать schema `training`;
 4. найти `sales` в браузере объектов;
@@ -1551,7 +1551,7 @@ Chart
 - Apache Superset 6.1.0 — Introduction: <https://superset.apache.org/user-docs/6.1.0/intro/>
 - Apache Superset 6.1.0 — Exploring Data in Superset, раздел `SQL Lab Tips`: <https://superset.apache.org/user-docs/6.1.0/using-superset/exploring-data/>
 - Apache Superset 6.1.0 — SQL Lab API: <https://superset.apache.org/developer-docs/6.1.0/api/>
-- Исходный код Superset 6.1.0 — регистрация `SQL Lab`: <https://github.com/apache/superset/blob/6.1.0/superset/initialization/__init__.py>
+- Исходный код Superset 6.1.0 — регистрация верхнего раздела `SQL` и пункта `SQL Lab`: <https://github.com/apache/superset/blob/6.1.0/superset/initialization/__init__.py>
 - Исходный код Superset 6.1.0 — выбор Database/Schema в SQL Lab: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/SqlEditorTopBar/useDatabaseSelector.ts>
 - Исходный код Superset 6.1.0 — кнопка `Run` / `Run selection`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/RunQueryActionButton/index.tsx>
 - Учебная структура таблицы: [`../training/schema.sql`](../training/schema.sql)

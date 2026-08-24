@@ -153,8 +153,6 @@ Superset сохраняет определение Dataset и его SQL в св
 
 Когда затем Chart обращается к такому Dataset, PostgreSQL всё равно выполняет запрос к исходным данным.
 
-То есть схема примерно такая:
-
 ```text
 training.sales
       ↓
@@ -226,7 +224,7 @@ profit
 В верхнем меню откройте:
 
 ```text
-SQL Lab → SQL Lab
+SQL → SQL Lab
 ```
 
 Выберите:
@@ -334,12 +332,16 @@ profit  = 285.00
 одна продажа
 ```
 
-Это важно для обучения.
-
-После сохранения Dataset мы сами решим в Explore, как группировать эти строки:
+После сохранения Dataset мы сами решим в Explore, как разделить результат:
 
 ```text
-region
+Table: Dimensions = region
+```
+
+или для графика:
+
+```text
+Generic Chart: X Axis = region
 ```
 
 и что считать:
@@ -379,8 +381,6 @@ Create chart
 Пока мы **ещё не сохранили постоянный Virtual Dataset**.
 
 Superset открыл результат SQL как временный query datasource, чтобы его можно было исследовать в Explore.
-
-То есть на этом промежуточном шаге цепочка такая:
 
 ```text
 SQL Lab query
@@ -496,10 +496,6 @@ FROM training.sales
 
 # Шаг 5. Проверяем, что Virtual Dataset действительно сохранён
 
-Не ограничивайтесь тем, что после `Save` Explore продолжил работать.
-
-Нужно проверить повторное открытие объекта.
-
 Перейдите:
 
 ```text
@@ -553,8 +549,6 @@ profit
 
 # Physical Dataset и Virtual Dataset выглядят похоже в Explore
 
-Это одна из главных идей урока.
-
 В Explore вы можете работать с обоими источниками привычным способом:
 
 ```text
@@ -585,10 +579,6 @@ sales_virtual
 
 # Как Superset выполняет запрос к Virtual Dataset
 
-Не нужно запоминать внутренний SQL Superset дословно.
-
-Важно понимать принцип.
-
 Наш Virtual Dataset определён запросом:
 
 ```sql
@@ -606,11 +596,11 @@ SELECT
 FROM training.sales
 ```
 
-Если в Explore затем попросить:
+Если в `Table` затем попросить:
 
 ```text
-Group by = region
-Metric   = SUM(profit)
+Dimensions = region
+Metrics    = SUM(profit)
 ```
 
 то логика запроса концептуально выглядит примерно так:
@@ -659,25 +649,27 @@ sales_virtual
 Generic Chart
 ```
 
-Для ряда используйте:
+Настройте:
 
 ```text
-Bar
+X Axis:      region
+Metric:      SUM(profit)
+Series type: Bar
+Dimensions:  пусто
+Filters:     без активного ограничения
 ```
 
-Настройте категорию:
+Если в `Filters` отображается temporal-фильтр `sale_date`, оставьте:
 
 ```text
-region
+No filter
 ```
 
-Добавьте временную ad hoc metric:
+Выполните текущую конфигурацию кнопкой:
 
 ```text
-SUM(profit)
+Create chart
 ```
-
-Запустите запрос.
 
 Ожидаемый результат:
 
@@ -701,9 +693,10 @@ SUM(profit)
 Если значения другие, проверьте:
 
 1. выбран ли именно `sales_virtual`;
-2. используется ли `region` как категория;
+2. используется ли `X Axis = region`;
 3. используется ли `SUM(profit)`, а не просто `profit`;
-4. нет ли оставшегося фильтра или Time Range.
+4. выбран ли `Series type = Bar`;
+5. нет ли активного ограничения в `Filters`.
 
 ---
 
@@ -722,8 +715,6 @@ Save
 ```
 
 Новый Dashboard для него создавать не нужно.
-
-Цель урока — доказать, что Virtual Dataset является полноценным источником для Explore и Chart.
 
 После сохранения перейдите в:
 
@@ -852,8 +843,6 @@ Virtual Dataset sales_virtual
 
 Определяется в Superset.
 
-Упрощённо:
-
 ```text
 Superset metadata
 └── Dataset
@@ -958,8 +947,6 @@ Virtual Dataset не нужно вручную «перезагружать» к
 
 Его SQL снова обращается к исходной таблице при выполнении аналитического запроса.
 
-Поэтому:
-
 ```text
 Virtual Dataset
 ≠ снимок данных на момент сохранения
@@ -1054,7 +1041,7 @@ PostgreSQL
     ↓
 training.sales
     ↓
-SQL Lab
+SQL → SQL Lab
     ↓
 SELECT ... revenue - cost AS profit
     ↓
@@ -1074,7 +1061,7 @@ Virtual Dataset
     ↓
 Explore
     ↓
-region + SUM(profit)
+X Axis = region + SUM(profit)
     ↓
 Generic Chart / Bar
     ↓
@@ -1085,8 +1072,6 @@ Generic Chart / Bar
 
 # Самостоятельная проверка урока
 
-После прохождения основной инструкции выполните следующую работу без копирования шагов один в один.
-
 ## Задание 1
 
 Вернитесь в `Datasets` и найдите одновременно:
@@ -1096,7 +1081,7 @@ sales
 sales_virtual
 ```
 
-Объясните вслух или письменно:
+Объясните:
 
 ```text
 что является источником sales
@@ -1107,11 +1092,12 @@ sales_virtual
 
 Откройте `sales_virtual` в Explore.
 
-Соберите обычную Table:
+Соберите обычную `Table`:
 
 ```text
-Group by = product
-Metric   = SUM(profit)
+Dimensions = product
+Metrics    = SUM(profit)
+Filters    = без активного ограничения
 ```
 
 Контроль:
@@ -1256,13 +1242,17 @@ revenue - cost AS profit
 Юг    = 1010.00
 ```
 
-Проверьте:
+Для сохранённого Bar Chart проверьте:
 
-- Dataset `sales_virtual`;
-- отсутствие ненужных фильтров;
-- `Group by = region`;
-- агрегацию именно `SUM(profit)`;
-- исходный SQL Virtual Dataset.
+```text
+Dataset:     sales_virtual
+X Axis:      region
+Metric:      SUM(profit)
+Series type: Bar
+Filters:     без активного ограничения
+```
+
+Не ищите отдельный `Time Range`: в используемом интерфейсе ограничение по времени задаётся через `Filters`.
 
 ---
 
@@ -1270,7 +1260,7 @@ revenue - cost AS profit
 
 Урок можно считать пройденным, если вы без пошаговой подсказки можете:
 
-1. открыть SQL Lab;
+1. открыть `SQL → SQL Lab`;
 2. выполнить простой SELECT к `training.sales`;
 3. добавить `revenue - cost AS profit`;
 4. получить 12 строк и столбец `profit`;
@@ -1281,7 +1271,7 @@ revenue - cost AS profit
 9. найти его через `Datasets`;
 10. объяснить разницу между `sales` и `sales_virtual`;
 11. открыть `sales_virtual` повторно в Explore;
-12. построить `region + SUM(profit)`;
+12. построить `Generic Chart` с `X Axis = region` и `SUM(profit)`;
 13. получить `520.00` и `1010.00`;
 14. сохранить Chart `Прибыль по регионам — Virtual Dataset`;
 15. объяснить, почему Virtual Dataset не создаёт автоматически таблицу `sales_virtual` в PostgreSQL;
@@ -1337,9 +1327,11 @@ PostgreSQL
 - Apache Superset 6.1.0 — FAQ, раздел о таблицах, views и SQL Lab: <https://superset.apache.org/user-docs/6.1.0/faq/>
 - Apache Superset 6.1.0 — SQL templating, где отдельно рассматриваются SQL Lab и virtual datasets: <https://superset.apache.org/admin-docs/6.1.0/configuration/sql-templating/>
 - Apache Superset 6.1.0 — Dataset API: <https://superset.apache.org/developer-docs/6.1.0/api/datasets/>
-- Исходный код Superset 6.1.0 — `Create chart` для результата SQL Lab: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/ExploreResultsButton/index.tsx>
-- Исходный код Superset 6.1.0 — переход из результата SQL Lab в Explore: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/ResultSet/index.tsx>
-- Исходный код Superset 6.1.0 — `Create a dataset` для query datasource в Explore: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/DatasourcePanel/index.tsx>
-- Исходный код Superset 6.1.0 — окно `Save or Overwrite Dataset`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/SaveDatasetModal/index.tsx>
+- верхний раздел `SQL` и пункт `SQL Lab`: <https://github.com/apache/superset/blob/6.1.0/superset/initialization/__init__.py>
+- `Create chart` для результата SQL Lab: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/ExploreResultsButton/index.tsx>
+- переход из результата SQL Lab в Explore: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/ResultSet/index.tsx>
+- `Create a dataset` для query datasource в Explore: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/DatasourcePanel/index.tsx>
+- окно `Save or Overwrite Dataset`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/SaveDatasetModal/index.tsx>
+- `Generic Chart` и его Query controls: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/index.ts>
 - Учебная структура таблицы: [`../training/schema.sql`](../training/schema.sql)
 - Учебные строки: [`../training/data.sql`](../training/data.sql)

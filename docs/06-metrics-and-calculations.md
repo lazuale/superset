@@ -7,9 +7,9 @@
 - отличать физический столбец, `Calculated column`, временную `ad hoc metric` и сохранённую `Metric`;
 - использовать основные агрегирования `SUM`, `COUNT`, `COUNT_DISTINCT` и `AVG`;
 - понимать, как `NULL` влияет на `COUNT`;
-- включать edit mode Dataset Editor перед изменением semantic layer;
 - создать вычисляемый столбец на уровне строки;
 - создать сохранённую метрику на уровне группы строк;
+- понимать, что замок `Source` не требуется для работы с `Metrics` и `Calculated columns`;
 - повторно использовать сохранённую Metric в `Explore`;
 - проверить расчёты по известным контрольным значениям;
 - объяснить, почему агрегатные функции относятся к Metric, а не к Calculated column.
@@ -60,8 +60,6 @@ Metric
 
 К этому моменту в работе уже встречались физические столбцы и временная метрика в `Explore`. Теперь добавятся ещё два объекта.
 
-Разложим их сразу.
-
 | Объект | Где определяется | Что делает | Пример |
 |---|---|---|---|
 | физический столбец | PostgreSQL | хранит исходное значение строки | `revenue` |
@@ -104,8 +102,6 @@ revenue - cost
 ```text
 200.00 - 120.00 = 80.00
 ```
-
-Для другой строки будет вычислено другое значение.
 
 То есть `Calculated column` отвечает на вопрос:
 
@@ -151,7 +147,7 @@ Metric отвечает на вопрос:
 
 ## Сначала разбираем основные агрегирования
 
-Откройте самостоятельный раздел:
+Откройте:
 
 ```text
 Datasets
@@ -169,10 +165,17 @@ sales
 
 ```text
 Visualization: Table
-Time Range:    No Filter
+Dimensions:    пусто
+Filters:       без активных ограничений
 ```
 
-Если после урока 05 остался `Group by`, удалите его. Сейчас сначала считаем показатели по всем 12 строкам целиком.
+Если в `Filters` отображается temporal-фильтр `sale_date`, оставьте его в состоянии:
+
+```text
+No filter
+```
+
+Если после урока 05 в `Dimensions` остался `region` или `sale_date`, удалите его. Сейчас сначала считаем показатели по всем 12 строкам целиком.
 
 Также удалите старые временные метрики, если они остались от предыдущего упражнения.
 
@@ -181,8 +184,6 @@ Time Range:    No Filter
 ```text
 Create chart
 ```
-
-Как разобрали в уроке 05, это подпись кнопки нового Chart в Superset 6.1.0. Сохранение Chart выполняется отдельно через `Save`.
 
 ## SUM
 
@@ -269,8 +270,6 @@ COUNT(sale_id)
 12
 ```
 
-Почему 12?
-
 В таблице 12 строк, а `sale_id` — обязательный первичный ключ и не может быть `NULL`.
 
 Теперь вместо `sale_id` выберите:
@@ -296,12 +295,10 @@ COUNT
 В одной учебной строке `manager` специально равен `NULL`. Поэтому:
 
 ```text
-строк всего        = 12
-COUNT(sale_id)     = 12
-COUNT(manager)     = 11
+строк всего    = 12
+COUNT(sale_id) = 12
+COUNT(manager) = 11
 ```
-
-Это важное свойство SQL: `COUNT(column)` не считает `NULL` в указанном столбце.
 
 Если интерфейс визуализации предлагает готовую метрику `COUNT(*)`, она считает строки и для нашей таблицы также должна дать:
 
@@ -325,7 +322,7 @@ manager
 COUNT_DISTINCT
 ```
 
-В Superset 6.1.0 этот вариант в списке агрегирований называется именно `COUNT_DISTINCT`.
+В Superset 6.1.0 этот вариант в редакторе ad hoc metric называется именно `COUNT_DISTINCT`.
 
 Смысл выражения:
 
@@ -351,8 +348,8 @@ COUNT(DISTINCT manager)
 Сравните:
 
 ```text
-COUNT(manager)                 = 11
-COUNT(DISTINCT manager)        = 4
+COUNT(manager)          = 11
+COUNT_DISTINCT(manager) = 4
 ```
 
 Первое выражение отвечает:
@@ -391,7 +388,7 @@ AVG(revenue)
 333.75
 ```
 
-Проверка понятна даже без SQL:
+Проверка:
 
 ```text
 4005.00 / 12 = 333.75
@@ -406,11 +403,39 @@ COUNT_DISTINCT → количество разных непустых значе
 AVG            → среднее
 ```
 
-`MIN` и `MAX` тоже существуют, но отдельно разбирать их сейчас не требуется: они выбирают минимальное и максимальное значение соответственно.
+`MIN` и `MAX` тоже существуют, но отдельно разбирать их сейчас не требуется.
+
+## Замок Source здесь не нужен
+
+Перед созданием Calculated column и Metric важно не повторить ошибочную модель из старых инструкций.
+
+В Dataset Editor Superset 6.1.0 замок находится на вкладке:
+
+```text
+Source
+```
+
+и защищает смену источника:
+
+```text
+Physical / Virtual
+Database
+Schema
+Table
+```
+
+Для вкладок:
+
+```text
+Calculated columns
+Metrics
+```
+
+снимать этот замок не требуется.
+
+В этом уроке источник `Training PostgreSQL → training → sales` вообще не меняем.
 
 ## Создаём Calculated column
-
-Теперь создадим вычисление на уровне одной строки.
 
 Вернитесь в:
 
@@ -420,29 +445,15 @@ Datasets
 
 У Dataset `sales` нажмите значок редактирования.
 
-Редактор Dataset в Superset 6.1.0 открывается в read-only mode. Перед добавлением Calculated column нажмите значок замка и включите режим редактирования.
-
-Последовательность:
-
-```text
-Datasets
-→ открыть sales через Edit
-→ нажать замок
-→ edit mode
-→ Calculated columns
-```
-
-Откройте вкладку:
+Перейдите прямо на вкладку:
 
 ```text
 Calculated columns
 ```
 
-Это отдельная вкладка редактора Dataset. Не используйте для этого вкладку `Metrics`.
+Не используйте для этого вкладку `Metrics`.
 
 Добавьте новый элемент.
-
-В зависимости от отображения интерфейса кнопка может быть показана как кнопка добавления с `+`.
 
 Заполните:
 
@@ -489,15 +500,6 @@ revenue - cost
 
 `profit` существует в метаданных Dataset как вычисляемый столбец.
 
-Смысл можно представить так:
-
-```text
-строка 1 → 200 - 120 = 80
-строка 2 → 450 - 300 = 150
-строка 3 → 150 - 90  = 60
-...
-```
-
 ## Почему нельзя написать SUM в Calculated column
 
 Неправильный вариант:
@@ -524,13 +526,11 @@ SUM(revenue) - SUM(cost)
 
 уже агрегирует **много строк** и поэтому относится к Metric.
 
-В официальной модели Superset агрегатные функции разрешены и ожидаемы в Metrics, а Calculated columns предназначены для неагрегированных выражений столбцов.
-
-Запомните не формулировку, а границу:
+Запомните границу:
 
 ```text
-одна строка      → Calculated column
-набор строк      → Metric
+одна строка → Calculated column
+набор строк → Metric
 ```
 
 ## Проверяем Calculated column в Explore
@@ -558,7 +558,7 @@ Column:      profit
 Aggregation: SUM
 ```
 
-То есть в текущем запросе нам нужен смысл:
+То есть нужен смысл:
 
 ```sql
 SUM(profit)
@@ -567,8 +567,8 @@ SUM(profit)
 При:
 
 ```text
-Time Range: No Filter
-Group by:   пусто
+Dimensions: пусто
+Filters:    без активных ограничений
 ```
 
 выполните конфигурацию кнопкой:
@@ -583,12 +583,10 @@ Create chart
 1530.00
 ```
 
-Это сумма построчной прибыли всех 12 строк.
-
 Теперь добавьте:
 
 ```text
-Group by: region
+Dimensions = region
 ```
 
 и снова выполните конфигурацию.
@@ -620,13 +618,13 @@ Datasets
 
 У `sales` снова нажмите значок редактирования.
 
-Поскольку Dataset Editor снова откроется в read-only mode, снова нажмите значок замка и включите edit mode.
-
-Перейдите на вкладку:
+Перейдите прямо на вкладку:
 
 ```text
 Metrics
 ```
+
+Замок `Source` для этого не снимаем.
 
 Добавьте новую Metric.
 
@@ -690,8 +688,14 @@ total_profit
 Установите:
 
 ```text
-Time Range: No Filter
-Group by:   пусто
+Dimensions: пусто
+Filters:    без активных ограничений
+```
+
+Если отображается `sale_date`, оставьте:
+
+```text
+No filter
 ```
 
 Выполните текущую конфигурацию:
@@ -709,7 +713,7 @@ Create chart
 Теперь добавьте:
 
 ```text
-Group by: region
+Dimensions = region
 ```
 
 и снова выполните конфигурацию.
@@ -729,7 +733,7 @@ Superset применил одну и ту же сохранённую форм�
 SUM(revenue) - SUM(cost)
 ```
 
-к каждой группе, которую сформировал `Group by`.
+к каждой группе, сформированной измерением `region`.
 
 Именно в этом смысл сохранённой Metric: один раз определить показатель на уровне Dataset и затем использовать его в разных аналитических запросах.
 
@@ -749,7 +753,7 @@ SUM(revenue) - SUM(cost) = 1530.00
 
 Но это **не означает**, что Calculated column и Metric — одно и то же.
 
-Первый путь логически выглядит так:
+Первый путь:
 
 ```text
 каждая строка:
@@ -774,11 +778,7 @@ profit       → значение строки
 total_profit → агрегированный показатель
 ```
 
-Не используйте совпадение результата как повод смешивать эти два уровня.
-
 ## Ad hoc metric и сохранённая Metric
-
-Теперь сравним ещё одну пару.
 
 В уроке 05 мы прямо в `Explore` создавали:
 
@@ -793,7 +793,7 @@ SUM(revenue)
 Сохранённая Metric создаётся по маршруту:
 
 ```text
-Datasets → sales → Edit → замок → Metrics
+Datasets → Edit sales → Metrics
 ```
 
 и затем появляется как готовый показатель при работе с этим Dataset.
@@ -817,8 +817,8 @@ Datasets → sales → Edit → замок → Metrics
 При:
 
 ```text
-Time Range: No Filter
-Group by:   пусто
+Dimensions: пусто
+Filters:    без активных ограничений
 ```
 
 контрольные результаты:
@@ -837,8 +837,6 @@ Group by:   пусто
 Если эти значения совпадают, расчёты настроены правильно.
 
 ## Самостоятельная проверка
-
-Не подглядывая выше, выполните четыре задания.
 
 ### Задание 1
 
@@ -880,7 +878,7 @@ Aggregation: COUNT_DISTINCT
 с:
 
 ```text
-Group by: product
+Dimensions = product
 ```
 
 Не создавайте новую Metric. Используйте уже сохранённую.
@@ -892,7 +890,7 @@ Group by: product
 1. почему `revenue - cost` является Calculated column;
 2. почему `SUM(revenue) - SUM(cost)` является Metric.
 
-Правильный ответ должен сводиться не к расположению кнопок, а к уровню вычисления:
+Правильный ответ должен сводиться к уровню вычисления:
 
 ```text
 строка против набора строк
@@ -912,26 +910,31 @@ Datasets → sales
 
 ### Не получается добавить Calculated column или Metric
 
-Проверьте, что после открытия Dataset вы нажали значок замка.
+Для этих вкладок не требуется снимать замок `Source`.
 
-Правильная последовательность:
+Правильные маршруты:
 
 ```text
-Datasets
-→ Edit sales
-→ замок
-→ нужная вкладка
-→ изменение
-→ Save
+Datasets → Edit sales → Calculated columns
 ```
 
-Без включения edit mode редактор Dataset в Superset 6.1.0 остаётся только для чтения.
+и:
+
+```text
+Datasets → Edit sales → Metrics
+```
+
+После изменения нажмите:
+
+```text
+Save
+```
+
+Не меняйте `Source`, если задача этого не требует.
 
 ### Calculated column выдаёт ошибку
 
-Проверьте выражение.
-
-Для урока оно должно быть ровно:
+Проверьте выражение:
 
 ```sql
 revenue - cost
@@ -947,7 +950,7 @@ SUM(revenue) - SUM(cost)
 
 ### Сохранённая Metric не появилась
 
-Вернитесь в редактор Dataset, включите edit mode через замок и проверьте вкладку:
+Вернитесь в редактор Dataset и проверьте вкладку:
 
 ```text
 Metrics
@@ -995,10 +998,15 @@ Update chart
 Сначала проверьте:
 
 ```text
-Time Range: No Filter
+Dimensions = пусто
+Filters = нет активных ограничений
 ```
 
-Затем уберите ненужные фильтры и `Group by`.
+Если в `Filters` указан `sale_date`, верните его в:
+
+```text
+No filter
+```
 
 Если сомневаетесь в самих учебных данных, из каталога `training` выполните:
 
@@ -1043,7 +1051,13 @@ expression: SUM(revenue) - SUM(cost)
 общая прибыль = 1530.00
 ```
 
-а при группировке по региону:
+а при:
+
+```text
+Dimensions = region
+```
+
+получить:
 
 ```text
 Север = 520.00
@@ -1070,7 +1084,7 @@ SUM(revenue) - SUM(cost)
 
 Если показатель нужен повторно, сохраните его как Metric Dataset.
 
-Это разделение будет использоваться во всех следующих уроках.
+Замок `Source` к созданию этих объектов отношения не имеет: он защищает смену источника Dataset.
 
 ## Следующий урок
 
@@ -1090,6 +1104,6 @@ SUM(revenue) - SUM(cost)
 - Superset 6.1.0 — Dataset API: <https://superset.apache.org/developer-docs/6.1.0/api/datasets/>
 - список агрегирований Explore в Superset 6.1.0 (`COUNT_DISTINCT`): <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/constants.ts>
 - отображение этих агрегирований в редакторе ad hoc metric: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/controls/MetricControl/AdhocMetricEditPopover/index.tsx>
-- исходный код редактора Dataset Apache Superset 6.1.0: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/components/Datasource/components/DatasourceEditor/DatasourceEditor.tsx>
-- Playwright helper Superset 6.1.0 с обязательным включением edit mode через замок: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/playwright/components/modals/EditDatasetModal.ts>
+- Dataset Editor 6.1.0: вкладки `Source`, `Metrics`, `Columns`, `Calculated columns`, `Settings` и область действия замка Source: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/components/Datasource/components/DatasourceEditor/DatasourceEditor.tsx>
+- реальный control panel `Table`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/controlPanel.tsx>
 - кнопка выполнения Explore (`Create chart` / `Update chart`): <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/RunQueryButton/index.tsx>

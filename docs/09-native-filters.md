@@ -89,8 +89,6 @@ Chart «Продажи по регионам — таблица»
 
 `Native Filter` находится на уровне Dashboard.
 
-Схема другая:
-
 ```text
 Dashboard
 ├── Native Filter: Период
@@ -158,6 +156,19 @@ Scoping
 
 Эти понятия не смешиваем.
 
+## Как называются типы в интерфейсе 6.1.0
+
+В исходном коде фильтров встречаются внутренние названия вроде `Select filter` и `Time filter`, но в конфигураторе Superset 6.1.0 пользователь видит другие подписи.
+
+Для этого урока нужны:
+
+```text
+Value      → фильтр по значениям столбца
+Time range → фильтр временного диапазона
+```
+
+Именно эти видимые названия используем в инструкции.
+
 ---
 
 # Фильтр 1. Период
@@ -165,8 +176,6 @@ Scoping
 ## Что хотим получить
 
 Пользователь Dashboard должен иметь возможность выбрать период и сразу пересчитать все четыре Chart.
-
-Для этого нужен фильтр времени.
 
 ## Добавляем фильтр
 
@@ -178,23 +187,15 @@ Scoping
 Период
 ```
 
-В качестве типа выберите фильтр времени.
-
-В интерфейсе Superset 6.1.0 соответствующий тип может отображаться как:
-
-```text
-Time filter
-```
-
-а само значение фильтра — как:
+В качестве типа выберите:
 
 ```text
 Time range
 ```
 
-Это не фильтр по конкретному текстовому значению из Dataset. Его задача — передать выбранный временной диапазон Chart.
+Это фильтр временного диапазона Dashboard.
 
-Поэтому здесь не нужно выбирать `region`, `manager` или другой категориальный столбец.
+Он не требует выбора `region`, `manager` или другого категориального столбца.
 
 ## Настраиваем Scoping
 
@@ -214,10 +215,6 @@ Scoping
 ```
 
 Проверьте их явно.
-
-Не полагайтесь на предположение «наверное, применяется ко всему».
-
-Смысл Scope:
 
 ```text
 Период
@@ -243,7 +240,7 @@ Scope
 
 выберите интервал, охватывающий только февраль 2026 года.
 
-Логически нам нужен диапазон:
+Логически нужен диапазон:
 
 ```text
 2026-02-01 <= sale_date < 2026-03-01
@@ -255,7 +252,7 @@ Scope
 Apply filters
 ```
 
-Если панель фильтров расположена горизонтально, кнопка может отображаться короче:
+Если панель фильтров расположена горизонтально, кнопка отображается короче:
 
 ```text
 Apply
@@ -311,7 +308,7 @@ Dashboard должен вернуться к исходным значениям
 
 # Фильтр 2. Регион
 
-Теперь создадим обычный фильтр по значению столбца Dataset.
+Теперь создадим фильтр по значению столбца Dataset.
 
 ## Открываем конфигурацию
 
@@ -332,12 +329,12 @@ Filter Bar → настройки → Add or edit filters and controls
 Тип:
 
 ```text
-Select filter
+Value
 ```
 
 ## Выбираем источник значений
 
-Для фильтра по значению нужно определить Dataset и столбец.
+Для фильтра `Value` нужно определить Dataset и столбец.
 
 Укажите:
 
@@ -355,13 +352,15 @@ Column:  region
 Юг
 ```
 
-Это важное отличие от фильтра периода:
+Отличие двух типов:
 
 ```text
 Период
+→ Time range
 → передаёт временной диапазон
 
 Регион
+→ Value
 → фильтрует по значениям конкретного столбца Dataset
 ```
 
@@ -466,8 +465,8 @@ Filter Bar → настройки → Add or edit filters and controls
 Добавьте фильтр:
 
 ```text
-Имя:    Менеджер
-Тип:    Select filter
+Имя:     Менеджер
+Тип:     Value
 Dataset: sales
 Column:  manager
 ```
@@ -508,8 +507,6 @@ Scoping
 Выручка по регионам — столбцы
 Выручка по месяцам
 ```
-
-Получаем:
 
 ```text
 Менеджер
@@ -613,8 +610,6 @@ Apply filters
 
 # Несколько фильтров одновременно
 
-Теперь проверим, что Native Filters комбинируются.
-
 Сначала очистите всё:
 
 ```text
@@ -669,16 +664,6 @@ region = Север
 
 ```text
 2026-02 → 450.00
-```
-
-Это важный принцип:
-
-```text
-несколько активных фильтров
-        ↓
-условия объединяются в итоговый запрос Chart
-        ↓
-Chart получает только те фильтры, которые входят в его Scope
 ```
 
 ## Добавляем Менеджера к уже выбранным фильтрам
@@ -779,8 +764,6 @@ Clear all
 
 Dataset тоже не переписывается.
 
-Сохраняется логика:
-
 ```text
 Dashboard
    ↓
@@ -825,7 +808,7 @@ PostgreSQL
 1. нажали ли Apply filters;
 2. входит ли Chart в Scoping;
 3. выбран ли правильный Dataset;
-4. выбран ли правильный Column;
+4. выбран ли правильный Column для фильтра Value;
 5. действительно ли Chart работает на ожидаемом Dataset;
 6. нет ли внутри самого Chart другого ограничения, которое делает результат пустым.
 ```
@@ -862,7 +845,7 @@ Scoping
 manager = NULL
 ```
 
-Обычный `Select filter` используется здесь для выбора конкретных непустых менеджеров.
+Фильтр типа `Value` используется здесь для выбора конкретных непустых менеджеров.
 
 ### После выбора значения ничего не происходит сразу
 
@@ -875,8 +858,6 @@ Apply filters
 Значение в поле фильтра и применённый к Chart фильтр — отдельные состояния интерфейса.
 
 ## Самостоятельная проверка
-
-Не меняя конфигурацию фильтров, получите следующие результаты.
 
 ### Задание 1
 
@@ -937,11 +918,11 @@ Apply filters
 
 На Dashboard `Учебные продажи` должны существовать три Native Filter:
 
-| Фильтр | Тип | Dataset / Column | Scope |
+| Фильтр | Видимый тип в Superset 6.1.0 | Dataset / Column | Scope |
 |---|---|---|---|
-| Период | Time filter / Time range | временной диапазон | все 4 Chart |
-| Регион | Select filter | `sales.region` | все 4 Chart |
-| Менеджер | Select filter | `sales.manager` | только таблица и Big Number |
+| Период | `Time range` | временной диапазон | все 4 Chart |
+| Регион | `Value` | `sales.region` | все 4 Chart |
+| Менеджер | `Value` | `sales.manager` | только таблица и Big Number |
 
 Перед завершением урока очистите активные значения:
 
@@ -961,8 +942,8 @@ Dashboard должен снова показывать:
 Урок завершён, если вы можете без подсказки:
 
 1. открыть конфигурацию Native Filters;
-2. создать `Select filter` на конкретном Dataset и Column;
-3. создать фильтр периода;
+2. создать фильтр `Value` на конкретном Dataset и Column;
+3. создать фильтр `Time range`;
 4. открыть `Scoping`;
 5. включить и исключить конкретные Chart из Scope;
 6. применить фильтр через `Apply filters`;
@@ -1007,5 +988,5 @@ SQL Lab
 Материал урока сверяется с исходным кодом Apache Superset 6.1.0:
 
 - настройка Filter Bar и пункт `Add or edit filters and controls`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/nativeFilters/FilterBar/FilterBarSettings/index.tsx>
-- конфигуратор Native Filters, вкладки `Settings` / `Scoping` и типы фильтров: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/nativeFilters/FiltersConfigModal/FiltersConfigForm/FiltersConfigForm.tsx>
-- встроенный `Time filter` в Superset 6.1.0: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/filters/components/Time/index.ts>
+- конфигуратор Native Filters, вкладки `Settings` / `Scoping` и видимые названия типов (`Value`, `Time range`): <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/nativeFilters/FiltersConfigModal/FiltersConfigForm/FiltersConfigForm.tsx>
+- кнопки Filter Bar `Apply filters` / `Apply` и `Clear all`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/nativeFilters/FilterBar/ActionButtons/index.tsx>
