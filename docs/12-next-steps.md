@@ -163,15 +163,17 @@ login:    admin
 password: admin
 ```
 
-PostgreSQL внутри compose-сети:
+PostgreSQL для подключения Superset внутри compose-сети:
 
 ```text
 host:     db
 port:     5432
 database: training
-user:     training
-password: training
+user:     superset_reader
+password: superset_reader
 ```
+
+Пользователь `training` используется только для инициализации базы и контрольных команд из терминала.
 
 Исходная таблица:
 
