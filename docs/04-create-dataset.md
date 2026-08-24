@@ -659,13 +659,13 @@ Table    = sales
 
 В следующем уроке разберём `Explore`, выполним первые группировки и фильтрацию и отдельно поймём работу `Time Range` и `Time Grain`.
 
-→ [Урок 05. Основы Explore](05-explore-basics.md)
+→ [Урок 05. Осваиваем Explore](05-explore-basics.md)
 
 ## Официальные источники
 
-Материал урока сверяется с официальной документацией Apache Superset:
+Материал урока сверяется с официальной документацией и исходным кодом Apache Superset 6.1.0:
 
-- создание Dataset из таблицы и переход в Explore: <https://superset.apache.org/user-docs/using-superset/creating-your-first-dashboard/>
+- создание Dataset из таблицы и переход в Explore — tutorial из тега `6.1.0`: <https://github.com/apache/superset/blob/6.1.0/docs/docs/using-superset/creating-your-first-dashboard.mdx>
 - работа с изменившейся схемой таблицы и `Sync columns from source`: <https://superset.apache.org/user-docs/6.1.0/faq/>
 - REST API Dataset в Superset 6.1.0: <https://superset.apache.org/developer-docs/6.1.0/api/datasets/>
 
