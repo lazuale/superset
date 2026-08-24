@@ -341,7 +341,7 @@ Table: Dimensions = region
 или для графика:
 
 ```text
-Generic Chart: X Axis = region
+Bar Chart: X Axis = region
 ```
 
 и что считать:
@@ -646,15 +646,14 @@ sales_virtual
 выберите визуализацию:
 
 ```text
-Generic Chart
+Bar Chart
 ```
 
 Настройте:
 
 ```text
 X Axis:      region
-Metric:      SUM(profit)
-Series type: Bar
+Metrics:     SUM(profit)
 Dimensions:  пусто
 Filters:     без активного ограничения
 ```
@@ -695,8 +694,7 @@ Create chart
 1. выбран ли именно `sales_virtual`;
 2. используется ли `X Axis = region`;
 3. используется ли `SUM(profit)`, а не просто `profit`;
-4. выбран ли `Series type = Bar`;
-5. нет ли активного ограничения в `Filters`.
+4. нет ли активного ограничения в `Filters`.
 
 ---
 
@@ -1063,7 +1061,7 @@ Explore
     ↓
 X Axis = region + SUM(profit)
     ↓
-Generic Chart / Bar
+Bar Chart
     ↓
 Прибыль по регионам — Virtual Dataset
 ```
@@ -1247,8 +1245,7 @@ revenue - cost AS profit
 ```text
 Dataset:     sales_virtual
 X Axis:      region
-Metric:      SUM(profit)
-Series type: Bar
+Metrics:     SUM(profit)
 Filters:     без активного ограничения
 ```
 
@@ -1271,7 +1268,7 @@ Filters:     без активного ограничения
 9. найти его через `Datasets`;
 10. объяснить разницу между `sales` и `sales_virtual`;
 11. открыть `sales_virtual` повторно в Explore;
-12. построить `Generic Chart` с `X Axis = region` и `SUM(profit)`;
+12. построить `Bar Chart` с `X Axis = region` и `SUM(profit)`;
 13. получить `520.00` и `1010.00`;
 14. сохранить Chart `Прибыль по регионам — Virtual Dataset`;
 15. объяснить, почему Virtual Dataset не создаёт автоматически таблицу `sales_virtual` в PostgreSQL;
@@ -1332,6 +1329,7 @@ PostgreSQL
 - переход из результата SQL Lab в Explore: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/ResultSet/index.tsx>
 - `Create a dataset` для query datasource в Explore: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/DatasourcePanel/index.tsx>
 - окно `Save or Overwrite Dataset`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/SaveDatasetModal/index.tsx>
-- `Generic Chart` и его Query controls: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/index.ts>
+- ECharts `Bar Chart`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/Regular/Bar/index.ts>
+- Query controls `Bar Chart`, включая `X Axis`, `Metrics`, `Dimensions` и `Filters`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-chart-controls/src/sections/echartsTimeSeriesQuery.tsx>
 - Учебная структура таблицы: [`../training/schema.sql`](../training/schema.sql)
 - Учебные строки: [`../training/data.sql`](../training/data.sql)
