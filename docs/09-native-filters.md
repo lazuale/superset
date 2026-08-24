@@ -1000,4 +1000,12 @@ Native Filters
 SQL Lab
 ```
 
-В [уроке 10](10-sql-lab.md) начнём с нуля: откроем SQL Editor, выберем подключение и схему, выполним обычный `SELECT`, разберём результат и сохраним запрос для повторного использования.
+В [уроке 10](10-sql-lab.md) начнём с нуля: откроем SQL Editor, выберем подключение и схему, выполним обычный `SELECT`, разберём результат и самостоятельно соберём простой агрегированный запрос.
+
+## Официальные источники
+
+Материал урока сверяется с исходным кодом Apache Superset 6.1.0:
+
+- настройка Filter Bar и пункт `Add or edit filters and controls`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/nativeFilters/FilterBar/FilterBarSettings/index.tsx>
+- конфигуратор Native Filters, вкладки `Settings` / `Scoping` и типы фильтров: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/nativeFilters/FiltersConfigModal/FiltersConfigForm/FiltersConfigForm.tsx>
+- встроенный `Time filter` в Superset 6.1.0: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/filters/components/Time/index.ts>
