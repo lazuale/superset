@@ -1,194 +1,14 @@
 # 04. Создаём первый Dataset
 
-## Что научимся делать
+## Результат урока
 
-После этого урока вы должны уметь:
-
-- открыть список `Datasets`;
-- создать физический Dataset на существующей таблице PostgreSQL;
-- правильно выбрать подключение, схему и таблицу;
-- проверить, какие столбцы Superset получил из источника;
-- убедиться, что поле даты распознано как временное;
-- понимать, что замок на вкладке `Source` защищает смену источника Dataset, а не весь Dataset Editor;
-- сохранить изменения Dataset;
-- найти созданный Dataset в общем списке;
-- снова открыть его настройки;
-- безопасно изменить описание и сохранить его повторно;
-- перейти из Dataset в `Explore`.
-
-В этом уроке мы работаем только с **обычным физическим Dataset**, который указывает на уже существующую таблицу `training.sales`.
-
-Мы пока **не создаём Metrics, Calculated Columns, Virtual Dataset и графики**. Эти темы будут разобраны дальше по отдельности.
-
-## Что нужно до начала
-
-Должны быть полностью пройдены:
-
-- [урок 02](02-start-training-superset.md) — учебный стенд запущен;
-- [урок 03](03-connect-postgresql.md) — создано подключение `Training PostgreSQL`.
-
-Откройте Superset:
-
-<http://localhost:8088>
-
-Войдите:
-
-```text
-логин:  admin
-пароль: admin
-```
-
-Перед началом убедитесь, что подключение существует:
-
-```text
-Settings → Data → Database Connections
-```
-
-В списке должно быть:
-
-```text
-Training PostgreSQL
-```
-
-Если подключения нет, вернитесь к уроку 03.
-
-## Что такое Dataset
-
-В PostgreSQL у нас уже существует реальная таблица:
-
-```text
-database: training
-schema:   training
-table:    sales
-```
-
-Superset не начинает автоматически использовать каждую таблицу каждой подключённой базы.
-
-Для работы в `Explore` нужную таблицу обычно регистрируют в Superset как `Dataset`.
-
-Для нашего случая связь выглядит так:
-
-```text
-PostgreSQL
-└── database training
-    └── schema training
-        └── table sales
-                │
-                │ регистрация в Superset
-                ▼
-Superset
-└── Dataset sales
-```
-
-Dataset — это не вторая таблица и не копия строк.
-
-Для физического Dataset Superset хранит описание источника и дополнительную аналитическую метаинформацию: к какой базе, схеме и таблице относится Dataset, какие у него столбцы, какие поля считаются временными и какие дополнительные настройки заданы пользователем.
-
-Когда позже мы построим график, Superset сформирует запрос и отправит его в PostgreSQL. Основную работу с данными выполняет сама база данных.
-
-Поэтому важно различать:
-
-```text
-таблица PostgreSQL = реальные данные
-Dataset Superset    = аналитическое описание источника
-```
-
-## Какие столбцы есть в учебной таблице
-
-Таблица `training.sales` была создана в уроке 02 из файла `training/schema.sql`.
-
-В ней девять столбцов:
-
-| Столбец | Тип PostgreSQL | Что хранит |
-|---|---|---|
-| `sale_id` | `BIGINT` | идентификатор продажи |
-| `sale_date` | `DATE` | дата продажи |
-| `region` | `TEXT` | регион |
-| `office` | `TEXT` | офис |
-| `manager` | `TEXT` | менеджер |
-| `product` | `TEXT` | продукт |
-| `quantity` | `INTEGER` | количество |
-| `revenue` | `NUMERIC(12,2)` | выручка |
-| `cost` | `NUMERIC(12,2)` | себестоимость |
-
-Именно эти столбцы мы должны увидеть после создания Dataset.
-
-Особенно важен:
-
-```text
-sale_date
-```
-
-Он имеет настоящий тип PostgreSQL `DATE`, поэтому Superset должен распознать его как поле, пригодное для временного анализа.
-
-## Открываем Datasets
-
-В верхнем меню Superset откройте самостоятельный раздел:
-
-```text
-Datasets
-```
-
-В Superset 6.1.0 `Datasets` находится в основной верхней навигации. Не ищите его внутри `Settings → Data`: в `Data` находятся административные пункты вроде `Database Connections`, а список Dataset — отдельный верхнеуровневый экран.
-
-Откроется список Dataset, зарегистрированных в Superset.
-
-После полного сброса учебного стенда список может быть пустым. Это нормально: таблица `training.sales` существует в PostgreSQL, но Dataset для неё мы ещё не создавали.
-
-## Создаём Dataset
-
-На странице `Datasets` нажмите:
-
-```text
-+ Dataset
-```
-
-Superset откроет форму выбора источника.
-
-Нам нужны три уровня:
-
-```text
-Database → Schema → Table
-```
-
-### Database
-
-Выберите:
-
-```text
-Training PostgreSQL
-```
-
-Это подключение, созданное в уроке 03.
-
-### Schema
-
-Выберите:
-
-```text
-training
-```
-
-Не путайте схему с именем подключения или именем базы PostgreSQL.
-
-В нашем стенде специально совпадают:
-
-```text
-PostgreSQL database = training
-PostgreSQL schema   = training
-```
-
-Это два разных уровня PostgreSQL, даже несмотря на одинаковое имя.
-
-### Table
-
-Выберите:
+После урока в Superset должен существовать Physical Dataset:
 
 ```text
 sales
 ```
 
-Итоговый источник должен выглядеть так:
+Источник:
 
 ```text
 Database: Training PostgreSQL
@@ -196,49 +16,108 @@ Schema:   training
 Table:    sales
 ```
 
-После выбора источника основная кнопка Superset 6.1.0 называется:
+В Dataset должны быть видны все девять физических столбцов, а `sale_date` должен быть отмечен как temporal.
+
+## Перед началом
+
+Должны быть пройдены:
+
+- [урок 02](02-start-training-superset.md) — стенд работает;
+- [урок 03](03-connect-postgresql.md) — подключение `Training PostgreSQL` создано и видит `training.sales`.
+
+Откройте:
 
 ```text
-Create and explore dataset
+http://localhost:8088
 ```
 
-Она создаёт Dataset и сразу переводит к созданию Chart.
-
-В этом уроке Chart ещё не создаём, поэтому откройте стрелку у этой кнопки и выберите:
+Войдите:
 
 ```text
-Create dataset
+login:    admin
+password: admin
 ```
 
-Так Dataset будет создан без перехода к созданию графика.
+## Что такое Dataset
 
-## Проверяем, что Dataset появился
+Исходные строки продолжают храниться в PostgreSQL:
 
-После создания Superset вернёт вас к списку Dataset либо позволит перейти к нему через:
+```text
+training.sales
+```
+
+Physical Dataset Superset хранит описание этого источника: Database, Schema, Table, список столбцов, temporal-признаки, Calculated Columns, Metrics и настройки Dataset.
+
+Создание Dataset не копирует 12 строк продаж в metadata database Superset.
+
+## Создаём Dataset
+
+Откройте верхний раздел:
 
 ```text
 Datasets
 ```
 
-Найдите созданный Dataset.
+Нажмите кнопку `Dataset` со значком `+`.
 
-Для него должны однозначно определяться:
+Откроется форма добавления Dataset.
+
+Последовательно выберите:
 
 ```text
-Dataset / Table: sales
-Schema:          training
-Database:        Training PostgreSQL
+Database: Training PostgreSQL
+Schema:   training
+Table:    sales
 ```
 
-Если в будущем в Superset появятся таблицы с одинаковым именем `sales` из разных схем или баз, именно `Schema` и `Database` помогут понять, к какому источнику относится Dataset.
+Справа должна появиться структура таблицы.
 
-## Открываем настройки Dataset
+Для учебного источника ожидаются столбцы:
 
-В строке Dataset `sales` нажмите значок редактирования.
+| Column | Data type |
+|---|---|
+| `sale_id` | `BIGINT` |
+| `sale_date` | `DATE` |
+| `region` | `TEXT` |
+| `office` | `TEXT` |
+| `manager` | `TEXT` |
+| `product` | `TEXT` |
+| `quantity` | `INTEGER` |
+| `revenue` | `NUMERIC(12, 2)` |
+| `cost` | `NUMERIC(12, 2)` |
 
-Откроется Dataset Editor.
+Внизу формы основная кнопка называется:
 
-В Superset 6.1.0 у него есть отдельные вкладки, в том числе:
+```text
+Create and explore dataset
+```
+
+Справа у неё есть раскрывающееся меню. Откройте его и выберите:
+
+```text
+Create dataset
+```
+
+Этот вариант создаёт Dataset и возвращает к списку Datasets. Explore пока не нужен.
+
+## Проверяем список Datasets
+
+В списке должна появиться строка:
+
+```text
+Dataset:  sales
+Type:     Physical
+Database: Training PostgreSQL
+Schema:   training
+```
+
+Наведите указатель на строку `sales`. В колонке `Actions` появится значок карандаша с действием `Edit`.
+
+Нажмите `Edit`.
+
+## Dataset Editor
+
+Для Physical Dataset `sales` в редакторе Superset 6.1.0 используются вкладки:
 
 ```text
 Source
@@ -249,40 +128,38 @@ Usage
 Settings
 ```
 
-Важно сразу правильно понять значок замка на вкладке `Source`.
+В этом уроке работаем с `Source`, `Columns` и `Settings`.
 
-Он **не переводит весь Dataset Editor в read-only mode**.
+## Source
 
-Замок защищает только смену источника Dataset:
+На вкладке `Source` должны быть указаны:
 
 ```text
-Physical / Virtual
-Database
-Schema
-Table
+Physical (table or view)
+Database: Training PostgreSQL
+Schema:   training
+Table:    sales
 ```
 
-Пока замок закрыт, эти параметры источника нельзя случайно изменить.
+Рядом находится замок и текст:
 
-При этом другие части Dataset Editor, например `Metrics`, `Calculated columns` и `Settings`, не требуют снятия этого замка.
+```text
+Click the lock to make changes.
+```
 
-В этом уроке источник Dataset менять вообще не нужно.
+Замок относится к полям Source. Он защищает от случайной смены типа Dataset, Database, Schema и Table.
 
-Сначала проверим метаданные, которые Superset получил из PostgreSQL.
+В этом курсе источник уже выбран правильно, поэтому замок не открываем.
 
-Нас прежде всего интересует вкладка:
+## Columns
+
+Перейдите на вкладку:
 
 ```text
 Columns
 ```
 
-Именно здесь Superset хранит метаданные столбцов Dataset.
-
-Не добавляйте в этом уроке новые Calculated Columns и не меняйте SQL-выражения. Нам нужно сначала проверить то, что Superset получил из физической таблицы.
-
-## Проверяем столбцы
-
-Во вкладке `Columns` найдите следующие имена:
+В таблице должны быть девять строк:
 
 ```text
 sale_id
@@ -296,503 +173,182 @@ revenue
 cost
 ```
 
-Их должно быть девять.
-
-Если все девять присутствуют, Dataset правильно получил структуру таблицы `training.sales`.
-
-Типы в интерфейсе Superset могут отображаться не буквально в том же виде, как в SQL-файле PostgreSQL. Например, конкретное текстовое представление `NUMERIC(12,2)` или `BIGINT` зависит от метаданных, полученных через SQLAlchemy и драйвер.
-
-Для этого урока важно другое:
-
-- `sale_date` должен определяться как дата/время;
-- `quantity`, `revenue`, `cost` должны определяться как числовые поля;
-- остальные исходные поля должны присутствовать и соответствовать таблице.
-
-## Проверяем `sale_date`
-
-Найдите столбец:
+Проверьте типы:
 
 ```text
-sale_date
+sale_id  → BIGINT
+sale_date → DATE
+region   → TEXT
+office   → TEXT
+manager  → TEXT
+product  → TEXT
+quantity → INTEGER
+revenue  → NUMERIC(12, 2)
+cost     → NUMERIC(12, 2)
 ```
 
-Проверьте его свойства.
+У строки `sale_date` в колонке:
 
-Он должен быть отмечен как временной (`temporal`) столбец или иным образом распознан интерфейсом как поле даты/времени.
-
-Это важно, потому что в следующем уроке `Explore` будет использовать временной столбец для временной фильтрации и группировки.
-
-В PostgreSQL `sale_date` имеет тип:
-
-```sql
-DATE
+```text
+Is temporal
 ```
 
-Поэтому в нормальном учебном стенде Superset должен распознать его корректно автоматически.
+должна стоять галка.
 
-Если `sale_date` присутствует, но метаданные выглядят неправильно, сначала выполните:
+Это обязательная проверка для следующих уроков: временные фильтры и `Time grain` будут опираться на temporal-столбец `sale_date`.
+
+## Sync columns from source
+
+Над таблицей Columns находится кнопка:
 
 ```text
 Sync columns from source
 ```
 
-В Superset 6.1.0 эта кнопка находится на вкладке `Columns` и доступна, когда изменение `Source` заблокировано.
+Она повторно считывает структуру исходной таблицы и синхронизирует метаданные Dataset.
 
-Если вы ранее специально сняли замок на `Source`, сначала снова закройте его, а затем выполните синхронизацию.
+Сейчас `training.sales` не менялась, поэтому кнопку не нажимаем. Она понадобится, если физическая структура таблицы в PostgreSQL изменится после создания Dataset.
 
-После синхронизации снова проверьте поле.
+`Sync columns from source` синхронизирует описание столбцов, а не копирует строки данных в Superset.
 
-Если метаданные всё ещё не распознаны, проверьте, что Dataset действительно создан из:
+## Settings
 
-```text
-Training PostgreSQL → training → sales
-```
-
-Не меняйте тип исходного столбца вручную только ради того, чтобы пройти урок.
-
-## Что делает `Sync columns from source`
-
-Dataset хранит метаданные о структуре источника.
-
-Если структура таблицы PostgreSQL позже изменится — например, появится новый столбец — уже существующий Dataset не обязательно мгновенно обновит свой список столбцов сам.
-
-Для этого в редакторе Dataset есть действие:
-
-```text
-Sync columns from source
-```
-
-Оно повторно считывает структуру исходной таблицы и синхронизирует метаданные Dataset.
-
-Сейчас структура `training.sales` не менялась, поэтому синхронизация обычно ничего нового не добавит. Но важно знать, где находится этот механизм.
-
-Не путайте синхронизацию столбцов с загрузкой данных.
-
-Она **не копирует 12 строк `training.sales` в Superset**. Она обновляет описание доступных столбцов.
-
-## Проверяем повторное открытие
-
-Теперь специально выйдите из редактора Dataset.
-
-Снова откройте:
-
-```text
-Datasets
-```
-
-Найдите:
-
-```text
-sales
-```
-
-и ещё раз откройте его через значок редактирования.
-
-Это простое действие важно: в реальной работе Dataset создаётся один раз, а затем к его настройкам возвращаются много раз.
-
-Создание Dataset не является одноразовым мастером, после которого его настройки становятся недоступными.
-
-## Что именно блокирует замок Source
-
-После повторного открытия перейдите на вкладку:
-
-```text
-Source
-```
-
-При закрытом замке источник Dataset остаётся защищён от случайной замены.
-
-Если нажать замок, станут доступны изменения именно этой части:
-
-```text
-Physical / Virtual
-Database
-Schema
-Table
-```
-
-Для нашего курса это сейчас не требуется.
-
-Оставьте источник:
-
-```text
-Physical
-Database: Training PostgreSQL
-Schema:   training
-Table:    sales
-```
-
-и не меняйте его.
-
-Этот замок не связан с правами PostgreSQL и не является общим переключателем редактирования всего Dataset.
-
-## Делаем одну безопасную правку
-
-Чтобы проверить полный цикл редактирования, изменим параметр, который не влияет на данные и расчёты.
-
-Откройте вкладку:
+Перейдите на вкладку:
 
 ```text
 Settings
 ```
 
-На этой вкладке находится поле описания Dataset:
+Поле:
 
 ```text
 Description
 ```
 
-Для изменения Description снимать замок `Source` не нужно.
+редактируется без открытия замка Source.
 
-Укажите:
+Введите:
 
 ```text
 Учебные продажи из PostgreSQL: training.sales
 ```
 
-Сохраните изменения кнопкой:
+Нажмите:
 
 ```text
 Save
 ```
 
-Затем снова выйдите в список `Datasets`, повторно откройте `sales`, перейдите на `Settings` и убедитесь, что описание сохранилось.
+## Проверяем сохранение
 
-Мы специально меняем только описание.
-
-Пока не нужно менять:
-
-- источник Dataset;
-- SQL-выражения столбцов;
-- типы данных;
-- Metrics;
-- Calculated Columns;
-- настройки кэша;
-- дополнительные SQL-фильтры;
-- расширенные параметры Dataset.
-
-С ними будем работать только тогда, когда будет понятно, зачем они нужны.
-
-## Переходим в Explore
-
-Теперь вернитесь в:
+Вернитесь в:
 
 ```text
 Datasets
 ```
 
-Нажмите на имя Dataset:
+Найдите `sales`, наведите указатель на строку и снова нажмите `Edit`.
+
+Проверьте:
 
 ```text
-sales
-```
-
-Superset откроет `Explore` для этого Dataset.
-
-Пока **ничего не настраивайте и не сохраняйте**.
-
-Нужно только увидеть, что `Explore` открылся именно для `sales` и что слева доступны столбцы Dataset.
-
-Ориентир:
-
-```text
-sales
-├── sale_id
-├── sale_date
-├── region
-├── office
-├── manager
-├── product
-├── quantity
-├── revenue
-└── cost
-```
-
-Если `Explore` открылся, Dataset уже можно использовать для аналитики.
-
-Сам интерфейс `Explore`, временную фильтрацию, группировки и фильтры разберём в следующем уроке.
-
-## Что сейчас произошло
-
-Мы прошли следующую цепочку:
-
-```text
-PostgreSQL
-└── training.sales
-        │
-        ▼
-Database connection
-└── Training PostgreSQL
-        │
-        ▼
-Dataset
-└── sales
-        │
-        ▼
-Explore
-```
-
-Каждый уровень выполняет свою задачу.
-
-### PostgreSQL table
-
-Хранит реальные строки и типы данных.
-
-### Database connection
-
-Говорит Superset, как подключаться к PostgreSQL.
-
-### Dataset
-
-Говорит Superset, какую таблицу использовать как аналитический источник и какие метаданные применять к её столбцам.
-
-### Explore
-
-Использует Dataset для построения запросов и визуализаций.
-
-Эту последовательность нужно понимать до начала работы с графиками.
-
-## Dataset не является копией таблицы
-
-Это один из главных выводов урока.
-
-После создания Dataset в PostgreSQL не появилась новая таблица.
-
-И Superset не перенёс внутрь себя 12 строк `training.sales` как отдельный набор данных.
-
-В упрощённом виде работа выглядит так:
-
-```text
-пользователь настраивает Chart
-        │
-        ▼
-Superset использует Dataset
-        │
-        ▼
-Superset формирует SQL-запрос
-        │
-        ▼
-PostgreSQL выполняет запрос
-        │
-        ▼
-Superset получает результат
-        │
-        ▼
-визуализация
-```
-
-Именно поэтому производительность аналитики во многом зависит от базы данных и качества запросов, а не от того, сколько строк Superset якобы способен «загрузить в Dataset».
-
-## Физический и виртуальный Dataset
-
-В Superset существуют разные способы представить источник данных.
-
-Сейчас мы создаём **физический Dataset**:
-
-```text
-Dataset → существующая таблица training.sales
-```
-
-Позже, в уроке 11, создадим **Virtual Dataset**, основанный на SQL-запросе.
-
-Пока достаточно запомнить:
-
-```text
-физический Dataset = существующая таблица или представление базы
-Virtual Dataset    = сохранённый SQL-запрос как источник для Explore
-```
-
-Virtual Dataset сейчас не нужен.
-
-## Попробуйте сами
-
-Чтобы закрепить навык, не подглядывая в пошаговую часть выше, выполните следующую проверку.
-
-1. Откройте `Datasets`.
-2. Найдите Dataset `sales`.
-3. По строке списка определите его схему и подключение.
-4. Откройте Dataset.
-5. Найдите вкладку `Columns` и убедитесь, что присутствуют все девять исходных столбцов.
-6. Найдите `sale_date` и убедитесь, что это временное поле.
-7. Откройте `Source` и убедитесь, что источник остаётся `Training PostgreSQL → training → sales`.
-8. Не снимайте замок `Source`: источник менять не требуется.
-9. Откройте `Settings` и найдите сохранённое описание.
-10. Закройте редактор.
-11. Снова найдите `sales`.
-12. Откройте его в `Explore`.
-
-Если можете выполнить это без инструкции, основной навык урока освоен.
-
-## Если не получилось
-
-### `Training PostgreSQL` отсутствует при создании Dataset
-
-Вернитесь к уроку 03 и проверьте, что подключение сохранено.
-
-Откройте:
-
-```text
-Settings → Data → Database Connections
-```
-
-В списке должно быть:
-
-```text
-Training PostgreSQL
-```
-
-### Схема `training` отсутствует
-
-Сначала проверьте подключение к правильной базе.
-
-В уроке 03 использовались:
-
-```text
-Host:          db
-Port:          5432
-Database name: training
-Username:      superset_reader
-Password:      superset_reader
-```
-
-Затем убедитесь, что учебная таблица вообще существует:
-
-```bash
-cd training
-docker compose exec -T db \
-  psql -U training -d training -f /training/check.sql
-```
-
-### Таблица `sales` отсутствует
-
-Если `check.sql` сообщает об отсутствии таблицы, проблема находится ещё на уровне учебного PostgreSQL, а не Dataset.
-
-При необходимости выполните полный сброс стенда:
-
-```bash
-docker compose down -v --remove-orphans
-docker compose up -d
-```
-
-Помните: полный сброс удалит уже созданные объекты Superset.
-
-После него подключение `Training PostgreSQL` и Dataset потребуется создать заново.
-
-### Dataset создался, но столбцов нет или не хватает
-
-Откройте Dataset, перейдите во вкладку:
-
-```text
-Columns
-```
-
-Убедитесь, что замок `Source` закрыт, и выполните:
-
-```text
-Sync columns from source
-```
-
-После этого снова сравните список с девятью ожидаемыми столбцами.
-
-### Не получается изменить Description
-
-Замок `Source` для Description не нужен.
-
-Проверьте последовательность:
-
-```text
-открыть Dataset
-→ Settings
-→ Description
-→ Save
-```
-
-Если поле недоступно по другой причине, не снимайте замок Source наугад: он отвечает за смену источника Dataset.
-
-### Не получается изменить Database / Schema / Table
-
-Эти поля действительно защищены замком на вкладке:
-
-```text
-Source
-```
-
-Снимать его нужно только если вы сознательно хотите поменять источник Dataset.
-
-В этом уроке источник менять не требуется.
-
-### `sale_date` не определяется как временное поле
-
-Проверьте три вещи:
-
-1. Dataset относится к `Training PostgreSQL`;
-2. схема — `training`;
-3. таблица — `sales`.
-
-Затем выполните `Sync columns from source` на вкладке `Columns` при закрытом замке `Source`.
-
-В исходной таблице `sale_date` имеет настоящий PostgreSQL-тип `DATE`, поэтому в штатном учебном стенде временная семантика должна определяться корректно.
-
-### В списке уже есть Dataset `sales`
-
-Не создавайте второй одинаковый Dataset только потому, что забыли о первом.
-
-Откройте существующий Dataset и проверьте его:
-
-```text
+Source:
 Database = Training PostgreSQL
 Schema   = training
 Table    = sales
+
+Columns:
+9 физических столбцов
+sale_date → Is temporal = включено
+
+Settings:
+Description = Учебные продажи из PostgreSQL: training.sales
 ```
 
-Если значения совпадают, используйте существующий Dataset.
+## Проверяем Explore
 
-## Что должно получиться
-
-К концу урока одновременно выполнены следующие условия:
-
-- подключение `Training PostgreSQL` существует;
-- в `Datasets` есть Dataset `sales`;
-- он указывает на схему `training` и таблицу `sales`;
-- в Dataset присутствуют все девять исходных столбцов;
-- `sale_date` доступен как временной столбец;
-- вы понимаете, что замок `Source` защищает только смену источника Dataset;
-- описание Dataset сохранено через `Settings` без изменения Source;
-- Dataset удаётся закрыть и повторно открыть;
-- по имени `sales` открывается `Explore`.
-
-Если всё это выполняется, физический Dataset готов для дальнейшего курса.
-
-## Следующий урок
-
-Теперь Superset знает:
+Вернитесь в `Datasets` и нажмите имя:
 
 ```text
-как подключаться к PostgreSQL
-            +
-какую таблицу использовать как Dataset
+sales
 ```
 
-Следующий шаг — научиться исследовать эти данные без написания SQL.
+Имя Dataset открывает `Explore`.
 
-В следующем уроке разберём `Explore`, выполним первые группировки и фильтрацию и отдельно поймём работу временного диапазона и временной группировки.
+В левой панели источника должны быть видны девять физических столбцов. У `sale_date` отображается temporal-значок; числовые поля `sale_id`, `quantity`, `revenue`, `cost` отмечены как числовые.
+
+На этом этапе Chart не настраиваем и не сохраняем.
+
+## Source lock и редактирование Dataset
+
+Замок на вкладке `Source` не переводит весь Dataset Editor в read-only.
+
+Без открытия Source lock доступны, в частности:
+
+```text
+Metrics
+Columns
+Calculated columns
+Settings
+```
+
+Поэтому для изменения `Description`, добавления Metric или Calculated Column разблокировать Source не требуется.
+
+## Типовые ошибки
+
+### В списке Database нет Training PostgreSQL
+
+Вернитесь к [уроку 03](03-connect-postgresql.md). Подключение должно быть сохранено с `Display Name = Training PostgreSQL`.
+
+### Нет schema training или table sales
+
+Проверьте подключение и права `superset_reader`.
+
+Контроль из терминала:
+
+```bash
+docker compose exec -T db bash -lc \
+  "PGPASSWORD=superset_reader psql -h 127.0.0.1 -U superset_reader -d training -c 'SELECT COUNT(*) FROM training.sales;'"
+```
+
+Ожидается:
+
+```text
+12
+```
+
+### sale_date не отмечен как Is temporal
+
+Сначала проверьте, что источник — именно `training.sales` и Data type столбца — `DATE`.
+
+Если структура PostgreSQL действительно была изменена после создания Dataset, используйте `Sync columns from source`, затем снова проверьте `sale_date`.
+
+### Description не сохранился
+
+После изменения на вкладке `Settings` нажмите `Save` и повторно откройте Dataset через `Edit`.
+
+## Критерий завершения
+
+Урок завершён, если одновременно выполняется:
+
+```text
+Dataset  = sales
+Type     = Physical
+Database = Training PostgreSQL
+Schema   = training
+Table    = sales
+Columns  = 9
+sale_date Is temporal = true
+Description = Учебные продажи из PostgreSQL: training.sales
+```
+
+Следующий урок — первый аналитический запрос через Explore.
 
 → [Урок 05. Осваиваем Explore](05-explore-basics.md)
 
-## Официальные источники
+## Источники Superset 6.1.0
 
-Материал урока сверяется с официальной документацией и исходным кодом Apache Superset 6.1.0:
-
-- создание Dataset из таблицы и переход в Explore — tutorial из тега `6.1.0`: <https://github.com/apache/superset/blob/6.1.0/docs/docs/using-superset/creating-your-first-dashboard.mdx>
-- реальные кнопки создания Dataset `Create and explore dataset` / `Create dataset`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/features/datasets/AddDataset/Footer/index.tsx>
-- работа с изменившейся схемой таблицы и `Sync columns from source`: <https://superset.apache.org/user-docs/6.1.0/faq/>
-- REST API Dataset в Superset 6.1.0: <https://superset.apache.org/developer-docs/6.1.0/api/datasets/>
-- редактор Dataset 6.1.0, включая вкладки, замок `Source` и `Sync columns from source`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/components/Datasource/components/DatasourceEditor/DatasourceEditor.tsx>
-
-Структура `training.sales` для курса зафиксирована в:
-
-```text
-training/schema.sql
-```
-
-Этот урок намеренно не затрагивает Metrics, Calculated Columns и Virtual Dataset: для них предусмотрены отдельные следующие уроки.
+- создание Dataset и переходы после создания: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/features/datasets/AddDataset/Footer/index.tsx>
+- Dataset Editor, вкладки, Source lock и `Sync columns from source`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/components/Datasource/components/DatasourceEditor/DatasourceEditor.tsx>
+- официальный tutorial по созданию Dataset: <https://github.com/apache/superset/blob/6.1.0/docs/docs/using-superset/creating-your-first-dashboard.mdx>
+- структура учебной таблицы: [`../training/schema.sql`](../training/schema.sql)
