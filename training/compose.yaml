@@ -1,5 +1,3 @@
-name: superset-training
-
 x-superset-environment: &superset-environment
   SUPERSET_HOME: /app/superset_home
   SUPERSET_SECRET_KEY: training-only-6-1-0-change-before-any-real-use
@@ -9,7 +7,7 @@ x-superset-environment: &superset-environment
 
 services:
   db:
-    image: postgres:17
+    image: postgres:17.11
     restart: unless-stopped
     environment:
       POSTGRES_DB: training
@@ -19,6 +17,7 @@ services:
       - training_db:/var/lib/postgresql/data
       - ./schema.sql:/docker-entrypoint-initdb.d/10-schema.sql:ro
       - ./data.sql:/docker-entrypoint-initdb.d/20-data.sql:ro
+      - ./readonly.sql:/docker-entrypoint-initdb.d/30-readonly.sql:ro
       - ./check.sql:/training/check.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U training -d training"]
