@@ -7,6 +7,7 @@
 - отличать физический столбец, `Calculated column`, временную `ad hoc metric` и сохранённую `Metric`;
 - использовать основные агрегирования `SUM`, `COUNT`, `COUNT_DISTINCT` и `AVG`;
 - понимать, как `NULL` влияет на `COUNT`;
+- включать edit mode Dataset Editor перед изменением semantic layer;
 - создать вычисляемый столбец на уровне строки;
 - создать сохранённую метрику на уровне группы строк;
 - повторно использовать сохранённую Metric в `Explore`;
@@ -150,10 +151,10 @@ Metric отвечает на вопрос:
 
 ## Сначала разбираем основные агрегирования
 
-Откройте:
+Откройте самостоятельный раздел:
 
 ```text
-Data → Datasets
+Datasets
 ```
 
 Нажмите на Dataset:
@@ -174,6 +175,14 @@ Time Range:    No Filter
 Если после урока 05 остался `Group by`, удалите его. Сейчас сначала считаем показатели по всем 12 строкам целиком.
 
 Также удалите старые временные метрики, если они остались от предыдущего упражнения.
+
+Пока Chart не сохранён, текущая конфигурация Explore выполняется кнопкой:
+
+```text
+Create chart
+```
+
+Как разобрали в уроке 05, это подпись кнопки нового Chart в Superset 6.1.0. Сохранение Chart выполняется отдельно через `Save`.
 
 ## SUM
 
@@ -197,10 +206,10 @@ SUM
 SUM(revenue)
 ```
 
-Нажмите:
+Выполните текущую конфигурацию:
 
 ```text
-Run Query
+Create chart
 ```
 
 Контрольный результат:
@@ -215,7 +224,7 @@ Run Query
 quantity
 ```
 
-с тем же `SUM`.
+с тем же `SUM` и снова выполните конфигурацию.
 
 Контрольный результат:
 
@@ -252,6 +261,8 @@ COUNT
 COUNT(sale_id)
 ```
 
+Выполните конфигурацию кнопкой `Create chart`.
+
 Контрольный результат:
 
 ```text
@@ -268,13 +279,13 @@ COUNT(sale_id)
 manager
 ```
 
-и снова:
+и снова используйте:
 
 ```text
 COUNT
 ```
 
-Контрольный результат:
+После выполнения контрольный результат:
 
 ```text
 11
@@ -331,7 +342,7 @@ COUNT(DISTINCT manager)
 Денис
 ```
 
-Поэтому контрольный результат:
+Поэтому после `Create chart` контрольный результат:
 
 ```text
 4
@@ -374,7 +385,7 @@ AVG
 AVG(revenue)
 ```
 
-Контрольный результат:
+После выполнения контрольный результат:
 
 ```text
 333.75
@@ -404,10 +415,22 @@ AVG            → среднее
 Вернитесь в:
 
 ```text
-Data → Datasets
+Datasets
 ```
 
 У Dataset `sales` нажмите значок редактирования.
+
+Редактор Dataset в Superset 6.1.0 открывается в read-only mode. Перед добавлением Calculated column нажмите значок замка и включите режим редактирования.
+
+Последовательность:
+
+```text
+Datasets
+→ открыть sales через Edit
+→ нажать замок
+→ edit mode
+→ Calculated columns
+```
 
 Откройте вкладку:
 
@@ -439,7 +462,11 @@ revenue - cost
 
 Никакой `SUM` здесь нет.
 
-Сохраните Dataset.
+Сохраните Dataset кнопкой:
+
+```text
+Save
+```
 
 ## Что теперь означает profit
 
@@ -508,11 +535,13 @@ SUM(revenue) - SUM(cost)
 
 ## Проверяем Calculated column в Explore
 
-После сохранения Dataset снова откройте:
+После сохранения Dataset вернитесь в:
 
 ```text
-Data → Datasets → sales
+Datasets
 ```
+
+и снова откройте `sales` по имени.
 
 В списке столбцов `Explore` должен появиться:
 
@@ -542,7 +571,13 @@ Time Range: No Filter
 Group by:   пусто
 ```
 
-контрольный результат:
+выполните конфигурацию кнопкой:
+
+```text
+Create chart
+```
+
+Контрольный результат:
 
 ```text
 1530.00
@@ -555,6 +590,8 @@ Group by:   пусто
 ```text
 Group by: region
 ```
+
+и снова выполните конфигурацию.
 
 Контрольный результат:
 
@@ -578,14 +615,12 @@ Group by: region
 Вернитесь в:
 
 ```text
-Data → Datasets
+Datasets
 ```
 
-Откройте редактирование Dataset:
+У `sales` снова нажмите значок редактирования.
 
-```text
-sales
-```
+Поскольку Dataset Editor снова откроется в read-only mode, снова нажмите значок замка и включите edit mode.
 
 Перейдите на вкладку:
 
@@ -626,11 +661,11 @@ total_profit
 
 нужна человеку в интерфейсе.
 
-Сохраните Dataset.
+Сохраните Dataset кнопкой `Save`.
 
 ## Проверяем сохранённую Metric
 
-Снова откройте `Explore` для Dataset `sales`.
+Снова откройте `Explore` для Dataset `sales` через раздел `Datasets`.
 
 В списке доступных Metrics должна появиться сохранённая метрика:
 
@@ -659,10 +694,10 @@ Time Range: No Filter
 Group by:   пусто
 ```
 
-Нажмите:
+Выполните текущую конфигурацию:
 
 ```text
-Run Query
+Create chart
 ```
 
 Контрольный результат:
@@ -676,6 +711,8 @@ Run Query
 ```text
 Group by: region
 ```
+
+и снова выполните конфигурацию.
 
 Результат:
 
@@ -753,10 +790,10 @@ SUM(revenue)
 
 Она удобна, когда нужно быстро проверить гипотезу или один раз собрать расчёт.
 
-Сохранённая Metric создаётся в Dataset:
+Сохранённая Metric создаётся по маршруту:
 
 ```text
-Data → Datasets → Edit → Metrics
+Datasets → sales → Edit → замок → Metrics
 ```
 
 и затем появляется как готовый показатель при работе с этим Dataset.
@@ -870,8 +907,25 @@ Group by: product
 Затем обновите страницу и повторно откройте:
 
 ```text
-Data → Datasets → sales
+Datasets → sales
 ```
+
+### Не получается добавить Calculated column или Metric
+
+Проверьте, что после открытия Dataset вы нажали значок замка.
+
+Правильная последовательность:
+
+```text
+Datasets
+→ Edit sales
+→ замок
+→ нужная вкладка
+→ изменение
+→ Save
+```
+
+Без включения edit mode редактор Dataset в Superset 6.1.0 остаётся только для чтения.
 
 ### Calculated column выдаёт ошибку
 
@@ -893,7 +947,7 @@ SUM(revenue) - SUM(cost)
 
 ### Сохранённая Metric не появилась
 
-Вернитесь в редактор Dataset и проверьте вкладку:
+Вернитесь в редактор Dataset, включите edit mode через замок и проверьте вкладку:
 
 ```text
 Metrics
@@ -919,6 +973,22 @@ manager = NULL
 ```
 
 `COUNT(manager)` считает только непустые значения.
+
+### Не вижу `Run Query`
+
+Это ожидаемо для Superset 6.1.0.
+
+Новый несохранённый Chart выполняется кнопкой:
+
+```text
+Create chart
+```
+
+После сохранения Chart эта же область будет использовать подпись:
+
+```text
+Update chart
+```
 
 ### Итоги отличаются от контрольных
 
@@ -1021,3 +1091,5 @@ SUM(revenue) - SUM(cost)
 - список агрегирований Explore в Superset 6.1.0 (`COUNT_DISTINCT`): <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/constants.ts>
 - отображение этих агрегирований в редакторе ad hoc metric: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/controls/MetricControl/AdhocMetricEditPopover/index.tsx>
 - исходный код редактора Dataset Apache Superset 6.1.0: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/components/Datasource/components/DatasourceEditor/DatasourceEditor.tsx>
+- Playwright helper Superset 6.1.0 с обязательным включением edit mode через замок: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/playwright/components/modals/EditDatasetModal.ts>
+- кнопка выполнения Explore (`Create chart` / `Update chart`): <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/RunQueryButton/index.tsx>
