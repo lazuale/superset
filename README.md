@@ -79,16 +79,19 @@ training/
 3. [Подключаем PostgreSQL](docs/03-connect-postgresql.md)
 4. [Создаём первый Dataset](docs/04-create-dataset.md)
 5. [Осваиваем Explore](docs/05-explore-basics.md)
+   - [Шпаргалка: Dimension, Metric и Filter без путаницы](docs/05a-dimension-metric-filter.md)
 6. [Метрики и расчёты](docs/06-metrics-and-calculations.md)
+   - [Шпаргалка: как выбрать SUM, COUNT, COUNT DISTINCT, AVG, MIN и MAX](docs/06a-aggregations.md)
 7. [Строим и сохраняем Chart](docs/07-create-charts.md)
-   - [Справочник: как выбрать визуализацию и зачем она нужна](docs/07a-choose-visualization.md)
+   - [Шпаргалка: как выбрать визуализацию и зачем она нужна](docs/07a-choose-visualization.md)
+   - [Шпаргалка: почему цифры в Superset не сходятся](docs/07b-troubleshoot-wrong-numbers.md)
 8. [Собираем Dashboard](docs/08-build-dashboard.md)
 9. [Добавляем Native Filters](docs/09-native-filters.md)
 10. [SQL Lab с нуля](docs/10-sql-lab.md)
 11. [Создаём Virtual Dataset](docs/11-create-virtual-dataset.md)
 12. [Итоговая проверка и что изучать дальше](docs/12-next-steps.md)
 
-Справочник к уроку 07 не является отдельным обязательным уроком. Используйте его как шпаргалку: сначала сформулируйте вопрос к данным, затем выберите самый простой Chart, который на этот вопрос отвечает.
+Шпаргалки не являются отдельными обязательными уроками. Открывайте их рядом с соответствующим уроком, когда нужно быстро понять смысл поля, выбрать способ расчёта, подобрать визуализацию или проверить подозрительный результат.
 
 ## Учебные данные
 
