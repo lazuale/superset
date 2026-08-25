@@ -11,7 +11,7 @@
 - сгруппировать даты по месяцам через `Time grain`;
 - проверить результат по контрольным значениям.
 
-Chart в этом уроке не сохраняем.
+График (`Chart`) в этом уроке не сохраняем.
 
 ## Перед началом
 
@@ -21,13 +21,13 @@ Chart в этом уроке не сохраняем.
 - [урок 03](03-connect-postgresql.md);
 - [урок 04](04-create-dataset.md).
 
-В Superset должен существовать Physical Dataset:
+В Superset должен существовать физический Dataset типа `Physical`:
 
 ```text
 sales
 ```
 
-с temporal-столбцом:
+с временным столбцом:
 
 ```text
 sale_date
@@ -70,7 +70,7 @@ Row limit
 
 Для временного столбца в `Dimensions` дополнительно становится доступен `Time grain`.
 
-У Physical Dataset Superset 6.1.0 создаёт стандартную сохранённую метрику:
+Для физического Dataset Superset 6.1.0 создаёт стандартную сохранённую метрику:
 
 ```text
 COUNT(*)
@@ -86,7 +86,7 @@ COUNT(*)
 → ничего удалять не нужно
 ```
 
-Дальше в каждом примере оставляйте только те Metrics, которые прямо указаны в инструкции.
+Дальше в каждом примере оставляйте только те метрики в `Metrics`, которые прямо указаны в инструкции.
 
 ## Первый запрос: выручка по регионам
 
@@ -108,7 +108,7 @@ revenue
 SUM
 ```
 
-В `Filters` оставьте temporal-фильтр:
+В `Filters` оставьте временной фильтр:
 
 ```text
 sale_date (No filter)
@@ -136,7 +136,7 @@ Row limit:     100
 Create chart
 ```
 
-Для нового, ещё не сохранённого Chart эта кнопка выполняет текущую конфигурацию Explore. Сохранение объекта Chart выполняется отдельно через `Save` и будет в уроке 07.
+Для нового, ещё не сохранённого графика эта кнопка выполняет текущую конфигурацию Explore. Сохранение объекта `Chart` выполняется отдельно через `Save` и будет в уроке 07.
 
 ## Контрольный результат
 
@@ -238,7 +238,7 @@ Create chart
 
 ## Фильтр по периоду
 
-Откройте temporal-фильтр:
+Откройте временной фильтр:
 
 ```text
 sale_date (No filter)
@@ -312,7 +312,7 @@ No filter
 sale_date
 ```
 
-После выбора temporal-столбца установите:
+После выбора временного столбца установите:
 
 ```text
 Time grain: Month
@@ -435,7 +435,7 @@ Metrics    = SUM(revenue)
 SUM(revenue)
 ```
 
-Если `COUNT(*)` изначально не была выбрана, это не ошибка — просто добавьте нужную Metric по инструкции.
+Если `COUNT(*)` изначально не была выбрана, это не ошибка — просто добавьте нужную метрику по инструкции.
 
 ### Пустой результат
 
@@ -475,7 +475,7 @@ End (exclusive)   = 2026-03-01
 
 ### Time grain не отображается
 
-Сначала добавьте temporal-столбец:
+Сначала добавьте временной столбец:
 
 ```text
 Dimensions = sale_date
@@ -483,7 +483,7 @@ Dimensions = sale_date
 
 После этого `Time grain` применяется к временной группировке.
 
-### sale_date не определяется как temporal
+### sale_date не определяется как временной
 
 Вернитесь к [уроку 04](04-create-dataset.md) и проверьте `Columns → sale_date → Is temporal`.
 
@@ -516,18 +516,18 @@ Dimensions = sale_date
 
 → [Time column, Time range и Time grain](05b-time-range-and-grain.md)
 
-Следующий урок — Calculated Column и сохранённая Metric.
+Следующий урок — Calculated Column и сохранённая метрика (`Metric`).
 
 → [Урок 06. Метрики и расчёты](06-metrics-and-calculations.md)
 
 ## Источники Superset 6.1.0
 
-- Table control panel: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/controlPanel.tsx>
+- панель управления Table: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/controlPanel.tsx>
 - `Dimensions`, `Metrics`, `Filters`, `Time grain`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-chart-controls/src/shared-controls/dndControls.tsx>
-- стандартная Metric `COUNT(*)` Physical Dataset: <https://github.com/apache/superset/blob/6.1.0/superset/db_engine_specs/base.py>
-- автоматический temporal-фильтр нового Explore: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-chart-controls/src/shared-controls/mixins.tsx>
+- стандартная метрика `COUNT(*)` физического Dataset: <https://github.com/apache/superset/blob/6.1.0/superset/db_engine_specs/base.py>
+- автоматический временной фильтр нового Explore: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-chart-controls/src/shared-controls/mixins.tsx>
 - адаптивный числовой формат Table: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/transformProps.ts>
-- default formatter `SMART_NUMBER`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-core/src/number-format/NumberFormatterRegistry.ts>
-- редактор обычного Filter и оператор `IN`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/controls/FilterControl/AdhocFilterEditPopoverSimpleTabContent/index.tsx>
+- стандартный форматировщик `SMART_NUMBER`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-core/src/number-format/NumberFormatterRegistry.ts>
+- редактор обычного фильтра и оператор `IN`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/controls/FilterControl/AdhocFilterEditPopoverSimpleTabContent/index.tsx>
 - пользовательский период `Start (inclusive)` / `End (exclusive)`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/controls/DateFilterControl/components/CustomFrame.tsx>
 - `Create chart` / `Update chart`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/RunQueryButton/index.tsx>
