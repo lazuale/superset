@@ -318,6 +318,12 @@ Charts    = 4
 размеры блоков
 ```
 
+## Справочник к уроку
+
+Урок 08 учит механике сборки панели. Если нужно понять, **как проектировать реальный Dashboard**, зачем нужны `Tabs`, `Row`, `Column`, `Header`, `Markdown`, `Divider` и как выстроить путь от KPI к деталям:
+
+→ [Как спроектировать нормальный Dashboard](08a-dashboard-design.md)
+
 Следующий урок — Native Filters на этом Dashboard.
 
 → [Урок 09. Native Filters](09-native-filters.md)
