@@ -70,13 +70,23 @@ Row limit
 
 Для временного столбца в `Dimensions` дополнительно становится доступен `Time grain`.
 
-При первом открытии нового Table Superset добавляет в `Metrics` стандартную метрику:
+У Physical Dataset Superset 6.1.0 создаёт стандартную сохранённую метрику:
 
 ```text
 COUNT(*)
 ```
 
-Перед первым упражнением удалите `COUNT(*)` из `Metrics`. Дальше в каждом примере оставляйте только те Metrics, которые прямо указаны в инструкции.
+Стартовое состояние поля `Metrics` может зависеть от того, как именно открыт Explore. Поэтому перед первым упражнением просто приведите его к однозначному состоянию:
+
+```text
+если COUNT(*) уже выбрана
+→ удалите её из Metrics
+
+если Metrics пусто
+→ ничего удалять не нужно
+```
+
+Дальше в каждом примере оставляйте только те Metrics, которые прямо указаны в инструкции.
 
 ## Первый запрос: выручка по регионам
 
@@ -411,11 +421,13 @@ Metrics    = SUM(revenue)
 
 ### В результате есть лишний COUNT(*)
 
-Удалите автоматически добавленную стандартную метрику из `Metrics`. Для основного упражнения там должен остаться только:
+Удалите `COUNT(*)` из `Metrics`. Для основного упражнения там должен остаться только:
 
 ```text
 SUM(revenue)
 ```
+
+Если `COUNT(*)` изначально не была выбрана, это не ошибка — просто добавьте нужную Metric по инструкции.
 
 ### Пустой результат
 
@@ -504,6 +516,7 @@ Dimensions = sale_date
 
 - Table control panel: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/controlPanel.tsx>
 - `Dimensions`, `Metrics`, `Filters`, `Time grain`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-chart-controls/src/shared-controls/dndControls.tsx>
+- стандартная Metric `COUNT(*)` Physical Dataset: <https://github.com/apache/superset/blob/6.1.0/superset/db_engine_specs/base.py>
 - редактор обычного Filter и оператор `IN`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/controls/FilterControl/AdhocFilterEditPopoverSimpleTabContent/index.tsx>
 - пользовательский период `Start (inclusive)` / `End (exclusive)`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/controls/DateFilterControl/components/CustomFrame.tsx>
 - `Create chart` / `Update chart`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/RunQueryButton/index.tsx>
