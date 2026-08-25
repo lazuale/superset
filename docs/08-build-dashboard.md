@@ -8,7 +8,7 @@
 Учебные продажи
 ```
 
-На нём должны находиться четыре Chart из урока 07:
+На нём должны находиться четыре графика (`Chart`) из урока 07:
 
 ```text
 Продажи по регионам — таблица
@@ -25,7 +25,7 @@
 Charts
 ```
 
-Проверьте наличие всех четырёх Chart.
+Проверьте наличие всех четырёх графиков.
 
 Контрольные значения:
 
@@ -86,7 +86,7 @@ Charts
 Layout elements
 ```
 
-В `Charts` отображаются сохранённые Chart, доступные для добавления на Dashboard.
+В `Charts` отображаются сохранённые графики, доступные для добавления на Dashboard.
 
 В `Layout elements` находятся элементы компоновки:
 
@@ -99,9 +99,9 @@ Markdown
 Divider
 ```
 
-Для этого урока используем только сохранённые Chart и обычную сетку Dashboard.
+Для этого урока используем только сохранённые графики и обычную сетку Dashboard.
 
-## Добавляем Chart
+## Добавляем графики
 
 На вкладке:
 
@@ -148,7 +148,7 @@ Charts
 | Север | 1360.00 | 520.00 |
 | Юг | 2645.00 | 1010.00 |
 
-Если значение внутри Chart неверно, исправляйте сам Chart через Explore. Перемещение или изменение размера блока на Dashboard расчёт не меняет.
+Если значение внутри графика неверно, исправляйте сам Chart через Explore. Перемещение или изменение размера блока на Dashboard расчёт не меняет.
 
 ## Раскладываем блоки
 
@@ -165,7 +165,7 @@ Charts
 └───────────────────────────────────────┘
 ```
 
-Перетаскивайте Chart по сетке Dashboard.
+Перетаскивайте графики по сетке Dashboard.
 
 Размер блока меняется перетаскиванием его границы или угла.
 
@@ -185,7 +185,7 @@ Charts
 Save
 ```
 
-Сохранение фиксирует заголовок, состав Chart, расположение и размеры блоков.
+Сохранение фиксирует заголовок, состав графиков, расположение и размеры блоков.
 
 Обновите страницу браузера и проверьте, что раскладка сохранилась.
 
@@ -227,7 +227,7 @@ Dashboards
 
 Откроется сохранённый Dashboard в режиме просмотра.
 
-Проверьте четыре Chart и их контрольные значения.
+Проверьте четыре графика и их контрольные значения.
 
 ## Повторно редактируем Dashboard
 
@@ -256,14 +256,14 @@ Chart
 → запрос, Metric, Dimensions, Filters, тип визуализации
 
 Dashboard
-→ состав Chart, их расположение, размеры и настройки панели
+→ состав графиков, их расположение, размеры и настройки панели
 ```
 
 Изменение размера блока не меняет `SUM(revenue)` или `Прибыль`.
 
 ## Типовые ошибки
 
-### В панели Charts нет нужного Chart
+### В панели Charts нет нужного графика
 
 Проверьте раздел:
 
@@ -275,7 +275,7 @@ Charts
 
 ### После перезагрузки вернулась старая раскладка
 
-После изменения layout требуется:
+После изменения компоновки требуется:
 
 ```text
 Save
@@ -313,7 +313,7 @@ Charts    = 4
 
 ```text
 заголовок
-состав Chart
+состав графиков
 расположение блоков
 размеры блоков
 ```
@@ -334,5 +334,5 @@ Charts    = 4
 - начальный заголовок `[ untitled dashboard ]`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/cypress-base/cypress/e2e/dashboard/utils.ts>
 - редактируемый заголовок и кнопка `Edit dashboard`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/Header/index.tsx>
 - вкладки `Charts` и `Layout elements`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/BuilderComponentPane/index.tsx>
-- добавление сохранённых Chart: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/SliceAdder.tsx>
+- добавление сохранённых графиков: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/SliceAdder.tsx>
 - статусы `Draft` / `Published`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/PublishedStatus/index.tsx>
