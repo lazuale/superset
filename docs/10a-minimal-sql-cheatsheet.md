@@ -2,25 +2,9 @@
 
 Эта страница не заменяет учебник SQL.
 
-Она нужна как короткая памятка после урока 10: **какую конструкцию SQL использовать, если нужно быстро проверить данные, повторить расчёт из Explore или подготовить Virtual Dataset**.
+Она нужна, чтобы быстро вспомнить конструкции, которые уже используются в базовом уроке 10 и при контрольной проверке Chart.
 
-Главное правило:
-
-```text
-сначала сформулируйте вопрос к данным
-        ↓
-определите, что является одной строкой результата
-        ↓
-только потом пишите SELECT
-```
-
-Если непонятно, что должна означать одна строка результата, SQL почти наверняка рано писать.
-
----
-
-## 1. Каркас обычного запроса
-
-Базовый шаблон:
+## Самый короткий каркас
 
 ```sql
 SELECT
@@ -28,66 +12,21 @@ SELECT
 FROM ...
 WHERE ...
 GROUP BY ...
-HAVING ...
 ORDER BY ...;
 ```
 
 Не каждая часть обязательна.
 
-Самый простой запрос:
+## 1. `SELECT` и `FROM`
+
+Все строки:
 
 ```sql
 SELECT *
 FROM training.sales;
 ```
 
----
-
-## 2. Что делает каждая часть
-
-| Конструкция | Смысл |
-|---|---|
-| `SELECT` | какие столбцы и расчёты вернуть |
-| `FROM` | откуда брать данные |
-| `JOIN` | какие ещё таблицы присоединить |
-| `WHERE` | какие исходные строки оставить |
-| `GROUP BY` | по каким признакам собрать строки в группы |
-| `HAVING` | какие уже сформированные группы оставить |
-| `ORDER BY` | как отсортировать итог |
-| `LIMIT` | сколько строк результата вернуть |
-
-Коротко:
-
-```text
-FROM / JOIN
-→ получаем набор строк
-
-WHERE
-→ отбрасываем ненужные строки
-
-GROUP BY
-→ формируем группы
-
-агрегаты
-→ считаем показатели внутри групп
-
-HAVING
-→ отбрасываем ненужные группы
-
-SELECT
-→ формируем результат
-
-ORDER BY
-→ сортируем результат
-```
-
-Это схема для понимания логики запроса, а не полный разбор внутреннего порядка выполнения SQL во всех СУБД.
-
----
-
-# 3. SELECT
-
-Выберите только нужные поля:
+Только нужные поля:
 
 ```sql
 SELECT
@@ -98,26 +37,9 @@ SELECT
 FROM training.sales;
 ```
 
-Для исследования можно использовать:
+Для постоянного `Virtual Dataset` лучше перечислять нужные столбцы явно, если структура результата уже известна.
 
-```sql
-SELECT *
-FROM training.sales;
-```
-
-Но для постоянного Virtual Dataset лучше перечислять нужные столбцы явно.
-
-Почему:
-
-```text
-понятна структура результата
-меньше лишних данных
-изменение исходной таблицы не добавит новый столбец неожиданно
-```
-
----
-
-# 4. WHERE — фильтр исходных строк
+## 2. `WHERE` — какие исходные строки оставить
 
 Только Север:
 
@@ -136,48 +58,62 @@ WHERE region = 'Север'
   AND revenue >= 200;
 ```
 
-Один из нескольких вариантов:
+Несколько допустимых значений:
 
 ```sql
-SELECT *
-FROM training.sales
-WHERE region IN ('Север', 'Юг');
+WHERE region IN ('Север', 'Юг')
 ```
 
----
+## 3. Период
 
-## Фильтр периода
-
-Для календарного февраля:
+Полный февраль 2026 года:
 
 ```sql
 WHERE sale_date >= DATE '2026-02-01'
   AND sale_date <  DATE '2026-03-01'
 ```
 
-То есть:
+Модель:
 
 ```text
-2026-02-01 <= sale_date < 2026-03-01
+начало включительно
+конец исключительно
 ```
 
-Такой полуоткрытый интервал хорошо согласуется с моделью `Start inclusive / End exclusive`, используемой в учебном маршруте.
+Она совпадает с логикой периода, используемой в учебных упражнениях Superset.
 
-Не пишите для timestamp без необходимости условие вида:
+## 4. `COUNT` и `SUM`
 
 ```sql
-... <= '2026-02-28 23:59:59'
+COUNT(*)
+→ количество строк
+
+COUNT(manager)
+→ количество строк, где manager не NULL
+
+COUNT(DISTINCT manager)
+→ количество разных непустых manager
+
+SUM(revenue)
+→ сумма revenue
 ```
 
-У данных может быть более высокая точность времени. Граница первым моментом следующего периода обычно надёжнее.
+Для `training.sales`:
 
----
+```text
+COUNT(*)               = 12
+COUNT(manager)          = 11
+COUNT(DISTINCT manager) = 4
+SUM(revenue)            = 4005.00
+```
 
-# 5. GROUP BY — одна строка на группу
+Подробно:
 
-Вопрос:
+→ [Как выбрать агрегирование](06a-aggregations.md)
 
-> сколько выручки у каждого региона?
+## 5. `GROUP BY` — одна строка на группу
+
+Выручка по регионам:
 
 ```sql
 SELECT
@@ -187,10 +123,10 @@ FROM training.sales
 GROUP BY region;
 ```
 
-Результат:
+Результат имеет зерно:
 
 ```text
-одна строка = один region
+1 строка = 1 region
 ```
 
 Если добавить `product`:
@@ -209,154 +145,14 @@ GROUP BY
 Теперь:
 
 ```text
-одна строка = одна комбинация region + product
+1 строка = 1 комбинация region + product
 ```
 
-Это изменение зерна результата.
+## 6. `ORDER BY`
 
----
-
-# 6. Основные агрегаты
+По убыванию результата:
 
 ```sql
-SUM(revenue)
-COUNT(*)
-COUNT(manager)
-COUNT(DISTINCT manager)
-AVG(revenue)
-MIN(revenue)
-MAX(revenue)
-```
-
-Для учебных данных:
-
-```text
-COUNT(*)               = 12
-COUNT(manager)          = 11
-COUNT(DISTINCT manager) = 4
-SUM(revenue)            = 4005.00
-AVG(revenue)            = 333.75
-```
-
-Подробно выбор агрегата разобран в:
-
-→ [Шпаргалка: как выбрать агрегацию](06a-aggregations.md)
-
----
-
-# 7. COUNT(*) и COUNT(column) — не одно и то же
-
-```sql
-COUNT(*)
-```
-
-считает строки.
-
-```sql
-COUNT(manager)
-```
-
-считает только строки, где `manager` не `NULL`.
-
-```sql
-COUNT(DISTINCT manager)
-```
-
-считает уникальные непустые значения `manager`.
-
-Поэтому:
-
-```text
-12
-11
-4
-```
-
-могут одновременно быть правильными ответами на три разных вопроса.
-
----
-
-# 8. DISTINCT
-
-Уникальные регионы:
-
-```sql
-SELECT DISTINCT region
-FROM training.sales
-ORDER BY region;
-```
-
-Количество уникальных регионов:
-
-```sql
-SELECT COUNT(DISTINCT region)
-FROM training.sales;
-```
-
-Но `DISTINCT` не является универсальным средством удаления «дублей».
-
-Если JOIN размножил строки, сначала исправьте причину размножения.
-
-Не лечите неверное зерно запросом:
-
-```sql
-SELECT DISTINCT ...
-```
-
-только потому, что визуально стало меньше строк.
-
-→ [Шпаргалка: JOIN и зерно данных](06c-join-and-data-grain.md)
-
----
-
-# 9. WHERE и HAVING
-
-`WHERE` фильтрует строки **до** группировки.
-
-Например, только февраль:
-
-```sql
-SELECT
-    region,
-    SUM(revenue) AS revenue
-FROM training.sales
-WHERE sale_date >= DATE '2026-02-01'
-  AND sale_date <  DATE '2026-03-01'
-GROUP BY region;
-```
-
-`HAVING` фильтрует **группы после агрегирования**.
-
-Например, оставить только регионы с выручкой больше 2000:
-
-```sql
-SELECT
-    region,
-    SUM(revenue) AS revenue
-FROM training.sales
-GROUP BY region
-HAVING SUM(revenue) > 2000;
-```
-
-Запомнить:
-
-```text
-WHERE  → исходные строки
-HAVING → агрегированные группы
-```
-
----
-
-# 10. ORDER BY
-
-По убыванию выручки:
-
-```sql
-SELECT
-    region,
-    SUM(revenue) AS revenue
-FROM training.sales
-GROUP BY region
 ORDER BY revenue DESC;
 ```
 
@@ -366,353 +162,147 @@ ORDER BY revenue DESC;
 ORDER BY revenue ASC;
 ```
 
-Если направление не указано, обычно используется `ASC`.
+## 7. `DISTINCT`
 
----
+Уникальные регионы:
 
-# 11. NULL
+```sql
+SELECT DISTINCT region
+FROM training.sales
+ORDER BY region;
+```
 
-`NULL` означает отсутствие значения, а не пустую строку и не ноль.
+Количество уникальных значений:
 
-Проверка:
+```sql
+SELECT COUNT(DISTINCT region)
+FROM training.sales;
+```
+
+`DISTINCT` не является универсальным способом «починить дубли» после неправильного JOIN.
+
+## 8. `NULL`
+
+`NULL` — отсутствие значения.
+
+Правильно:
 
 ```sql
 WHERE manager IS NULL
 ```
 
-Обратная проверка:
+или:
 
 ```sql
 WHERE manager IS NOT NULL
 ```
 
-Не используйте:
+Неправильно:
 
 ```sql
 manager = NULL
 ```
 
-Для `NULL` нужны `IS NULL` и `IS NOT NULL`.
+## 9. `LIMIT` для быстрого просмотра
 
----
-
-# 12. COALESCE
-
-Если для отображения нужно заменить `NULL`:
+Когда нужно посмотреть небольшой образец строк:
 
 ```sql
-SELECT
-    COALESCE(manager, 'Не указан') AS manager
-FROM training.sales;
+SELECT *
+FROM training.sales
+ORDER BY sale_id
+LIMIT 10;
 ```
 
-`COALESCE` возвращает первое непустое (`NOT NULL`) значение из списка.
+`LIMIT` ограничивает количество строк результата, но сам по себе не определяет, какие строки считать «первыми». Для воспроизводимого примера обычно добавляйте `ORDER BY`.
 
-Но помните: это меняет представление результата, а не восстанавливает отсутствующее исходное значение.
-
----
-
-# 13. CASE
-
-Построчная классификация:
-
-```sql
-SELECT
-    sale_id,
-    revenue,
-    CASE
-        WHEN revenue >= 500 THEN 'Крупная'
-        WHEN revenue >= 250 THEN 'Средняя'
-        ELSE 'Малая'
-    END AS revenue_group
-FROM training.sales;
-```
-
-`CASE` полезен для:
-
-```text
-категоризации
-условных признаков
-условных расчётов
-```
-
-Если выражение относится к одной строке и должно повторно использоваться внутри Dataset, сравните этот вариант с `Calculated Column`.
-
-→ [Calculated Column, Metric или SQL?](06b-calculated-column-metric-or-sql.md)
-
----
-
-# 14. JOIN
-
-Базовая форма:
-
-```sql
-SELECT
-    ...
-FROM table_a a
-LEFT JOIN table_b b
-    ON b.key = a.key;
-```
-
-Перед JOIN обязательно задайте вопросы:
-
-```text
-что означает одна строка table_a?
-что означает одна строка table_b?
-сколько строк table_b может соответствовать одной строке table_a?
-```
-
-И после JOIN проверьте:
-
-```sql
-COUNT(*)
-COUNT(DISTINCT ключ_факта)
-контрольную SUM(...)
-```
-
-Если количество строк или сумма неожиданно выросли — Chart строить рано.
-
-Подробно:
-
-→ [JOIN и зерно данных](06c-join-and-data-grain.md)
-
----
-
-# 15. LEFT JOIN и INNER JOIN
-
-Упрощённо:
-
-```text
-INNER JOIN
-→ оставить только строки, для которых найдено соответствие с обеих сторон
-
-LEFT JOIN
-→ сохранить все строки левой таблицы, даже если справа соответствия нет
-```
-
-Пример:
-
-```sql
-FROM sales s
-LEFT JOIN managers m
-    ON m.manager_id = s.manager_id
-```
-
-Если справочника для одной продажи нет, строка `sales` останется, а поля `m` будут `NULL`.
-
-Но `LEFT JOIN` не защищает от размножения строк, если справа найдено несколько совпадений.
-
----
-
-# 16. CTE — WITH
-
-CTE позволяет дать промежуточному запросу имя:
-
-```sql
-WITH monthly AS (
-    SELECT
-        DATE_TRUNC('month', sale_date)::date AS month,
-        SUM(revenue) AS revenue
-    FROM training.sales
-    GROUP BY DATE_TRUNC('month', sale_date)
-)
-SELECT
-    month,
-    revenue
-FROM monthly
-ORDER BY month;
-```
-
-Полезно, когда запрос логично разбивается на последовательные этапы.
-
-Но CTE не делает неправильную модель данных правильной. Сначала зерно и логика, потом красота SQL.
-
----
-
-# 17. Алиасы через AS
-
-```sql
-SUM(revenue) AS revenue
-```
-
-```sql
-revenue - cost AS profit
-```
-
-Хорошее имя результата облегчает работу в Virtual Dataset.
-
-Плохо:
-
-```text
-?column?
-sum
-expr_1
-```
-
-Хорошо:
-
-```text
-profit
-revenue
-manager_count
-```
-
----
-
-# 18. Не агрегируйте Virtual Dataset заранее без причины
-
-Если Virtual Dataset нужен как построчный аналитический набор:
-
-```text
-одна строка = одна продажа
-```
-
-то запрос может быть:
-
-```sql
-SELECT
-    sale_id,
-    sale_date,
-    region,
-    revenue,
-    cost,
-    revenue - cost AS profit
-FROM training.sales;
-```
-
-А уже Chart выполняет:
-
-```text
-Dimension = region
-Metric    = SUM(profit)
-```
-
-Если заранее сделать:
-
-```sql
-GROUP BY region
-```
-
-зерно Virtual Dataset станет:
-
-```text
-одна строка = один регион
-```
-
-Это может быть нужно, но это уже другая аналитическая модель.
-
----
-
-# 19. Минимальный порядок проверки SQL
-
-Перед сохранением результата как Virtual Dataset:
-
-```text
-1. Запрос выполняется без ошибки?
-2. Понятно, что означает одна строка?
-3. Количество строк ожидаемое?
-4. Ключевой объект не размножен?
-5. Контрольные суммы совпадают?
-6. NULL ведут себя ожидаемо?
-7. Названия столбцов понятные?
-8. Нет ненужного SELECT *?
-9. Нет случайной преждевременной агрегации?
-```
-
----
-
-# 20. Если цифры в SQL и Chart разные
-
-Не начинайте менять визуальные настройки.
-
-Сравните одинаковые условия:
-
-```text
-Dataset / FROM
-период
-обычные Filters / WHERE
-Dimensions / GROUP BY
-Metric / агрегат
-```
-
-Например:
+## 10. Контрольный SQL для Explore
 
 Explore:
 
 ```text
-Dimensions = region
-Metrics    = SUM(revenue)
+Dimension = region
+Metric    = SUM(revenue)
 ```
 
-контрольный SQL:
+Контрольный SQL:
 
 ```sql
 SELECT
     region,
     SUM(revenue) AS revenue
 FROM training.sales
-GROUP BY region;
+GROUP BY region
+ORDER BY region;
 ```
 
-Если результаты различаются, постепенно убирайте дополнительные фильтры и настройки до минимального воспроизводимого запроса.
-
-→ [Почему цифры в Superset не сходятся](07b-troubleshoot-wrong-numbers.md)
-
----
-
-# 21. Быстрая таблица «что написать»
-
-| Нужно | SQL |
-|---|---|
-| все строки | `SELECT ... FROM ...` |
-| отобрать строки | `WHERE` |
-| получить уникальные значения | `DISTINCT` |
-| посчитать строки | `COUNT(*)` |
-| посчитать объекты | часто `COUNT(DISTINCT id)` |
-| сложить значение | `SUM()` |
-| получить среднее | `AVG()` |
-| сгруппировать | `GROUP BY` |
-| отфильтровать агрегаты | `HAVING` |
-| отсортировать | `ORDER BY` |
-| заменить `NULL` для вывода | `COALESCE()` |
-| условие внутри результата | `CASE` |
-| связать таблицы | `JOIN` |
-| разбить запрос на этапы | `WITH` / CTE |
-
----
-
-# 22. Главное правило
-
-SQL Lab нужен не для того, чтобы писать максимально сложные запросы.
-
-Для аналитика он особенно полезен как инструмент проверки:
+Ожидается:
 
 ```text
-получил цифру в Chart
-        ↓
-повторил смысл простым SQL
-        ↓
-цифры совпали
-        ↓
-можно доверять следующему уровню визуализации
+Север = 1360.00
+Юг    = 2645.00
 ```
 
-Если простой контрольный SQL уже даёт неправильный результат, проблема находится до Chart.
+Если Chart и SQL не совпадают, сравнивайте одинаковые:
 
----
+```text
+Dataset / FROM
+Filters / WHERE
+Dimension / GROUP BY
+Metric / агрегат
+период
+```
+
+## 11. Перед `Virtual Dataset`
+
+Проверьте:
+
+```text
+[ ] Запрос выполняется без ошибки.
+[ ] Понятно, что означает одна строка результата.
+[ ] Количество строк ожидаемое.
+[ ] Контрольные суммы совпадают.
+[ ] Названия столбцов понятные.
+[ ] Нет случайной преждевременной агрегации.
+```
+
+## 12. Что не входит в эту шпаргалку
+
+Следующие конструкции относятся уже к следующему уровню SQL:
+
+```text
+HAVING
+CASE
+COALESCE
+JOIN
+CTE / WITH
+оконные функции
+```
+
+Они специально вынесены из базовой памятки, чтобы урок 10 оставался последовательным.
+
+- JOIN: [JOIN без размножения данных](10b-join-without-duplication.md)
+- остальной следующий уровень: [справочник по продвинутому SQL](reference/sql-next-level.md)
+
+## Главное
+
+```text
+SQL Lab полезен не только для сложных запросов,
+но и как контроль правильности аналитического расчёта.
+```
 
 ## Связанные материалы
 
 - [Урок 10. SQL Lab с нуля](10-sql-lab.md)
-- [Шпаргалка: агрегации](06a-aggregations.md)
-- [Шпаргалка: Calculated Column, Metric или SQL?](06b-calculated-column-metric-or-sql.md)
-- [Шпаргалка: JOIN и зерно данных](06c-join-and-data-grain.md)
+- [Как выбрать агрегирование](06a-aggregations.md)
+- [Зерно Dataset](06c-data-grain.md)
+- [Почему цифры в Superset не сходятся](07b-troubleshoot-wrong-numbers.md)
 - [Урок 11. Создаём Virtual Dataset](11-create-virtual-dataset.md)
 
 ## Источники Superset 6.1.0
 
 - SQL Editor: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/SqlEditor/index.tsx>
 - `Run` / `Run selection`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/RunQueryActionButton/index.tsx>
-- результат SQL Lab: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/ResultSet/index.tsx>
+- результаты SQL Lab: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/ResultSet/index.tsx>
 
-Примеры SQL этой шпаргалки используют PostgreSQL учебного стенда курса.
+Примеры SQL рассчитаны на PostgreSQL учебного стенда курса.
