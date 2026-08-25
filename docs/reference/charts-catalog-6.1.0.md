@@ -10,16 +10,16 @@
 
 ## Как читать этот каталог
 
-В колонке `UI name` используются **пользовательские названия из `metadata.name` исходного кода Superset 6.1.0**.
+В колонке `Название в интерфейсе` используются **пользовательские названия из `metadata.name` исходного кода Superset 6.1.0**.
 
-Это важно, потому что внутреннее имя класса и название в chart picker могут различаться. Например:
+Это важно, потому что внутреннее имя класса и название в галерее выбора визуализации (`chart picker`) могут различаться. Например:
 
 ```text
 EchartsTimeseriesBarChartPlugin
-→ UI name: Bar Chart
+→ название в интерфейсе: Bar Chart
 
 BigNumberTotalChartPlugin
-→ UI name: Big Number
+→ название в интерфейсе: Big Number
 ```
 
 Не используйте имя класса как инструкцию пользователю, если `metadata.name` отличается.
@@ -30,29 +30,29 @@ BigNumberTotalChartPlugin
 - **аналитика** — полезно BI-аналитику;
 - **спец.** — изучать под конкретную задачу;
 - **осторожно** — применять осознанно;
-- **deprecated** — плагин явно помечен в metadata как deprecated;
-- **feature flag** — регистрация зависит от настройки Superset.
+- **устаревший (`deprecated`)** — плагин явно помечен соответствующей меткой в метаданных;
+- **флаг функции (`feature flag`)** — регистрация зависит от настройки Superset.
 
 ## Основные Chart: MainPreset
 
-Ниже перечислены 45 visualization plugins, постоянно регистрируемых `MainPreset` Superset 6.1.0. Filter plugins и chart customizations в этот счёт не входят.
+Ниже перечислены 45 плагинов визуализаций, постоянно регистрируемых `MainPreset` Superset 6.1.0. Плагины фильтров и дополнительные настройки графиков в этот счёт не входят.
 
 ### KPI и таблицы
 
-| UI name | Уровень | Для чего / примечание |
+| Название в интерфейсе | Уровень | Для чего / примечание |
 |---|---|---|
 | `Big Number` | база | одно итоговое значение |
 | `Big Number with Trendline` | аналитика | KPI вместе с небольшой динамикой |
 | `Table` | база | точные строки и агрегаты |
 | `Pivot Table` | база | сводная матрица |
-| `Time-series Table` | спец. | несколько временных показателей и sparklines в таблице |
+| `Time-series Table` | спец. | несколько временных показателей и мини-графики в таблице |
 | `Handlebars` | спец. | собственное шаблонное представление данных |
 
 ### Время и изменение показателей
 
-| UI name | Уровень | Для чего / примечание |
+| Название в интерфейсе | Уровень | Для чего / примечание |
 |---|---|---|
-| `Generic Chart` | аналитика | универсальный ECharts-вариант с несколькими способами представления series |
+| `Generic Chart` | аналитика | универсальный ECharts-вариант с несколькими способами представления серий |
 | `Area Chart` | база | временная динамика с акцентом на площадь / накопление |
 | `Bar Chart` | база | сравнение категорий или дискретных периодов |
 | `Line Chart` | база | динамика и тренд |
@@ -60,7 +60,7 @@ BigNumberTotalChartPlugin
 | `Scatter Plot` | аналитика | связь показателей / точки, в том числе с временной осью |
 | `Stepped Line` | спец. | ступенчатое изменение значения |
 | `Mixed Chart` | аналитика | две серии на общей оси, например столбцы + линия |
-| `Time-series Percent Change` | deprecated | legacy NVD3; metadata помечает Chart как deprecated |
+| `Time-series Percent Change` | устаревший | старая реализация NVD3 (`legacy`); метаданные явно помечают Chart как `deprecated` |
 | `Time-series Period Pivot` | спец. | сравнение временных периодов |
 | `Horizon Chart` | спец. | компактное сравнение временных рядов групп |
 | `Calendar Heatmap` | аналитика | интенсивность показателя по дням календаря |
@@ -69,9 +69,9 @@ BigNumberTotalChartPlugin
 
 ### Сравнение, структура и KPI
 
-| UI name | Уровень | Для чего / примечание |
+| Название в интерфейсе | Уровень | Для чего / примечание |
 |---|---|---|
-| `Pie Chart` | база, осторожно | небольшое число частей целого; Donut — настройка этого Chart, не отдельный plugin |
+| `Pie Chart` | база, осторожно | небольшое число частей целого; Donut — настройка этого Chart, не отдельный плагин |
 | `Treemap` | база | вклад категорий / иерархия через площадь |
 | `Funnel Chart` | аналитика | изменение показателя по последовательным стадиям |
 | `Radar Chart` | спец. | сравнение нескольких показателей по нескольким осям |
@@ -81,13 +81,13 @@ BigNumberTotalChartPlugin
 
 ### Распределения, связи и иерархии
 
-| UI name | Уровень | Для чего / примечание |
+| Название в интерфейсе | Уровень | Для чего / примечание |
 |---|---|---|
 | `Box Plot` | аналитика | распределение, медиана, квартили, диапазон |
 | `Histogram` | аналитика | распределение значений по интервалам |
 | `Heatmap` | база | интенсивность показателя на пересечении двух групп |
 | `Bubble Chart` | аналитика | три измерения через X, Y и размер пузыря |
-| `Bubble Chart (legacy)` | deprecated | legacy NVD3; явно помечен как deprecated |
+| `Bubble Chart (legacy)` | устаревший | старая реализация NVD3 (`legacy`); явно помечена как `deprecated` |
 | `Paired t-test Table` | спец. | таблица результатов парных t-тестов |
 | `Parallel Coordinates` | спец. | сравнение множества показателей по строкам / объектам |
 | `Partition Chart` | спец. | сравнение агрегированного показателя по иерархическим группам |
@@ -98,20 +98,20 @@ BigNumberTotalChartPlugin
 | `Sunburst Chart` | спец. | круговая многоуровневая иерархия |
 | `Word Cloud` | осторожно | частота слов; обычно не лучший выбор для точного сравнения |
 
-### География вне deck.gl preset
+### География вне набора deck.gl
 
-| UI name | Уровень | Для чего / примечание |
+| Название в интерфейсе | Уровень | Для чего / примечание |
 |---|---|---|
-| `Country Map` | спец. | choropleth по административным подразделениям страны |
+| `Country Map` | спец. | картограмма по административным подразделениям страны |
 | `World Map` | спец. | показатели по странам мира |
-| `MapBox` | спец. | legacy MapBox-визуализация |
+| `MapBox` | спец. | старая MapBox-визуализация (`legacy`) |
 | `Cartodiagram` | спец. | размещение других Chart на карте |
 
-## deck.gl preset
+## Набор deck.gl
 
-Отдельный `DeckGLChartPreset` Superset 6.1.0 регистрирует 11 visualization plugins.
+Отдельный `DeckGLChartPreset` Superset 6.1.0 регистрирует 11 плагинов визуализаций.
 
-| UI name | Registration key | Уровень |
+| Название в интерфейсе | Ключ регистрации | Уровень |
 |---|---|---|
 | `deck.gl Arc` | `deck_arc` | спец. |
 | `deck.gl Geojson` | `deck_geojson` | спец. |
@@ -127,25 +127,25 @@ BigNumberTotalChartPlugin
 
 Написание `Geojson`, `Scatterplot` и `3D Hexagon` здесь сохранено именно таким, как оно задано в `metadata.name` Superset 6.1.0.
 
-## Chart под feature flags
+## Chart за флагами функций
 
-Кроме 56 постоянно зарегистрированных visualization plugins, `MainPreset` условно регистрирует ещё два типа.
+Кроме 56 постоянно зарегистрированных плагинов визуализаций, `MainPreset` условно регистрирует ещё два типа.
 
-| UI name | Feature flag | Примечание |
+| Название в интерфейсе | Флаг функции | Примечание |
 |---|---|---|
 | `Big Number with Time Period Comparison` | `ChartPluginsExperimental` | сравнение KPI между временными периодами |
-| `Table V2` | `AgGridTableEnabled` | AG Grid-based табличная визуализация |
+| `Table V2` | `AgGridTableEnabled` | табличная визуализация на основе AG Grid |
 
-Внутренние названия классов этих типов — `BigNumberPeriodOverPeriodChartPlugin` и `AgGridTableChartPlugin`, но это **не** их пользовательские названия в chart picker.
+Внутренние названия классов этих типов — `BigNumberPeriodOverPeriodChartPlugin` и `AgGridTableChartPlugin`, но это **не** их пользовательские названия в галерее выбора визуализации.
 
 ## Сколько их
 
 В исходном коде Superset 6.1.0:
 
 ```text
-45 MainPreset visualization plugins
-+ 11 deck.gl visualization plugins
-= 56 постоянно зарегистрированных visualization plugins
+45 плагинов визуализаций MainPreset
++ 11 плагинов визуализаций deck.gl
+= 56 постоянно зарегистрированных плагинов визуализаций
 ```
 
 Дополнительно:
@@ -155,29 +155,29 @@ BigNumberTotalChartPlugin
 + Table V2
 ```
 
-могут быть зарегистрированы при соответствующих feature flags.
+могут быть зарегистрированы при соответствующих флагах функций.
 
-То есть технический максимум из этих preset:
+То есть технический максимум из этих наборов регистрации:
 
 ```text
-58 visualization plugins
+58 плагинов визуализаций
 ```
 
 Важно:
 
 ```text
-registered plugin
+зарегистрированный плагин
 ≠
-обязательно видимый каждому пользователю пункт chart picker
+обязательно видимый каждому пользователю пункт галереи выбора визуализации
 ```
 
-Конкретная установка может отличаться из-за feature flags, конфигурации, metadata/labels Chart и других настроек.
+Конкретная установка может отличаться из-за флагов функций, конфигурации, метаданных и меток Chart, а также других настроек.
 
 ## `legacy` и `deprecated` — не одно и то же
 
-Часть Chart импортируется из пакетов с `legacy` в имени. Само по себе это **не доказывает**, что конкретный Chart помечен как deprecated.
+Часть Chart импортируется из пакетов с `legacy` в имени. Само по себе это **не доказывает**, что конкретный Chart помечен как `deprecated`.
 
-В этом каталоге `deprecated` ставится только там, где исходный код Superset 6.1.0 делает это явно через metadata / `ChartLabel.Deprecated`.
+В этом каталоге статус `deprecated` ставится только там, где исходный код Superset 6.1.0 делает это явно через метаданные / `ChartLabel.Deprecated`.
 
 На проверенных источниках это, в частности:
 
@@ -189,11 +189,11 @@ Time-series Percent Change
 Поэтому правило такое:
 
 ```text
-legacy package
+legacy в имени пакета
 → старая реализация / исторический путь
 
-explicit deprecated label
-→ Chart действительно помечен deprecated
+явная метка deprecated
+→ Chart действительно помечен как устаревший
 ```
 
 Не смешивайте эти понятия.
@@ -238,11 +238,11 @@ Calendar Heatmap
 
 ## Источники Superset 6.1.0
 
-Основная регистрация и feature flags:
+Основная регистрация и флаги функций:
 
 - <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/visualizations/presets/MainPreset.ts>
 
-Точные UI names ECharts:
+Точные пользовательские названия ECharts:
 
 - `Generic Chart`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/index.ts>
 - `Bar Chart`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/Regular/Bar/index.ts>
@@ -251,24 +251,24 @@ Calendar Heatmap
 - `Big Number`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/BigNumber/BigNumberTotal/index.ts>
 - `Big Number with Time Period Comparison`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/BigNumber/BigNumberPeriodOverPeriod/index.ts>
 
-Таблицы и отдельные plugins:
+Таблицы и отдельные плагины:
 
 - `Table`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/index.ts>
 - `Pivot Table`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-pivot-table/src/plugin/index.ts>
 - `Time-series Table`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/visualizations/TimeTable/index.ts>
 - `Table V2`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-ag-grid-table/src/index.ts>
 
-Explicit deprecated examples:
+Примеры явной метки `deprecated`:
 
 - `Bubble Chart (legacy)`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/legacy-preset-chart-nvd3/src/Bubble/index.ts>
 - `Time-series Percent Change`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/legacy-preset-chart-nvd3/src/Compare/index.ts>
 
 `deck.gl`:
 
-- preset: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/legacy-preset-chart-deckgl/src/preset.ts>
+- набор регистрации: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/legacy-preset-chart-deckgl/src/preset.ts>
 - `deck.gl 3D Hexagon`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/legacy-preset-chart-deckgl/src/layers/Hex/index.ts>
 - `deck.gl Geojson`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/legacy-preset-chart-deckgl/src/layers/Geojson/index.ts>
 
-Introduction 6.1.0:
+Введение Superset 6.1.0:
 
 - <https://superset.apache.org/user-docs/6.1.0/intro/>
