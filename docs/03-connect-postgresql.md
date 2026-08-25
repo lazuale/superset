@@ -8,7 +8,7 @@
 Training PostgreSQL
 ```
 
-Оно должно использовать PostgreSQL-пользователя `superset_reader` и видеть:
+Оно должно использовать пользователя PostgreSQL `superset_reader` и видеть:
 
 ```text
 database: training
@@ -85,18 +85,18 @@ Superset подключаем именно как `superset_reader`.
 | Password | `superset_reader` |
 | Display Name | `Training PostgreSQL` |
 
-`Display Name` — обязательное поле формы Superset 6.1.0. Это имя подключения внутри Superset, а не имя PostgreSQL database.
+`Display Name` — обязательное поле формы Superset 6.1.0. Это имя подключения внутри Superset, а не имя базы PostgreSQL.
 
 ## Почему Host = db
 
 Superset и PostgreSQL работают в разных контейнерах одного Compose-проекта:
 
 ```text
-superset container
+контейнер superset
       |
       | db:5432
       v
-db container
+контейнер db
 ```
 
 Внутри Compose-сети имя сервиса PostgreSQL — `db`.
@@ -161,7 +161,7 @@ Password:      superset_reader
 Display Name:  Training PostgreSQL
 ```
 
-Не используйте `training / training` в полях Username/Password: это владелец базы, а не учётная запись Superset.
+Не используйте `training / training` в полях `Username` / `Password`: это владелец базы, а не учётная запись Superset.
 
 ## Проверяем соединение
 
@@ -174,9 +174,9 @@ Test Connection
 Успешная проверка означает, что Superset смог:
 
 ```text
-разрешить host db
-→ подключиться к 5432
-→ открыть database training
+найти узел db
+→ подключиться к порту 5432
+→ открыть базу training
 → пройти аутентификацию как superset_reader
 ```
 
@@ -202,7 +202,7 @@ Settings → Data → Database Connections
 Training PostgreSQL
 ```
 
-## Проверяем доступ к schema и table
+## Проверяем доступ к схеме и таблице
 
 Откройте верхний раздел:
 
@@ -226,16 +226,16 @@ Table:    sales
 
 На этом проверка подключения закончена. Нажмите `Cancel` и Dataset пока не создавайте.
 
-Если `training` отсутствует в списке Schema или `sales` отсутствует в списке Table, подключение не готово для следующего урока. Проверьте реквизиты соединения и права `superset_reader`.
+Если `training` отсутствует в списке `Schema` или `sales` отсутствует в списке `Table`, подключение не готово для следующего урока. Проверьте реквизиты соединения и права `superset_reader`.
 
-## Database, schema и table
+## База, схема и таблица
 
 Для учебного PostgreSQL структура такая:
 
 ```text
-database training
-└── schema training
-    └── table sales
+база training
+└── схема training
+    └── таблица sales
 ```
 
 Запись:
@@ -244,7 +244,7 @@ database training
 training.sales
 ```
 
-означает `schema.table`, а не `database.table`.
+означает `схема.таблица`, а не `база.таблица`.
 
 ## SQLAlchemy URI
 
@@ -254,7 +254,7 @@ training.sales
 postgresql://superset_reader:superset_reader@db:5432/training
 ```
 
-В URI входят пользователь, пароль, host, port и database. Schema `training` и `Display Name` в URI не входят.
+В URI входят пользователь, пароль, узел, порт и база. Схема `training` и `Display Name` в URI не входят.
 
 Для выполнения урока URI вручную вводить не требуется.
 
@@ -325,12 +325,12 @@ Training PostgreSQL
 Урок завершён, когда одновременно выполняется следующее:
 
 ```text
-Database Connection = Training PostgreSQL
+Подключение Database = Training PostgreSQL
 Test Connection      = успешно
 Database             = training
 Schema               = training
 Table                = sales
-User                 = superset_reader
+Пользователь         = superset_reader
 ```
 
 Следующий шаг — создать Physical Dataset на таблице `training.sales`.
@@ -339,7 +339,7 @@ User                 = superset_reader
 
 ## Источники Superset 6.1.0
 
-- список Database Connections и кнопка `Database`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/pages/DatabaseList/index.tsx>
+- список `Database Connections` и кнопка `Database`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/pages/DatabaseList/index.tsx>
 - окно `Connect a database` и кнопка `Connect`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/features/databases/DatabaseModal/index.tsx>
 - поля `Host`, `Port`, `Database name`, `Username`, `Password`, `Display Name`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/features/databases/DatabaseModal/DatabaseConnectionForm/CommonParameters.tsx>
 - тест `Test Connection`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/features/databases/DatabaseModal/index.test.tsx>
