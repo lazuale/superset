@@ -2,7 +2,7 @@
 
 ## Результат урока
 
-После урока в Superset должны существовать четыре сохранённых Chart:
+После урока в Superset должны существовать четыре сохранённых графика (`Chart`):
 
 ```text
 Продажи по регионам — таблица
@@ -31,21 +31,21 @@ Metric Label:       Прибыль
 1530.00
 ```
 
-При новом открытии Dataset в Explore Table может уже содержать стандартную метрику `COUNT(*)`. В каждом упражнении ниже оставляйте только Metrics, прямо указанные в конфигурации Chart.
+При новом открытии Dataset в Explore Table может уже содержать стандартную метрику `COUNT(*)`. В каждом упражнении ниже оставляйте только метрики, прямо указанные в конфигурации графика.
 
 ## Create chart, Update chart и Save
 
 В Explore Superset 6.1.0 используются три разных действия.
 
-### Новый Chart
+### Новый график
 
-Для нового несохранённого Chart текущая конфигурация выполняется кнопкой:
+Для нового несохранённого графика текущая конфигурация выполняется кнопкой:
 
 ```text
 Create chart
 ```
 
-### Сохранённый Chart
+### Сохранённый график
 
 После сохранения текущая конфигурация выполняется кнопкой:
 
@@ -63,13 +63,13 @@ Save
 
 открывает диалог сохранения.
 
-Для нового Chart выбирается:
+Для нового графика выбирается:
 
 ```text
 Save as...
 ```
 
-Для изменения существующего Chart:
+Для изменения существующего графика:
 
 ```text
 Save (Overwrite)
@@ -81,7 +81,7 @@ Save (Overwrite)
 Save
 ```
 
-## Chart 1. Продажи по регионам — таблица
+## График 1. Продажи по регионам — таблица
 
 Откройте:
 
@@ -153,7 +153,7 @@ Dashboard не выбирайте.
 
 Нажмите `Save`.
 
-## Chart 2. Общая прибыль
+## График 2. Общая прибыль
 
 Снова откройте:
 
@@ -173,7 +173,7 @@ Big Number
 Прибыль
 ```
 
-Если в поле остался другой расчёт, замените его: для этого Chart используется только `Прибыль`.
+Если в поле остался другой расчёт, замените его: для этого графика используется только `Прибыль`.
 
 В `Filters` оставьте:
 
@@ -198,7 +198,7 @@ Save
 → Save
 ```
 
-## Chart 3. Выручка по регионам — столбцы
+## График 3. Выручка по регионам — столбцы
 
 Откройте:
 
@@ -253,7 +253,7 @@ Save
 → Save
 ```
 
-## Chart 4. Выручка по месяцам
+## График 4. Выручка по месяцам
 
 Откройте:
 
@@ -267,7 +267,7 @@ Datasets → sales
 Line Chart
 ```
 
-Удалите лишние Metrics и оставьте только:
+Удалите лишние метрики и оставьте только:
 
 ```text
 SUM(revenue)
@@ -327,9 +327,9 @@ Charts
 Выручка по месяцам
 ```
 
-Нажатие имени сохранённого Chart открывает его в `Explore`.
+Нажатие имени сохранённого графика открывает его в `Explore`.
 
-## Редактируем существующий Chart
+## Редактируем существующий график
 
 В `Charts` нажмите:
 
@@ -350,7 +350,7 @@ Filters:       sale_date (No filter)
 Marker:        включён
 ```
 
-Для сохранённого Chart кнопка выполнения называется:
+Для сохранённого графика кнопка выполнения называется:
 
 ```text
 Update chart
@@ -390,7 +390,7 @@ Save (Overwrite)
 Save as...
 ```
 
-когда нужен новый самостоятельный Chart.
+когда нужен новый самостоятельный график.
 
 Используйте:
 
@@ -398,7 +398,7 @@ Save as...
 Save (Overwrite)
 ```
 
-когда нужно сохранить изменения текущего Chart.
+когда нужно сохранить изменения текущего графика.
 
 ## Выбор визуализации
 
@@ -409,15 +409,15 @@ Save (Overwrite)
 | сравнение категорий | `Bar Chart` |
 | динамика по времени | `Line Chart` |
 
-Тип Chart меняет представление результата, но не формулу Metric.
+Тип Chart меняет представление результата, но не формулу метрики.
 
 ## Типовые ошибки
 
 ### Появился лишний COUNT(*) или лишняя серия
 
-Очистите `Metrics` и оставьте только расчёты, указанные для текущего Chart. Новый Explore может начинаться со стандартного `COUNT(*)`, а при смене типа визуализации часть текущей конфигурации может сохраняться.
+Очистите `Metrics` и оставьте только расчёты, указанные для текущего графика. Новый Explore может начинаться со стандартного `COUNT(*)`, а при смене типа визуализации часть текущей конфигурации может сохраняться.
 
-### Chart пустой
+### График пустой
 
 Проверьте:
 
@@ -452,7 +452,7 @@ X Axis     = sale_date
 Time grain = Month
 ```
 
-### Появилась копия существующего Chart
+### Появилась копия существующего графика
 
 Для обновления существующего объекта используйте:
 
@@ -462,7 +462,7 @@ Save (Overwrite)
 
 а не `Save as...`.
 
-### Chart нет в списке Charts
+### Графика нет в списке Charts
 
 `Create chart` выполняет конфигурацию Explore, но не сохраняет самостоятельный объект. Для сохранения требуется `Save`.
 
@@ -501,7 +501,7 @@ Save (Overwrite)
 
 → [Шпаргалка: как выбрать визуализацию](07a-choose-visualization.md)
 
-Если Chart выглядит нормально, но число вызывает сомнение:
+Если график выглядит нормально, но число вызывает сомнение:
 
 → [Шпаргалка: почему цифры в Superset не сходятся](07b-troubleshoot-wrong-numbers.md)
 
@@ -513,7 +513,7 @@ Save (Overwrite)
 
 → [Справочник: каталог Chart Apache Superset 6.1.0](reference/charts-catalog-6.1.0.md)
 
-Следующий урок — сборка Dashboard из этих Chart.
+Следующий урок — сборка Dashboard из этих графиков.
 
 → [Урок 08. Собираем Dashboard](08-build-dashboard.md)
 
@@ -521,10 +521,10 @@ Save (Overwrite)
 
 - `Create chart` / `Update chart`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/RunQueryButton/index.tsx>
 - диалог сохранения `Save as...`, `Save (Overwrite)`, `Chart name`, `Save`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/SaveModal.tsx>
-- список Charts и переход по имени Chart: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/pages/ChartList/index.tsx>
+- список `Charts` и переход по имени Chart: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/pages/ChartList/index.tsx>
 - URL сохранённого Chart ведёт в Explore: <https://github.com/apache/superset/blob/6.1.0/superset/models/slice.py>
-- Bar Chart: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/Regular/Bar/index.ts>
-- Line Chart: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/Regular/Line/index.ts>
-- Query controls Bar/Line: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-chart-controls/src/sections/echartsTimeSeriesQuery.tsx>
+- `Bar Chart`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/Regular/Bar/index.ts>
+- `Line Chart`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/Regular/Line/index.ts>
+- элементы запроса Bar/Line: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-chart-controls/src/sections/echartsTimeSeriesQuery.tsx>
 - `Show value`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/Regular/Bar/controlPanel.tsx>
 - `Marker`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/Regular/Line/controlPanel.tsx>
