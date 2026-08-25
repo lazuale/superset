@@ -7,7 +7,7 @@
 ```text
 данные в SQL-источнике
         ↓
-Database connection
+подключение Database
         ↓
 Dataset
         ↓
@@ -130,7 +130,7 @@ AVG(revenue)
 
 ### Собирают Dashboard
 
-Несколько связанных Chart можно разместить на одной аналитической панели и добавить общие фильтры.
+Несколько связанных графиков (`Chart`) можно разместить на одной аналитической панели и добавить общие фильтры.
 
 ### Выполняют SQL
 
@@ -158,21 +158,21 @@ Superset
 
 В объекте подключения находятся параметры, необходимые Superset для обращения к базе.
 
-Саму учебную Database connection создадим в уроке 03.
+Учебное подключение `Database` создадим в уроке 03.
 
 Важно различать:
 
 ```text
-PostgreSQL database
+базу PostgreSQL
 ```
 
 и:
 
 ```text
-Database object в Superset
+объект Database в Superset
 ```
 
-Второй является настройкой подключения к первому.
+Второй является настройкой подключения к первой.
 
 ### 2. Dataset
 
@@ -188,7 +188,7 @@ Superset Dataset
 └── sales
 ```
 
-Dataset даёт Superset описание данных, с которыми затем работают `Explore`, Metrics и Chart.
+Dataset даёт Superset описание данных, с которыми затем работают `Explore`, метрики (`Metric`) и графики (`Chart`).
 
 В Dataset могут быть, например:
 
@@ -247,17 +247,17 @@ COUNT(*)
 AVG(cost)
 ```
 
-В Superset Metric может быть создана временно внутри конкретного Explore или сохранена в Dataset для повторного использования.
+В Superset метрику можно создать временно внутри конкретного Explore или сохранить в Dataset для повторного использования.
 
-Например одна сохранённая Metric:
+Например одна сохранённая метрика:
 
 ```text
 Прибыль
 ```
 
-может затем использоваться в нескольких Chart.
+может затем использоваться в нескольких графиках.
 
-Metrics и Calculated Columns подробно разбираются в уроке 06.
+Метрики (`Metrics`) и Calculated Columns подробно разбираются в уроке 06.
 
 ### 5. Chart
 
@@ -275,7 +275,7 @@ Dataset
 + настройки отображения
 ```
 
-Chart может быть:
+Тип визуализации Chart может быть, например:
 
 ```text
 Table
@@ -289,7 +289,7 @@ Line Chart
 
 ### 6. Dashboard
 
-`Dashboard` — аналитическая панель из сохранённых Chart.
+`Dashboard` — аналитическая панель из сохранённых графиков (`Chart`).
 
 Например:
 
@@ -404,7 +404,7 @@ Explore / Chart
 
 → [Где заканчивается Superset](12a-what-belongs-in-superset.md)
 
-Сейчас углубляться в DWH, ETL, materialized views, сложные JOIN или оконные функции не требуется.
+Сейчас углубляться в DWH, ETL, материализованные представления, сложные JOIN или оконные функции не требуется.
 
 ---
 
@@ -428,7 +428,7 @@ Chart сохраняет аналитическую конфигурацию и 
 
 ### Dashboard не является новым Dataset
 
-Dashboard собирает Chart и управляет панелью. Он не заменяет источник данных.
+Dashboard собирает графики (`Chart`) и управляет панелью. Он не заменяет источник данных.
 
 ### Native Filter не является правом доступа
 
@@ -507,7 +507,7 @@ Explore
 ### Что такое Dashboard?
 
 ```text
-панель из связанных Chart
+панель из связанных графиков (Chart)
 ```
 
 ### Для чего нужен SQL Lab?
@@ -526,7 +526,7 @@ Explore
 
 ```text
 данные в PostgreSQL
-→ Database connection
+→ подключение Database
 → Dataset
 → Explore
 → Chart
@@ -540,7 +540,7 @@ Metric
 SQL Lab
 ```
 
-Без знания синтаксиса SQL и без деталей production-архитектуры.
+Без знания синтаксиса SQL и без деталей архитектуры промышленной эксплуатации.
 
 Следующий урок — запуск фиксированного учебного стенда Superset 6.1.0 и PostgreSQL.
 
@@ -549,7 +549,7 @@ SQL Lab
 ## Источники Superset 6.1.0
 
 - Introduction 6.1.0: <https://superset.apache.org/user-docs/6.1.0/intro/>
-- SQLAlchemy Dataset model: <https://github.com/apache/superset/blob/6.1.0/superset/connectors/sqla/models.py>
+- модель Dataset SQLAlchemy: <https://github.com/apache/superset/blob/6.1.0/superset/connectors/sqla/models.py>
 - Explore: <https://github.com/apache/superset/tree/6.1.0/superset-frontend/src/explore>
 - SQL Lab: <https://github.com/apache/superset/tree/6.1.0/superset-frontend/src/SqlLab>
 - Dashboard: <https://github.com/apache/superset/tree/6.1.0/superset-frontend/src/dashboard>
