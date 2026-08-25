@@ -25,7 +25,7 @@
 строка
 → Calculated Column
 
-group / набор строк
+группа / набор строк
 → Metric
 
 структура Dataset
@@ -69,7 +69,7 @@ COALESCE(manager, 'Не указан')
 SUM(revenue) - SUM(cost)
 ```
 
-Без Dimension:
+Без измерения (`Dimension`):
 
 ```text
 Прибыль = 1530.00
@@ -88,11 +88,11 @@ Dimension = region
 Юг    = 1010.00
 ```
 
-Одна и та же Metric пересчитывается внутри текущих групп и Filters.
+Одна и та же метрика пересчитывается внутри текущих групп и фильтров.
 
 ## 4. SQL / Virtual Dataset — меняем набор данных
 
-SQL нужен, когда задача уже не сводится к одному атрибуту строки или одной агрегированной Metric.
+SQL нужен, когда задача уже не сводится к одному атрибуту строки или одной агрегированной метрике.
 
 Типовые причины:
 
@@ -160,7 +160,7 @@ SUM(profit)
 
 ## 7. Когда сохранять Metric в Dataset
 
-Если показатель используется в нескольких Chart, лучше определить одну сохранённую Metric.
+Если показатель используется в нескольких графиках (`Chart`), лучше определить одну сохранённую метрику.
 
 Плюсы:
 
@@ -171,7 +171,7 @@ SUM(profit)
 меньше риска разных формул одного KPI
 ```
 
-Ad hoc Metric удобна для разовой проверки.
+Разовая метрика (`ad hoc metric`) удобна для разовой проверки.
 
 ## 8. `CASE` сам по себе ничего не решает
 
@@ -209,7 +209,7 @@ SUM(CASE WHEN region = 'Север' THEN revenue ELSE 0 END)
 
 ```text
 VIEW
-Materialized View
+MATERIALIZED VIEW
 таблицу-витрину
 DWH / ETL / ELT
 ```
@@ -226,7 +226,7 @@ DWH / ETL / ELT
 | `COUNT(DISTINCT manager)` | Metric |
 | маржа выбранной группы | Metric |
 | JOIN таблиц | SQL / Virtual Dataset |
-| CTE / UNION / window function | SQL / Virtual Dataset |
+| CTE / UNION / оконная функция | SQL / Virtual Dataset |
 | тяжёлая общая витрина | чаще слой БД |
 
 ## Главное
@@ -255,6 +255,6 @@ SQL / Virtual Dataset
 
 ## Источники Superset 6.1.0
 
-- Dataset Editor: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/components/Datasource/components/DatasourceEditor/DatasourceEditor.tsx>
-- редактор ad hoc Metric: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/controls/MetricControl/AdhocMetricEditPopover/index.tsx>
+- редактор Dataset: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/components/Datasource/components/DatasourceEditor/DatasourceEditor.tsx>
+- редактор разовой метрики (`ad hoc metric`): <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/controls/MetricControl/AdhocMetricEditPopover/index.tsx>
 - SQL Lab: <https://github.com/apache/superset/tree/6.1.0/superset-frontend/src/SqlLab>
