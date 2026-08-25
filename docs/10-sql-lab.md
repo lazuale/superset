@@ -5,7 +5,7 @@
 После урока вы должны уметь:
 
 - открыть `SQL Lab`;
-- выбрать `Training PostgreSQL` и schema `training`;
+- выбрать `Training PostgreSQL` и схему `training`;
 - выполнить обычный `SELECT`;
 - использовать `WHERE`, `GROUP BY`, `ORDER BY`, `COUNT`, `SUM`;
 - читать результат во вкладке `Results`;
@@ -45,7 +45,7 @@ profit   = 1530.00
 SQL → SQL Lab
 ```
 
-Откроется SQL Editor.
+Откроется `SQL Editor`.
 
 Выберите:
 
@@ -95,7 +95,7 @@ DATE_TRUNC('month', sale_date)::date
 Поэтому при работе с реальной системой всегда сначала определяйте:
 
 ```text
-к какому Database connection подключён SQL Lab
+к какому подключению Database относится SQL Lab
 → какой SQL-диалект поддерживает этот источник
 ```
 
@@ -237,7 +237,7 @@ FROM training.sales;
 1530.00
 ```
 
-Здесь выражение выполняет PostgreSQL. Сохранённая Metric `Прибыль` из урока 06 для этого SQL не используется.
+Здесь выражение выполняет PostgreSQL. Сохранённая метрика `Прибыль` из урока 06 для этого SQL не используется.
 
 ## GROUP BY
 
@@ -344,7 +344,7 @@ Metrics    = SUM(revenue)
 
 ## Run selection
 
-Если в SQL Editor выделить часть SQL-текста, подпись кнопки меняется с:
+Если в `SQL Editor` выделить часть SQL-текста, подпись кнопки меняется с:
 
 ```text
 Run
@@ -398,9 +398,9 @@ Ctrl + Enter
 
 ## SQL Lab и Dataset
 
-SQL Lab выполняет SQL непосредственно через выбранный Database connection.
+SQL Lab выполняет SQL непосредственно через выбранное подключение Database.
 
-Dataset нужен для повторно используемой аналитической модели Superset: Columns, Calculated Columns, Metrics, Explore и Chart.
+Dataset нужен для повторно используемой аналитической модели Superset: столбцов, Calculated Columns, Metrics, Explore и Chart.
 
 В следующем уроке результат SQL Lab будет сохранён как `Virtual Dataset`.
 
@@ -416,7 +416,7 @@ training.sales
 
 ### Синтаксис из другого SQL-движка не работает
 
-Сначала проверьте, какой Database connection выбран в SQL Lab.
+Сначала проверьте, какое подключение Database выбрано в SQL Lab.
 
 Примеры курса рассчитаны на PostgreSQL. Не переносите функции и особенности синтаксиса дословно в другую СУБД без проверки её документации.
 
@@ -491,6 +491,6 @@ SQL Lab не создаёт отдельный SQL-диалект Superset;
 ## Источники Superset 6.1.0
 
 - верхнее меню `SQL → SQL Lab`: <https://github.com/apache/superset/blob/6.1.0/superset/initialization/__init__.py>
-- SQL Editor и переход на `Results`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/SqlEditor/index.tsx>
+- `SQL Editor` и переход на `Results`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/SqlEditor/index.tsx>
 - кнопки `Run`, `Run selection`, `Stop` и Ctrl+Enter: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/RunQueryActionButton/index.tsx>
 - результаты SQL Lab: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/ResultSet/index.tsx>
