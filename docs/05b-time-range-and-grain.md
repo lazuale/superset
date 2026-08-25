@@ -65,9 +65,9 @@ Time column = sale_date
 Time column = closed_at
 ```
 
-Неправильная временная колонка может дать технически корректный, но смыслово неверный Chart.
+Неправильная временная колонка может дать технически корректный, но смыслово неверный график (`Chart`).
 
-## 2. Temporal column
+## 2. Временной столбец
 
 Superset должен распознавать поле как временное.
 
@@ -77,7 +77,7 @@ Superset должен распознавать поле как временно�
 sale_date
 ```
 
-Если поле не работает как дата, проверьте metadata Dataset и признак temporal.
+Если поле не работает как дата, проверьте метаданные Dataset и признак `Is temporal`.
 
 ## 3. Time range — какой период взять
 
@@ -184,20 +184,20 @@ Metric + Time range
 
 | Симптом | Сначала проверить |
 |---|---|
-| Chart пустой | `Time range`, затем `Time column` |
+| график пустой | `Time range`, затем `Time column` |
 | вместо месяцев дни | `Time grain` |
-| сумма только части периода | `Time range` и обычные Filters |
-| события попали не в тот день | timezone у timestamp |
+| сумма только части периода | `Time range` и обычные фильтры |
+| события попали не в тот день | часовой пояс у `timestamp` |
 
-## 9. Про timezone
+## 9. Про часовые пояса
 
 В `training.sales` используется простой `sale_date`, поэтому в базовом курсе проблема временных зон не возникает.
 
-В production для `timestamp` важно знать:
+В рабочей системе для `timestamp` важно знать:
 
 ```text
-в какой timezone хранится событие
-и в какой timezone пользователь ожидает календарный день
+в каком часовом поясе хранится событие
+и в каком часовом поясе пользователь ожидает календарный день
 ```
 
 Записи около полуночи могут перейти в соседнюю дату после преобразования времени.
@@ -242,4 +242,4 @@ Time grain
 ## Источники Superset 6.1.0
 
 - пользовательский период `Start (inclusive)` / `End (exclusive)`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/controls/DateFilterControl/components/CustomFrame.tsx>
-- Table control panel и temporal controls: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/controlPanel.tsx>
+- панель управления Table и элементы настройки времени: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/controlPanel.tsx>
