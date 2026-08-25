@@ -549,6 +549,12 @@ End (exclusive):   2026-03-01
 4005.00
 ```
 
+## Справочник к уроку
+
+Если нужно выбрать тип Native Filter для другого Dashboard, продумать Scoping или понять, почему один Filter не должен влиять на все Chart:
+
+→ [Как выбрать Native Filter](09a-choose-native-filter.md)
+
 Следующий урок — SQL Lab.
 
 → [Урок 10. SQL Lab с нуля](10-sql-lab.md)
