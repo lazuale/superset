@@ -1,34 +1,22 @@
 # 03. Подключаем PostgreSQL
 
-## Результат урока
-
-После урока в Superset должно существовать подключение:
+Стенд уже работает, таблица `training.sales` существует, но Superset пока о ней ничего не знает. В этом уроке создадим одно подключение:
 
 ```text
 Training PostgreSQL
 ```
 
-Оно должно использовать пользователя PostgreSQL `superset_reader` и видеть:
+Dataset пока не создаём — это будет следующим шагом.
 
-```text
-database: training
-schema:   training
-table:    sales
-```
+## Быстрая проверка стенда
 
-Dataset в этом уроке не создаём.
-
-## Перед началом
-
-Должен быть пройден [урок 02](02-start-training-superset.md).
-
-Из каталога `training` проверьте стенд:
+Из каталога `training` убедитесь, что контейнеры в нормальном состоянии:
 
 ```bash
 docker compose ps -a
 ```
 
-Ожидаемое состояние:
+Ожидаем:
 
 ```text
 db             running / healthy
@@ -36,14 +24,14 @@ superset       running / healthy
 superset-init  exited (0)
 ```
 
-Проверьте учебные данные:
+Если есть сомнения в данных, запустите контрольный скрипт:
 
 ```bash
 docker compose exec -T db \
   psql -U training -d training -f /training/check.sql
 ```
 
-Контрольный результат:
+Основные значения:
 
 ```text
 rows     = 12
@@ -53,17 +41,15 @@ cost     = 2475.00
 profit   = 1530.00
 ```
 
-## Какой пользователь PostgreSQL нужен Superset
+## Каким пользователем подключаться
 
-В стенде есть две учётные записи PostgreSQL.
+В учебной PostgreSQL есть две разные учётные записи, и смешивать их не нужно.
 
-### `training`
+`training` — владелец базы. Он используется для инициализации стенда и административных проверок из терминала.
 
-Владелец учебной базы. Используется для инициализации и контрольных команд из терминала.
+`superset_reader` — отдельный пользователь только для чтения. Его создаёт [`../training/readonly.sql`](../training/readonly.sql), и именно его используем в Superset.
 
-### `superset_reader`
-
-Создаётся файлом [`../training/readonly.sql`](../training/readonly.sql). Для схемы `training` ему выданы права чтения:
+Для схемы `training` ему достаточно прав:
 
 ```text
 CONNECT
@@ -71,9 +57,9 @@ USAGE
 SELECT
 ```
 
-Superset подключаем именно как `superset_reader`.
+Такой подход полезно закрепить с самого начала: BI-инструменту не нужен владелец базы, если задача — читать данные.
 
-## Реквизиты подключения
+## Реквизиты
 
 | Поле Superset | Значение |
 |---|---|
@@ -85,72 +71,45 @@ Superset подключаем именно как `superset_reader`.
 | Password | `superset_reader` |
 | Display Name | `Training PostgreSQL` |
 
-`Display Name` — обязательное поле формы Superset 6.1.0. Это имя подключения внутри Superset, а не имя базы PostgreSQL.
+`Display Name` — имя подключения внутри Superset. Оно никак не переименовывает базу PostgreSQL.
 
-## Почему Host = db
+### Почему Host именно `db`
 
-Superset и PostgreSQL работают в разных контейнерах одного Compose-проекта:
+Superset и PostgreSQL находятся в разных контейнерах одного Compose-проекта. Внутри этой сети PostgreSQL доступен по имени сервиса `db`:
 
 ```text
-контейнер superset
-      |
-      | db:5432
-      v
-контейнер db
+superset → db:5432
 ```
 
-Внутри Compose-сети имя сервиса PostgreSQL — `db`.
+`localhost` внутри контейнера Superset означал бы сам контейнер Superset, а не PostgreSQL. Поэтому здесь `localhost` — неправильный адрес.
 
-`localhost` в контейнере Superset указывал бы на сам контейнер Superset, поэтому для этого стенда он не подходит.
+## Создаём подключение
 
-## Открываем Database Connections
-
-Откройте:
+Откройте Superset:
 
 ```text
 http://localhost:8088
 ```
 
-Войдите:
-
-```text
-login:    admin
-password: admin
-```
-
-Перейдите:
+Войдите под учебной учётной записью `admin / admin` и перейдите:
 
 ```text
 Settings → Data → Database Connections
 ```
 
-На странице `Database Connections` нажмите кнопку:
+Нажмите кнопку:
 
 ```text
 Database
 ```
 
-В Superset 6.1.0 это основная кнопка создания подключения; слева от подписи отображается значок `+`.
-
-Откроется окно:
-
-```text
-Connect a database
-```
-
-## Выбираем PostgreSQL
-
-На первом шаге выберите:
+Затем выберите:
 
 ```text
 PostgreSQL
 ```
 
-После выбора откроется форма параметров соединения.
-
-## Заполняем форму
-
-Укажите:
+В форме укажите:
 
 ```text
 Host:          db
@@ -161,9 +120,9 @@ Password:      superset_reader
 Display Name:  Training PostgreSQL
 ```
 
-Не используйте `training / training` в полях `Username` / `Password`: это владелец базы, а не учётная запись Superset.
+Не подставляйте `training / training` в `Username` и `Password`: это владелец учебной базы, а не пользователь для аналитического подключения.
 
-## Проверяем соединение
+## Сначала тест, потом сохранение
 
 Нажмите:
 
@@ -171,24 +130,17 @@ Display Name:  Training PostgreSQL
 Test Connection
 ```
 
-Успешная проверка означает, что Superset смог:
+Если тест прошёл, Superset смог найти `db`, подключиться к порту `5432`, открыть базу `training` и пройти аутентификацию как `superset_reader`.
 
-```text
-найти узел db
-→ подключиться к порту 5432
-→ открыть базу training
-→ пройти аутентификацию как superset_reader
-```
-
-После успешного теста нажмите:
+После этого нажмите:
 
 ```text
 Connect
 ```
 
-`Test Connection` проверяет реквизиты; `Connect` сохраняет объект Database в Superset.
+Разница простая: `Test Connection` только проверяет реквизиты, `Connect` сохраняет объект Database.
 
-## Проверяем сохранённое подключение
+## Проверяем, что Superset действительно видит данные
 
 Вернитесь в:
 
@@ -196,21 +148,19 @@ Connect
 Settings → Data → Database Connections
 ```
 
-В списке должно быть:
+В списке должно появиться:
 
 ```text
 Training PostgreSQL
 ```
 
-## Проверяем доступ к схеме и таблице
-
-Откройте верхний раздел:
+Теперь откройте:
 
 ```text
 Datasets
 ```
 
-Нажмите:
+и нажмите:
 
 ```text
 + Dataset
@@ -224,13 +174,13 @@ Schema:   training
 Table:    sales
 ```
 
-На этом проверка подключения закончена. Нажмите `Cancel` и Dataset пока не создавайте.
+Если все три значения доступны, подключение работает как нужно. Нажмите `Cancel`: сам Dataset создадим уже в следующем уроке.
 
-Если `training` отсутствует в списке `Schema` или `sales` отсутствует в списке `Table`, подключение не готово для следующего урока. Проверьте реквизиты соединения и права `superset_reader`.
+Если схема `training` или таблица `sales` не видна, проблема ещё на уровне подключения или прав пользователя — переходить дальше рано.
 
-## База, схема и таблица
+## Небольшое уточнение про PostgreSQL
 
-Для учебного PostgreSQL структура такая:
+В нашей базе структура такая:
 
 ```text
 база training
@@ -238,7 +188,7 @@ Table:    sales
     └── таблица sales
 ```
 
-Запись:
+Поэтому запись:
 
 ```text
 training.sales
@@ -246,42 +196,17 @@ training.sales
 
 означает `схема.таблица`, а не `база.таблица`.
 
-## SQLAlchemy URI
-
-Те же реквизиты можно представить как URI:
+Те же реквизиты подключения можно записать SQLAlchemy URI:
 
 ```text
 postgresql://superset_reader:superset_reader@db:5432/training
 ```
 
-В URI входят пользователь, пароль, узел, порт и база. Схема `training` и `Display Name` в URI не входят.
+Для этого урока вводить URI вручную не требуется, но полезно понимать, что в нём находятся пользователь, пароль, узел, порт и база. Схема `training` туда не входит.
 
-Для выполнения урока URI вручную вводить не требуется.
+## Если подключение не проходит
 
-## Проверка прав superset_reader
-
-При необходимости права можно проверить из терминала:
-
-```bash
-docker compose exec -T db bash -lc \
-  "PGPASSWORD=superset_reader psql -h 127.0.0.1 -U superset_reader -d training -c 'SELECT COUNT(*) FROM training.sales;'"
-```
-
-Ожидается:
-
-```text
-count
------
-12
-```
-
-Запись в таблицу этой учётной записи не разрешена.
-
-## Типовые ошибки
-
-### Test Connection не проходит
-
-Проверьте форму без изменений в названиях полей:
+Если `Test Connection` падает, сначала просто сравните форму с эталоном:
 
 ```text
 Host          = db
@@ -298,42 +223,40 @@ Display Name  = Training PostgreSQL
 docker compose ps -a
 ```
 
-### Host = localhost
+Если в `Host` стоит `localhost`, замените его на `db`.
 
-Для учебного Compose это неверно. Используйте:
+Если подключение сохранилось под именем `PostgreSQL`, а не `Training PostgreSQL`, исправьте `Display Name`: это имя используется дальше во всём курсе.
 
-```text
-db
+Если не видна схема `training`, проверьте, что подключение действительно выполнено пользователем `superset_reader` и что `readonly.sql` отработал при создании базы.
+
+При необходимости можно проверить чтение напрямую из терминала:
+
+```bash
+docker compose exec -T db bash -lc \
+  "PGPASSWORD=superset_reader psql -h 127.0.0.1 -U superset_reader -d training -c 'SELECT COUNT(*) FROM training.sales;'"
 ```
 
-### Подключение сохранилось как PostgreSQL, а не Training PostgreSQL
-
-В поле `Display Name` должно быть:
+Ожидается:
 
 ```text
-Training PostgreSQL
+count
+-----
+12
 ```
 
-Это имя используется во всех следующих уроках.
+Записывать данные этим пользователем нельзя — и для нашего сценария это правильно.
 
-### Schema training не видна
+## Можно идти дальше, если
 
-Проверьте, что Superset подключён как `superset_reader`, а `readonly.sql` выполнился при первичной инициализации PostgreSQL.
-
-## Критерий завершения
-
-Урок завершён, когда одновременно выполняется следующее:
+В Superset есть подключение `Training PostgreSQL`, `Test Connection` проходит, а в форме создания Dataset видны:
 
 ```text
-Подключение Database = Training PostgreSQL
-Test Connection      = успешно
-Database             = training
-Schema               = training
-Table                = sales
-Пользователь         = superset_reader
+Database = Training PostgreSQL
+Schema   = training
+Table    = sales
 ```
 
-Следующий шаг — создать Physical Dataset на таблице `training.sales`.
+Следующий урок — уже про сам Dataset.
 
 → [Урок 04. Создаём первый Dataset](04-create-dataset.md)
 
