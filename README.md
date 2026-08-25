@@ -81,11 +81,14 @@ training/
 5. [Осваиваем Explore](docs/05-explore-basics.md)
 6. [Метрики и расчёты](docs/06-metrics-and-calculations.md)
 7. [Строим и сохраняем Chart](docs/07-create-charts.md)
+   - [Справочник: как выбрать визуализацию и зачем она нужна](docs/07a-choose-visualization.md)
 8. [Собираем Dashboard](docs/08-build-dashboard.md)
 9. [Добавляем Native Filters](docs/09-native-filters.md)
 10. [SQL Lab с нуля](docs/10-sql-lab.md)
 11. [Создаём Virtual Dataset](docs/11-create-virtual-dataset.md)
 12. [Итоговая проверка и что изучать дальше](docs/12-next-steps.md)
+
+Справочник к уроку 07 не является отдельным обязательным уроком. Используйте его как шпаргалку: сначала сформулируйте вопрос к данным, затем выберите самый простой Chart, который на этот вопрос отвечает.
 
 ## Учебные данные
 
