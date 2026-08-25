@@ -145,7 +145,7 @@ SELECT
 FROM ...;
 ```
 
-Если `revenue` вырос, а задача JOIN не должна была менять продажи, дальше строить Chart нельзя.
+Если `revenue` вырос, а задача JOIN не должна была менять продажи, дальше строить график нельзя.
 
 ## 6. Проверьте уникальность справочника
 
@@ -201,7 +201,7 @@ LEFT JOIN payments_by_sale AS p
 
 ## 8. Не лечите JOIN через `DISTINCT`
 
-Такой патч:
+Такой приём:
 
 ```sql
 SELECT DISTINCT ...
@@ -262,7 +262,7 @@ JOIN без SQL-ошибки
 аналитически правильный JOIN
 ```
 
-Сначала проверяйте зерно и контрольные числа, только потом сохраняйте результат как `Virtual Dataset` и стройте Chart.
+Сначала проверяйте зерно и контрольные числа, только потом сохраняйте результат как `Virtual Dataset` и стройте график.
 
 ## Связанные материалы
 
@@ -276,6 +276,6 @@ JOIN без SQL-ошибки
 ## Источники Superset 6.1.0
 
 - SQL Lab: <https://github.com/apache/superset/tree/6.1.0/superset-frontend/src/SqlLab>
-- SQLAlchemy Dataset model: <https://github.com/apache/superset/blob/6.1.0/superset/connectors/sqla/models.py>
+- модель Dataset SQLAlchemy: <https://github.com/apache/superset/blob/6.1.0/superset/connectors/sqla/models.py>
 
 Правила кардинальности JOIN относятся к SQL и реляционному моделированию данных в целом.
