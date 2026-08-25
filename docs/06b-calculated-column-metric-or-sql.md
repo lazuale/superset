@@ -570,4 +570,4 @@ SQL / Virtual Dataset
 
 - Dataset Editor: `Metrics`, `Calculated columns`, SQL expression: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/components/Datasource/components/DatasourceEditor/DatasourceEditor.tsx>
 - редактор ad hoc Metric: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/controls/MetricControl/AdhocMetricEditPopover/index.tsx>
-- Virtual Dataset и SQL Lab: <https://superset.apache.org/docs/6.0.0/using-superset/exploring-data/>
+- SQL Lab в исходном коде Superset 6.1.0: <https://github.com/apache/superset/tree/6.1.0/superset-frontend/src/SqlLab>
