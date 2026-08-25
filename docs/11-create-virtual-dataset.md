@@ -242,7 +242,11 @@ sales
 sales_virtual
 ```
 
-Для `sales_virtual` в колонке `Type` должен отображаться Virtual Dataset.
+В колонке `Type` у `sales_virtual` точная подпись Superset 6.1.0:
+
+```text
+Virtual
+```
 
 Нажмите имя:
 
@@ -655,5 +659,6 @@ Chart Source = sales_virtual
 - `Create a dataset` в Explore: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/DatasourcePanel/index.tsx>
 - `Save or Overwrite Dataset`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/SaveDatasetModal/index.tsx>
 - список Datasets и переход по `explore_url`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/pages/DatasetList/index.tsx>
+- точные подписи `Physical` / `Virtual`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-core/src/components/Label/reusable/DatasetTypeLabel.tsx>
 - структура учебной таблицы: [`../training/schema.sql`](../training/schema.sql)
 - учебные данные: [`../training/data.sql`](../training/data.sql)
