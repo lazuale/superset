@@ -70,7 +70,7 @@ training/
 
 ## Как устроены дополнительные материалы
 
-У курса теперь два разных типа дополнительных страниц.
+У курса два типа дополнительных страниц.
 
 ### Шпаргалка
 
@@ -87,10 +87,10 @@ training/
 
 ### Справочник
 
-Более подробный необязательный материал:
+Более подробный необязательный материал. Он может вводить следующую возможность после соответствующей практики:
 
 ```text
-можно открыть после соответствующего урока
+можно открыть после урока
 можно использовать позже в работе
 не требуется проходить для завершения базового маршрута
 ```
@@ -115,7 +115,7 @@ training/
 7. [Строим и сохраняем Chart](docs/07-create-charts.md)
    - Шпаргалка: [как выбрать визуализацию](docs/07a-choose-visualization.md)
    - Шпаргалка: [почему цифры в Superset не сходятся](docs/07b-troubleshoot-wrong-numbers.md)
-   - Шпаргалка: [форматы чисел, процентов и дат](docs/07c-formatting.md)
+   - Справочник: [форматы чисел, процентов и дат](docs/07c-formatting.md)
    - Справочник: [каталог Chart Apache Superset 6.1.0](docs/reference/charts-catalog-6.1.0.md)
 8. [Собираем Dashboard](docs/08-build-dashboard.md)
    - Справочник: [как спроектировать нормальный Dashboard](docs/08a-dashboard-design.md)
@@ -123,7 +123,7 @@ training/
    - Справочник: [как выбрать Native Filter и настроить Scoping](docs/09a-choose-native-filter.md)
 10. [SQL Lab с нуля](docs/10-sql-lab.md)
     - Шпаргалка: [минимальный SQL для Superset](docs/10a-minimal-sql-cheatsheet.md)
-    - Шпаргалка: [JOIN без размножения данных](docs/10b-join-without-duplication.md)
+    - Справочник: [JOIN без размножения данных](docs/10b-join-without-duplication.md)
     - Справочник: [следующий уровень SQL](docs/reference/sql-next-level.md)
 11. [Создаём Virtual Dataset](docs/11-create-virtual-dataset.md)
     - Справочник: [Physical Dataset или Virtual Dataset?](docs/11a-physical-vs-virtual-dataset.md)
