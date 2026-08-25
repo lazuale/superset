@@ -84,17 +84,20 @@ training/
 6. [Метрики и расчёты](docs/06-metrics-and-calculations.md)
    - [Шпаргалка: как выбрать SUM, COUNT, COUNT DISTINCT, AVG, MIN и MAX](docs/06a-aggregations.md)
    - [Шпаргалка: Calculated Column, Metric или SQL?](docs/06b-calculated-column-metric-or-sql.md)
+   - [Шпаргалка: JOIN и зерно данных](docs/06c-join-and-data-grain.md)
 7. [Строим и сохраняем Chart](docs/07-create-charts.md)
    - [Шпаргалка: как выбрать визуализацию и зачем она нужна](docs/07a-choose-visualization.md)
    - [Шпаргалка: почему цифры в Superset не сходятся](docs/07b-troubleshoot-wrong-numbers.md)
 8. [Собираем Dashboard](docs/08-build-dashboard.md)
+   - [Шпаргалка: как собрать нормальный Dashboard](docs/08a-dashboard-design.md)
 9. [Добавляем Native Filters](docs/09-native-filters.md)
+   - [Шпаргалка: как выбрать Native Filter и настроить Scoping](docs/09a-choose-native-filter.md)
 10. [SQL Lab с нуля](docs/10-sql-lab.md)
 11. [Создаём Virtual Dataset](docs/11-create-virtual-dataset.md)
    - [Шпаргалка: Physical Dataset или Virtual Dataset?](docs/11a-physical-vs-virtual-dataset.md)
 12. [Итоговая проверка и что изучать дальше](docs/12-next-steps.md)
 
-Шпаргалки не являются отдельными обязательными уроками. Открывайте их рядом с соответствующим уроком, когда нужно быстро понять смысл поля, выбрать способ расчёта, разобраться со временем, подобрать визуализацию, выбрать тип Dataset или проверить подозрительный результат.
+Шпаргалки не являются отдельными обязательными уроками. Открывайте их рядом с соответствующим уроком, когда нужно быстро понять смысл поля, выбрать способ расчёта, разобраться со временем и зерном данных, подобрать визуализацию, спроектировать Dashboard, настроить фильтрацию, выбрать тип Dataset или проверить подозрительный результат.
 
 ## Учебные данные
 
