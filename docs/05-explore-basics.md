@@ -140,6 +140,14 @@ Create chart
 
 ## Контрольный результат
 
+В контрольных таблицах курса числа приводятся в точном виде. При стандартном адаптивном форматировании Superset то же значение может выглядеть компактнее, например:
+
+```text
+1360.00 → 1.36k
+```
+
+Это не ошибка расчёта. В этом уроке проверяем само значение и не настраиваем оформление числа отдельно.
+
 Ожидаются две строки:
 
 | region | SUM(revenue) |
@@ -517,6 +525,9 @@ Dimensions = sale_date
 - Table control panel: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/controlPanel.tsx>
 - `Dimensions`, `Metrics`, `Filters`, `Time grain`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-chart-controls/src/shared-controls/dndControls.tsx>
 - стандартная Metric `COUNT(*)` Physical Dataset: <https://github.com/apache/superset/blob/6.1.0/superset/db_engine_specs/base.py>
+- автоматический temporal-фильтр нового Explore: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-chart-controls/src/shared-controls/mixins.tsx>
+- адаптивный числовой формат Table: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/transformProps.ts>
+- default formatter `SMART_NUMBER`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-core/src/number-format/NumberFormatterRegistry.ts>
 - редактор обычного Filter и оператор `IN`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/controls/FilterControl/AdhocFilterEditPopoverSimpleTabContent/index.tsx>
 - пользовательский период `Start (inclusive)` / `End (exclusive)`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/controls/DateFilterControl/components/CustomFrame.tsx>
 - `Create chart` / `Update chart`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/RunQueryButton/index.tsx>
