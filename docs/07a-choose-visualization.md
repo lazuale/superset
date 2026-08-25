@@ -14,29 +14,32 @@
 
 Не начинайте с галереи визуализаций по принципу «что выглядит красивее».
 
+Названия Chart ниже совпадают с пользовательскими названиями `metadata.name` Apache Superset 6.1.0. Внутреннее имя класса может содержать `Timeseries`, но это не означает, что в интерфейсе нужно искать Chart с таким названием. Например, `EchartsTimeseriesBarChartPlugin` отображается как `Bar Chart`.
+
 ## Самая короткая таблица выбора
 
 | Что нужно понять | Обычно выбирать |
 |---|---|
 | одно итоговое значение | `Big Number` |
+| KPI вместе с небольшой динамикой | `Big Number with Trendline` |
 | точные строки или группы | `Table` |
 | сводная матрица | `Pivot Table` |
 | сравнить категории | `Bar Chart` |
 | показать динамику | `Line Chart` |
-| показать объём по периодам | `Time-series Bar` |
+| показать объём по периодам | `Bar Chart` с временной осью |
 | показать структуру во времени | `Area Chart` |
-| совместить два временных представления | `Mixed Time-series` |
-| показать несколько частей целого | `Pie / Donut` |
+| совместить два временных представления | `Mixed Chart` |
+| показать несколько частей целого | `Pie Chart` |
 | показать вклад многих категорий | `Treemap` |
 | увидеть распределение значений | `Histogram` |
 | увидеть выбросы и диапазон | `Box Plot` |
 | проверить связь двух показателей | `Scatter Plot` |
 | показать концентрацию по двум измерениям | `Heatmap` |
-| объяснить изменение итога | `Waterfall` |
-| показать последовательные стадии | `Funnel` |
-| показать потоки между состояниями | `Sankey` |
+| объяснить изменение итога | `Waterfall Chart` |
+| показать последовательные стадии | `Funnel Chart` |
+| показать потоки между состояниями | `Sankey Chart` |
 | показать активность по дням календаря | `Calendar Heatmap` |
-| показать начало и конец интервалов | `Gantt` |
+| показать начало и конец интервалов | `Gantt Chart` |
 | показать географию | карты / `deck.gl` |
 
 Если простой Chart уже отвечает на вопрос, более сложный обычно не нужен.
@@ -51,27 +54,29 @@ Table
 Pivot Table
 Bar Chart
 Line Chart
-Time-series Bar
 Area Chart
-Pie / Donut
+Pie Chart
 Heatmap
 Treemap
 ```
 
-Этого достаточно для большого числа обычных Dashboard.
+`Bar Chart` и `Line Chart` умеют работать с временной осью. Не ищите отдельный обязательный тип `Time-series Bar Chart` или `Time-series Line Chart`: в Superset 6.1.0 пользовательские названия этих ECharts-плагинов — `Bar Chart` и `Line Chart`.
+
+Этого набора достаточно для большого числа обычных Dashboard.
 
 ## 2. Набор BI-аналитика
 
 Когда базовых Chart мало, добавьте:
 
 ```text
-Mixed Time-series
+Big Number with Trendline
+Mixed Chart
 Scatter Plot
 Histogram
 Box Plot
-Waterfall
-Funnel
-Sankey
+Waterfall Chart
+Funnel Chart
+Sankey Chart
 Calendar Heatmap
 ```
 
@@ -107,23 +112,25 @@ Bar Chart
 
 ```text
 тренд
-→ Line
+→ Line Chart
 
 объём каждого периода
-→ Time-series Bar
+→ Bar Chart + временная ось + Time grain
 
 конкретные дни
 → Calendar Heatmap
 
 интервалы начала и окончания
-→ Gantt
+→ Gantt Chart
 ```
 
 ### Не усложняю ли я ответ?
 
-Если задачу нормально решает `Bar Chart`, не нужен `Radar`, `Chord` или `Graph` только ради необычного вида.
+Если задачу нормально решает `Bar Chart`, не нужен `Radar Chart`, `Chord Diagram` или `Graph Chart` только ради необычного вида.
 
-## 4. Pie / Donut — только для простой структуры
+## 4. Pie / Donut
+
+В Superset 6.1.0 пользователь выбирает `Pie Chart`. Donut — это способ отображения круговой диаграммы через настройки `Pie Chart`, а не отдельный зарегистрированный Chart.
 
 Хороший случай:
 
@@ -143,13 +150,13 @@ Bar Chart
 
 ```text
 мало хорошо различимых частей целого
-→ Pie / Donut
+→ Pie Chart / режим Donut
 
 много категорий
-→ Bar / Treemap
+→ Bar Chart / Treemap
 ```
 
-## 5. Gauge — не автоматический выбор для KPI
+## 5. Gauge Chart — не автоматический выбор для KPI
 
 Если нужно просто показать:
 
@@ -159,7 +166,7 @@ Bar Chart
 
 `Big Number` часто компактнее и понятнее.
 
-`Gauge` имеет смысл, когда сама шкала, пороги или диапазоны важны для интерпретации.
+`Gauge Chart` имеет смысл, когда сама шкала, пороги или диапазоны важны для интерпретации.
 
 ## 6. Table — режим проверки, а не только финальный Chart
 
@@ -174,7 +181,7 @@ Metrics
 лишние группы
 ```
 
-Сначала добейтесь правильного результата, потом выбирайте красивое представление.
+Сначала добейтесь правильного результата, потом выбирайте представление.
 
 ## 7. Пример рабочего Dashboard
 
@@ -182,15 +189,15 @@ Metrics
 
 | Вопрос | Chart |
 |---|---|
-| сколько документов | Big Number |
-| сколько ошибок | Big Number |
-| доля ошибок | Big Number |
-| как ошибки меняются по дням | Line Chart |
-| где ошибок больше | Bar Chart |
-| где концентрируются типы ошибок | Heatmap |
-| какие записи проблемные | Table |
+| сколько документов | `Big Number` |
+| сколько ошибок | `Big Number` |
+| доля ошибок | `Big Number` |
+| как ошибки меняются по дням | `Line Chart` |
+| где ошибок больше | `Bar Chart` |
+| где концентрируются типы ошибок | `Heatmap` |
+| какие записи проблемные | `Table` |
 
-Здесь не нужны Sankey, Radar, Gauge, Word Cloud или карта, пока для них нет отдельного вопроса.
+Здесь не нужны `Sankey Chart`, `Radar Chart`, `Gauge Chart`, `Word Cloud` или карта, пока для них нет отдельного вопроса.
 
 ## 8. Специализированные Chart
 
@@ -198,7 +205,7 @@ Metrics
 
 Их не нужно учить подряд.
 
-Полный перечень версии курса вынесен отдельно:
+Полный перечень версии курса с точными пользовательскими именами вынесен отдельно:
 
 → [Справочник: каталог Chart Apache Superset 6.1.0](reference/charts-catalog-6.1.0.md)
 
@@ -210,16 +217,27 @@ Metrics
 обычно и есть лучший выбор
 ```
 
+И ещё одно правило курса:
+
+```text
+название в Wiki
+→ должно совпадать с названием в chart picker
+```
+
+Если техническое имя плагина отличается, оно используется только как пояснение для проверки исходного кода.
+
 ## Связанные материалы
 
 - [Урок 07. Строим и сохраняем Chart](07-create-charts.md)
 - [Почему цифры в Superset не сходятся](07b-troubleshoot-wrong-numbers.md)
 - [Форматы чисел, процентов и дат](07c-formatting.md)
-- [Как собрать нормальный Dashboard](08a-dashboard-design.md)
+- [Как спроектировать нормальный Dashboard](08a-dashboard-design.md)
 - [Каталог Chart 6.1.0](reference/charts-catalog-6.1.0.md)
 
 ## Источники Superset 6.1.0
 
 - регистрация основных Chart: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/visualizations/presets/MainPreset.ts>
+- `Bar Chart`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/Regular/Bar/index.ts>
+- `Line Chart`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/Regular/Line/index.ts>
 - preset `deck.gl`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/legacy-preset-chart-deckgl/src/preset.ts>
 - Introduction 6.1.0: <https://superset.apache.org/user-docs/6.1.0/intro/>
