@@ -43,7 +43,7 @@ profit  = 1530.00
 
 ---
 
-# Physical Dataset и Virtual Dataset
+## Physical Dataset и Virtual Dataset
 
 В уроке 04 мы создали Physical Dataset прямо на таблице:
 
@@ -86,7 +86,7 @@ FROM training.sales;
 
 ---
 
-# 1. Выполняем SQL
+## 1. Выполняем SQL
 
 Откройте:
 
@@ -157,7 +157,7 @@ profit  = 285.00
 
 ---
 
-# 2. Открываем результат в Explore
+## 2. Открываем результат в Explore
 
 У результата SQL Lab нажмите кнопку с иконкой графика:
 
@@ -183,7 +183,7 @@ Explore
 
 ---
 
-# 3. Сохраняем SQL как Dataset
+## 3. Сохраняем SQL как Dataset
 
 В левой панели Explore для query datasource Superset показывает:
 
@@ -227,7 +227,7 @@ Save
 
 ---
 
-# 4. Проверяем Virtual Dataset
+## 4. Проверяем Virtual Dataset
 
 Откройте:
 
@@ -269,7 +269,7 @@ profit
 
 ---
 
-# Что сохранено
+## Что сохранено
 
 Physical Dataset:
 
@@ -308,7 +308,7 @@ Superset хранит определение Virtual Dataset в своей metad
 
 ---
 
-# 5. Строим Chart на Virtual Dataset
+## 5. Строим Chart на Virtual Dataset
 
 Откройте `sales_virtual` в Explore и выберите:
 
@@ -362,7 +362,7 @@ Filters = нет ограничивающего фильтра
 
 ---
 
-# 6. Сохраняем Chart
+## 6. Сохраняем Chart
 
 Нажмите:
 
@@ -404,7 +404,7 @@ Chart Source = sales_virtual
 
 ---
 
-# Почему результат совпадает с Physical Dataset
+## Почему результат совпадает с Physical Dataset
 
 Оба Dataset читают одни и те же продажи из `training.sales`.
 
@@ -435,7 +435,7 @@ sales_virtual
 
 ---
 
-# Calculated Column и Virtual Dataset
+## Calculated Column и Virtual Dataset
 
 Calculated Column подходит, когда набор строк уже правильный, а внутри Dataset нужно добавить простой row-level расчёт.
 
@@ -453,7 +453,7 @@ Virtual Dataset нужен, когда SQL должен определить с�
 
 ---
 
-# Virtual Dataset и VIEW PostgreSQL
+## Virtual Dataset и VIEW PostgreSQL
 
 Virtual Dataset хранится в metadata Superset:
 
@@ -478,7 +478,7 @@ Virtual Dataset сам по себе не ускоряет тяжёлый SQL.
 
 ---
 
-# Как выполняется запрос Chart
+## Как выполняется запрос Chart
 
 Упрощённо, если Virtual Dataset определён как:
 
@@ -514,7 +514,7 @@ SQL Virtual Dataset становится входным набором для з
 
 ---
 
-# Virtual Dataset не является снимком данных
+## Virtual Dataset не является снимком данных
 
 Сохранение Virtual Dataset не фиксирует текущие 12 строк навсегда.
 
@@ -532,7 +532,7 @@ SUM(profit)
 
 ---
 
-# Три состояния SQL
+## Три состояния SQL
 
 ```text
 1. SQL в SQL Lab
@@ -550,7 +550,7 @@ SUM(profit)
 
 ---
 
-# Самостоятельная проверка
+## Самостоятельная проверка
 
 На `sales_virtual` соберите `Table`:
 
@@ -587,7 +587,7 @@ Metrics    = SUM(profit)
 
 ---
 
-# Типовые ошибки
+## Типовые ошибки
 
 ### Create chart у результата SQL Lab недоступна
 
@@ -623,7 +623,7 @@ SUM(profit)
 
 ---
 
-# Критерий завершения
+## Критерий завершения
 
 Должно выполняться:
 
