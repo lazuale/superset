@@ -10,7 +10,7 @@ sales_virtual
 
 Он определяется SQL-запросом к `training.sales`, возвращает 12 продаж и дополнительную колонку `profit`.
 
-Также должен быть сохранён Chart:
+Также должен быть сохранён график (`Chart`):
 
 ```text
 Прибыль по регионам — Virtual Dataset
@@ -21,13 +21,13 @@ sales_virtual
 ```text
 SQL Lab
 → результат SQL
-→ временный query datasource
+→ временный источник запроса
 → Virtual Dataset
 → Explore
 → Chart
 ```
 
-Глубокое сравнение Virtual Dataset с VIEW, materialized view и витринами вынесено в отдельный справочник после урока.
+Глубокое сравнение Virtual Dataset с VIEW, MATERIALIZED VIEW и витринами вынесено в отдельный справочник после урока.
 
 ## Перед началом
 
@@ -189,21 +189,21 @@ profit  = 285.00
 Create chart
 ```
 
-В Superset 6.1.0 tooltip и `aria-label` этой кнопки — `Create chart`.
+В Superset 6.1.0 всплывающая подсказка и технический `aria-label` этой кнопки — `Create chart`.
 
 Откроется Explore на результате выполненного SQL.
 
 На этом этапе постоянного Dataset ещё нет:
 
 ```text
-SQL Lab query
+запрос SQL Lab
       ↓
-query datasource
+временный источник запроса
       ↓
 Explore
 ```
 
-`query datasource` здесь — временный источник Explore для результата SQL Lab.
+В исходном коде такой временный источник называется `query datasource`. Здесь это только временный источник Explore для результата SQL Lab.
 
 Не путайте:
 
@@ -223,7 +223,7 @@ Create chart
 
 ## 3. Сохраняем результат как Virtual Dataset
 
-В левой панели Explore для query datasource Superset показывает сообщение:
+В левой панели Explore для временного источника Superset показывает сообщение:
 
 ```text
 Create a dataset to edit or add columns and metrics.
@@ -301,22 +301,22 @@ profit
 
 ```text
 sales
-→ source = physical table training.sales
+→ источник = физическая таблица training.sales
 
 sales_virtual
-→ source = сохранённый SQL-запрос
+→ источник = сохранённый SQL-запрос
 ```
 
 При этом:
 
 ```text
-PostgreSQL table sales_virtual
+таблица PostgreSQL sales_virtual
 → не создаётся
 ```
 
 ---
 
-## 5. Строим Chart на Virtual Dataset
+## 5. Строим график на Virtual Dataset
 
 Откройте `sales_virtual` в Explore и выберите:
 
@@ -359,7 +359,7 @@ Create chart
 
 ```text
 оба Dataset читают те же 12 продаж
-и используют тот же row-level смысл profit = revenue - cost
+и используют тот же построчный смысл profit = revenue - cost
 ```
 
 Различается место определения `profit`:
@@ -374,7 +374,7 @@ Virtual sales_virtual
 
 ---
 
-## 6. Сохраняем Chart
+## 6. Сохраняем график
 
 Нажмите:
 
@@ -404,7 +404,7 @@ Dashboard не выбирайте.
 Charts
 ```
 
-Найдите этот Chart и снова откройте его в Explore.
+Найдите этот график и снова откройте его в Explore.
 
 Проверьте:
 
@@ -427,9 +427,9 @@ sales
 Упрощённая модель:
 
 ```text
-Superset metadata
+метаданные Superset
 └── sales_virtual
-    └── SQL definition
+    └── определение SQL
 ```
 
 Когда Explore или Chart обращается к Virtual Dataset, его SQL участвует в запросе к подключённому источнику.
@@ -440,7 +440,7 @@ Superset metadata
 
 Если `training.sales` изменится, следующий запрос к `sales_virtual` тоже может вернуть другой результат.
 
-### Изменение SQL Virtual Dataset может повлиять на зависимые Chart
+### Изменение SQL Virtual Dataset может повлиять на зависимые графики
 
 Например, если убрать из SQL:
 
@@ -448,7 +448,7 @@ Superset metadata
 profit
 ```
 
-Chart с:
+график с:
 
 ```text
 SUM(profit)
@@ -474,7 +474,7 @@ SUM(profit)
 1. SQL в SQL Lab
    → текст и выполненный запрос
 
-2. query datasource после Create chart
+2. временный источник после Create chart
    → временный источник Explore
 
 3. sales_virtual после Create a dataset
@@ -514,7 +514,7 @@ Metrics    = SUM(profit)
 
 ```text
 Где хранится SQL sales_virtual?
-→ в metadata Superset как определение Dataset
+→ в метаданных Superset как определение Dataset
 
 Создалась ли таблица sales_virtual в PostgreSQL?
 → нет
@@ -531,13 +531,13 @@ Metrics    = SUM(profit)
 
 Сначала убедитесь, что SQL успешно выполнен.
 
-В Superset 6.1.0 кнопка Explore результата также отключена, если Database connection не разрешает subquery. Учебное подключение курса используется для этого сценария.
+В Superset 6.1.0 кнопка открытия результата в Explore также отключена, если подключение Database не разрешает подзапросы. В исходном коде эта возможность проверяется через `allows_subquery`. Учебное подключение курса используется для этого сценария.
 
 ### После Create chart sales_virtual ещё нет в Datasets
 
 Это ожидаемо.
 
-Сначала появляется временный query datasource.
+Сначала появляется временный источник запроса.
 
 Постоянный объект появляется только после:
 
@@ -551,9 +551,9 @@ Create a dataset
 
 Проверьте, что Explore открыт именно из результата SQL Lab, а не из уже сохранённого Dataset.
 
-### В Chart есть лишний COUNT(*)
+### В графике есть лишний COUNT(*)
 
-Для основного Chart должен остаться только:
+Для основного графика должен остаться только:
 
 ```text
 SUM(profit)
@@ -574,7 +574,7 @@ GROUP BY
 
 Не используйте `Overwrite existing` автоматически.
 
-Для чистого повторного прохождения удалите ненужный учебный Virtual Dataset и связанные тестовые Chart либо продолжайте только после проверки, что существующий `sales_virtual` соответствует уроку.
+Для чистого повторного прохождения удалите ненужный учебный Virtual Dataset и связанные тестовые графики либо продолжайте только после проверки, что существующий `sales_virtual` соответствует уроку.
 
 ---
 
@@ -596,7 +596,7 @@ Virtual Dataset  = sales_virtual
 profit присутствует
 ```
 
-Chart:
+График:
 
 ```text
 Прибыль по регионам — Virtual Dataset
@@ -608,8 +608,8 @@ Chart Source = sales_virtual
 И вы должны различать:
 
 ```text
-SQL Lab query
-query datasource
+запрос SQL Lab
+временный источник запроса (query datasource)
 Virtual Dataset
 ```
 
@@ -619,7 +619,7 @@ Virtual Dataset
 
 - когда выбирать Physical или Virtual Dataset;
 - когда достаточно Calculated Column;
-- когда SQL лучше вынести в VIEW / materialized view / витрину;
+- когда SQL лучше вынести в VIEW / MATERIALIZED VIEW / витрину;
 - почему тяжёлый общий SQL не стоит автоматически держать внутри Superset;
 
 используйте отдельный справочник:
@@ -636,5 +636,5 @@ Virtual Dataset
 
 - кнопка результата SQL Lab `Create chart` и проверка `allows_subquery`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/ExploreResultsButton/index.tsx>
 - SQL Lab: <https://github.com/apache/superset/tree/6.1.0/superset-frontend/src/SqlLab>
-- SQLAlchemy Dataset model: <https://github.com/apache/superset/blob/6.1.0/superset/connectors/sqla/models.py>
+- модель Dataset SQLAlchemy: <https://github.com/apache/superset/blob/6.1.0/superset/connectors/sqla/models.py>
 - Explore: <https://github.com/apache/superset/tree/6.1.0/superset-frontend/src/explore>
