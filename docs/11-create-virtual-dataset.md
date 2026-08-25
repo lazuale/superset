@@ -16,6 +16,19 @@ sales_virtual
 Прибыль по регионам — Virtual Dataset
 ```
 
+Главная цель урока — понять рабочую цепочку:
+
+```text
+SQL Lab
+→ результат SQL
+→ временный query datasource
+→ Virtual Dataset
+→ Explore
+→ Chart
+```
+
+Глубокое сравнение Virtual Dataset с VIEW, materialized view и витринами вынесено в отдельный справочник после урока.
+
 ## Перед началом
 
 Должны быть пройдены уроки 02–10.
@@ -43,17 +56,17 @@ profit  = 1530.00
 
 ---
 
-## Physical Dataset и Virtual Dataset
+## Physical и Virtual: минимальное различие
 
-В уроке 04 мы создали Physical Dataset прямо на таблице:
+В уроке 04 мы создали Physical Dataset прямо на существующей таблице:
 
 ```text
-training.sales
-      ↓
-Dataset sales
+PostgreSQL: training.sales
+        ↓
+Physical Dataset: sales
 ```
 
-Virtual Dataset определяется SQL:
+Virtual Dataset определяется SQL-запросом, который хранится в Superset:
 
 ```text
 SQL-запрос
@@ -61,9 +74,7 @@ SQL-запрос
 Virtual Dataset
 ```
 
-При этом Superset не создаёт новую физическую таблицу PostgreSQL и не копирует туда строки.
-
-В этом уроке SQL будет таким:
+В этом уроке запрос будет построчным:
 
 ```sql
 SELECT
@@ -80,9 +91,15 @@ SELECT
 FROM training.sales;
 ```
 
-Исходная таблица содержит девять физических столбцов. Результат запроса содержит десять — добавляется `profit`.
+Исходная таблица содержит девять физических столбцов. Результат содержит десять — добавляется `profit`.
 
-Одна строка результата по-прежнему соответствует одной продаже.
+Зерно не меняется:
+
+```text
+1 строка результата = 1 продажа
+```
+
+Новой физической таблицы PostgreSQL этот запрос не создаёт.
 
 ---
 
@@ -124,7 +141,14 @@ FROM training.sales;
 Run
 ```
 
-Ожидается 12 строк и десять столбцов:
+Ожидается:
+
+```text
+12 строк
+10 столбцов
+```
+
+Столбцы:
 
 ```text
 sale_id
@@ -153,7 +177,7 @@ cost    = 440.00
 profit  = 285.00
 ```
 
-Если результат не совпадает, сначала исправьте SQL.
+Если результат не совпадает, сначала исправьте SQL. Не сохраняйте неправильный запрос как Dataset.
 
 ---
 
@@ -165,11 +189,11 @@ profit  = 285.00
 Create chart
 ```
 
-В Superset 6.1.0 это точные tooltip и `aria-label` этой кнопки.
+В Superset 6.1.0 tooltip и `aria-label` этой кнопки — `Create chart`.
 
 Откроется Explore на результате выполненного SQL.
 
-На этом этапе постоянного Virtual Dataset ещё нет:
+На этом этапе постоянного Dataset ещё нет:
 
 ```text
 SQL Lab query
@@ -179,13 +203,27 @@ query datasource
 Explore
 ```
 
-`query datasource` — временный источник Explore.
+`query datasource` здесь — временный источник Explore для результата SQL Lab.
+
+Не путайте:
+
+```text
+Create chart
+```
+
+на этом шаге и:
+
+```text
+создание постоянного Virtual Dataset
+```
+
+Это ещё не одно и то же.
 
 ---
 
-## 3. Сохраняем SQL как Dataset
+## 3. Сохраняем результат как Virtual Dataset
 
-В левой панели Explore для query datasource Superset показывает:
+В левой панели Explore для query datasource Superset показывает сообщение:
 
 ```text
 Create a dataset to edit or add columns and metrics.
@@ -209,7 +247,7 @@ Save or Overwrite Dataset
 Save as new
 ```
 
-В `Dataset name` укажите:
+Имя:
 
 ```text
 sales_virtual
@@ -235,28 +273,22 @@ Save
 Datasets
 ```
 
-В списке должны одновременно существовать:
+Должны одновременно существовать:
 
 ```text
 sales
 sales_virtual
 ```
 
-В колонке `Type` у `sales_virtual` точная подпись Superset 6.1.0:
+Для `sales_virtual` в колонке `Type` ожидается:
 
 ```text
 Virtual
 ```
 
-Нажмите имя:
+Откройте `sales_virtual`.
 
-```text
-sales_virtual
-```
-
-Имя Dataset в списке открывает его `explore_url`, то есть Explore.
-
-В Columns должны быть, в частности:
+Проверьте наличие, в частности:
 
 ```text
 region
@@ -265,46 +297,22 @@ cost
 profit
 ```
 
-`profit` здесь является колонкой результата SQL Virtual Dataset.
-
----
-
-## Что сохранено
-
-Physical Dataset:
+Главное различие теперь можно записать так:
 
 ```text
 sales
-→ source = training.sales
+→ source = physical table training.sales
+
+sales_virtual
+→ source = сохранённый SQL-запрос
 ```
 
-Virtual Dataset:
+При этом:
 
 ```text
-sales_virtual
-→ source = SQL-запрос
+PostgreSQL table sales_virtual
+→ не создаётся
 ```
-
-SQL:
-
-```sql
-SELECT
-    sale_id,
-    sale_date,
-    region,
-    office,
-    manager,
-    product,
-    quantity,
-    revenue,
-    cost,
-    revenue - cost AS profit
-FROM training.sales;
-```
-
-В PostgreSQL таблица `sales_virtual` не появляется.
-
-Superset хранит определение Virtual Dataset в своей metadata database, а сам запрос выполняется PostgreSQL.
 
 ---
 
@@ -316,11 +324,7 @@ Superset хранит определение Virtual Dataset в своей metad
 Bar Chart
 ```
 
-Очистите `Metrics` от автоматически добавленных или перенесённых расчётов. В этом Chart должна остаться только:
-
-```text
-SUM(profit)
-```
+Очистите `Metrics` от лишних автоматически добавленных или перенесённых расчётов.
 
 Настройте:
 
@@ -351,13 +355,21 @@ Create chart
 520.00 + 1010.00 = 1530.00
 ```
 
-Если результат отличается, проверьте:
+Почему результат совпадает с Physical Dataset:
 
 ```text
-Dataset = sales_virtual
-X Axis  = region
-Metrics = только SUM(profit)
-Filters = нет ограничивающего фильтра
+оба Dataset читают те же 12 продаж
+и используют тот же row-level смысл profit = revenue - cost
+```
+
+Различается место определения `profit`:
+
+```text
+Physical sales
+→ Calculated Column Superset
+
+Virtual sales_virtual
+→ SELECT ... revenue - cost AS profit
 ```
 
 ---
@@ -386,167 +398,90 @@ Dashboard не выбирайте.
 
 Нажмите `Save`.
 
-Теперь откройте:
+Откройте:
 
 ```text
 Charts
 ```
 
-Найдите Chart по имени и нажмите его.
+Найдите этот Chart и снова откройте его в Explore.
 
-В Explore проверьте:
+Проверьте:
 
 ```text
 Chart Source = sales_virtual
 ```
 
-а не `sales`.
-
----
-
-## Почему результат совпадает с Physical Dataset
-
-Оба Dataset читают одни и те же продажи из `training.sales`.
-
-Разница — место определения `profit`.
-
-В Physical Dataset:
+а не:
 
 ```text
 sales
-└── Calculated Column
-    └── revenue - cost
-```
-
-В Virtual Dataset:
-
-```text
-sales_virtual
-└── SQL
-    └── revenue - cost AS profit
-```
-
-Поэтому одинаковая группировка и агрегация дают одинаковый результат:
-
-```text
-Север = 520.00
-Юг    = 1010.00
 ```
 
 ---
 
-## Calculated Column и Virtual Dataset
+## Что обязательно понять про Virtual Dataset
 
-Calculated Column подходит, когда набор строк уже правильный, а внутри Dataset нужно добавить простой row-level расчёт.
+### Он хранит определение SQL, а не отдельную копию строк
 
-Пример:
-
-```sql
-revenue - cost
-```
-
-Virtual Dataset нужен, когда SQL должен определить сам набор данных: выбрать столбцы, переименовать их, добавить выражения, отфильтровать строки или выполнить более сложную подготовку для анализа.
-
-Если задача решается одной Calculated Column, переводить весь Dataset на SQL только ради неё не требуется.
-
-В этом уроке `profit` специально реализован вторым способом, чтобы показать механизм Virtual Dataset.
-
----
-
-## Virtual Dataset и VIEW PostgreSQL
-
-Virtual Dataset хранится в metadata Superset:
+Упрощённая модель:
 
 ```text
-Superset
-└── Dataset
-    └── SQL
+Superset metadata
+└── sales_virtual
+    └── SQL definition
 ```
 
-VIEW создаётся в PostgreSQL:
+Когда Explore или Chart обращается к Virtual Dataset, его SQL участвует в запросе к подключённому источнику.
+
+Поэтому Virtual Dataset не является сохранённым снимком этих 12 строк.
+
+### Изменение исходных данных может изменить результат
+
+Если `training.sales` изменится, следующий запрос к `sales_virtual` тоже может вернуть другой результат.
+
+### Изменение SQL Virtual Dataset может повлиять на зависимые Chart
+
+Например, если убрать из SQL:
 
 ```text
-PostgreSQL
-└── VIEW
+profit
 ```
 
-VIEW доступен другим приложениям, которым разрешён доступ к базе. Virtual Dataset — часть аналитической модели Superset.
-
-Если одна SQL-логика нужна многим системам, централизованно управляется в базе или слишком тяжела для постоянного выполнения как вложенный запрос, её разумнее вынести в VIEW, materialized view или подготовленную таблицу-витрину.
-
-Virtual Dataset сам по себе не ускоряет тяжёлый SQL.
-
----
-
-## Как выполняется запрос Chart
-
-Упрощённо, если Virtual Dataset определён как:
-
-```sql
-SELECT
-    region,
-    revenue - cost AS profit
-FROM training.sales
-```
-
-а Chart использует:
-
-```text
-X Axis  = region
-Metrics = SUM(profit)
-```
-
-PostgreSQL получает запрос, концептуально похожий на:
-
-```sql
-SELECT
-    region,
-    SUM(profit)
-FROM (
-    -- SQL Virtual Dataset
-) AS virtual_dataset
-GROUP BY region;
-```
-
-Это схема для понимания, а не обещание дословного SQL во всех конфигурациях Superset.
-
-SQL Virtual Dataset становится входным набором для запроса Explore. Поэтому на базовом уровне не агрегируем данные внутри Virtual Dataset заранее, если следующая агрегация должна выполняться в Chart.
-
----
-
-## Virtual Dataset не является снимком данных
-
-Сохранение Virtual Dataset не фиксирует текущие 12 строк навсегда.
-
-При следующем запросе его SQL снова обращается к `training.sales`.
-
-Если исходная таблица изменится, результат Virtual Dataset тоже может измениться. В реальной эксплуатации на момент отображения дополнительно может влиять настроенный кэш Superset; кэширование в этом курсе не настраиваем.
-
-Если изменить SQL самого Virtual Dataset, изменение затронет Chart, которые от него зависят.
-
-Например, удаление `profit` из SQL сломает Chart с:
+Chart с:
 
 ```text
 SUM(profit)
 ```
 
+перестанет иметь нужный столбец.
+
+### Зерно результата нужно контролировать
+
+В этом уроке SQL намеренно остаётся построчным:
+
+```text
+1 строка = 1 продажа
+```
+
+Не добавляйте `GROUP BY` только потому, что он уже знаком из урока 10. Предварительная агрегация изменила бы зерно Virtual Dataset.
+
 ---
 
-## Три состояния SQL
+## Три состояния, которые не нужно путать
 
 ```text
 1. SQL в SQL Lab
-   → текст запроса
+   → текст и выполненный запрос
 
-2. query datasource
-   → временный источник после Create chart
+2. query datasource после Create chart
+   → временный источник Explore
 
-3. Virtual Dataset
-   → постоянный объект после
-     Create a dataset → Save as new → Save
+3. sales_virtual после Create a dataset
+   → постоянный Virtual Dataset в Datasets
 ```
 
-Только третий объект находится в `Datasets` и предназначен для повторного использования.
+Только третий объект является сохранённым Dataset для повторного использования.
 
 ---
 
@@ -559,7 +494,7 @@ Dimensions = product
 Metrics    = SUM(profit)
 ```
 
-Если Table автоматически содержит `COUNT(*)`, удалите его.
+Если Table содержит лишний `COUNT(*)`, удалите его.
 
 Ожидается:
 
@@ -575,14 +510,17 @@ Metrics    = SUM(profit)
 1530.00
 ```
 
-После этого ответьте на вопрос:
-
-> появилась ли в PostgreSQL физическая таблица `sales_virtual`?
-
-Ответ:
+После этого ответьте без подсказки:
 
 ```text
-нет
+Где хранится SQL sales_virtual?
+→ в metadata Superset как определение Dataset
+
+Создалась ли таблица sales_virtual в PostgreSQL?
+→ нет
+
+Что означает одна строка sales_virtual?
+→ одну продажу
 ```
 
 ---
@@ -591,11 +529,15 @@ Metrics    = SUM(profit)
 
 ### Create chart у результата SQL Lab недоступна
 
-Сначала убедитесь, что SQL успешно выполнен. В Superset 6.1.0 кнопка также отключается, если Database connection не разрешает subquery. Учебное подключение PostgreSQL этот сценарий поддерживает.
+Сначала убедитесь, что SQL успешно выполнен.
+
+В Superset 6.1.0 кнопка Explore результата также отключена, если Database connection не разрешает subquery. Учебное подключение курса используется для этого сценария.
 
 ### После Create chart sales_virtual ещё нет в Datasets
 
-Это ожидаемо. `Create chart` создаёт временный query datasource для Explore.
+Это ожидаемо.
+
+Сначала появляется временный query datasource.
 
 Постоянный объект появляется только после:
 
@@ -609,17 +551,30 @@ Create a dataset
 
 Проверьте, что Explore открыт именно из результата SQL Lab, а не из уже сохранённого Dataset.
 
-### В Chart есть лишняя серия COUNT(*)
+### В Chart есть лишний COUNT(*)
 
-Удалите её из `Metrics`. Для основного Chart урока нужна только:
+Для основного Chart должен остаться только:
 
 ```text
 SUM(profit)
 ```
 
+### Получилось не 12 строк
+
+Проверьте SQL до сохранения.
+
+Для основного упражнения в запросе не должно быть:
+
+```text
+GROUP BY
+ограничивающего WHERE
+```
+
 ### sales_virtual уже существует
 
-Не выбирайте `Overwrite existing` автоматически. Для повторного чистого прохождения удалите ненужный учебный Virtual Dataset и связанные с ним тестовые Chart либо продолжайте работу с уже корректным `sales_virtual`.
+Не используйте `Overwrite existing` автоматически.
+
+Для чистого повторного прохождения удалите ненужный учебный Virtual Dataset и связанные тестовые Chart либо продолжайте только после проверки, что существующий `sales_virtual` соответствует уроку.
 
 ---
 
@@ -632,11 +587,12 @@ Physical Dataset = sales
 Virtual Dataset  = sales_virtual
 ```
 
-Запрос `sales_virtual` возвращает:
+`sales_virtual`:
 
 ```text
 12 строк
 10 столбцов
+1 строка = 1 продажа
 profit присутствует
 ```
 
@@ -649,22 +605,36 @@ Chart Source = sales_virtual
 Юг    = 1010.00
 ```
 
+И вы должны различать:
+
+```text
+SQL Lab query
+query datasource
+Virtual Dataset
+```
+
 ## Справочник к уроку
 
-Если после упражнения нужно решить, **когда вообще выбирать Physical или Virtual Dataset**, когда достаточно Calculated Column и когда SQL лучше вынести в VIEW/витрину:
+Если после практики нужно решить:
+
+- когда выбирать Physical или Virtual Dataset;
+- когда достаточно Calculated Column;
+- когда SQL лучше вынести в VIEW / materialized view / витрину;
+- почему тяжёлый общий SQL не стоит автоматически держать внутри Superset;
+
+используйте отдельный справочник:
 
 → [Physical Dataset или Virtual Dataset?](11a-physical-vs-virtual-dataset.md)
 
+Эти архитектурные вопросы не требуются для выполнения механики текущего урока.
+
 Следующий урок — самостоятельная итоговая проверка всего маршрута.
 
-→ [Урок 12. Итоговая проверка и что изучать дальше](12-next-steps.md)
+→ [Урок 12. Итоговая проверка](12-next-steps.md)
 
 ## Источники Superset 6.1.0
 
-- `Create chart` для результата SQL Lab: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/ExploreResultsButton/index.tsx>
-- `Create a dataset` в Explore: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/DatasourcePanel/index.tsx>
-- `Save or Overwrite Dataset`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/SaveDatasetModal/index.tsx>
-- список Datasets и переход по `explore_url`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/pages/DatasetList/index.tsx>
-- точные подписи `Physical` / `Virtual`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-core/src/components/Label/reusable/DatasetTypeLabel.tsx>
-- структура учебной таблицы: [`../training/schema.sql`](../training/schema.sql)
-- учебные данные: [`../training/data.sql`](../training/data.sql)
+- кнопка результата SQL Lab `Create chart` и проверка `allows_subquery`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/ExploreResultsButton/index.tsx>
+- SQL Lab: <https://github.com/apache/superset/tree/6.1.0/superset-frontend/src/SqlLab>
+- SQLAlchemy Dataset model: <https://github.com/apache/superset/blob/6.1.0/superset/connectors/sqla/models.py>
+- Explore: <https://github.com/apache/superset/tree/6.1.0/superset-frontend/src/explore>
