@@ -93,11 +93,14 @@ training/
 9. [Добавляем Native Filters](docs/09-native-filters.md)
    - [Шпаргалка: как выбрать Native Filter и настроить Scoping](docs/09a-choose-native-filter.md)
 10. [SQL Lab с нуля](docs/10-sql-lab.md)
+    - [Шпаргалка: минимальный SQL для Superset](docs/10a-minimal-sql-cheatsheet.md)
 11. [Создаём Virtual Dataset](docs/11-create-virtual-dataset.md)
-   - [Шпаргалка: Physical Dataset или Virtual Dataset?](docs/11a-physical-vs-virtual-dataset.md)
+    - [Шпаргалка: Physical Dataset или Virtual Dataset?](docs/11a-physical-vs-virtual-dataset.md)
 12. [Итоговая проверка и что изучать дальше](docs/12-next-steps.md)
+    - [Шпаргалка: что делать в Superset, а что вне него](docs/12a-what-belongs-in-superset.md)
+    - [Шпаргалка: форматы чисел, процентов и дат](docs/12b-format-numbers-percent-dates.md)
 
-Шпаргалки не являются отдельными обязательными уроками. Открывайте их рядом с соответствующим уроком, когда нужно быстро понять смысл поля, выбрать способ расчёта, разобраться со временем и зерном данных, подобрать визуализацию, спроектировать Dashboard, настроить фильтрацию, выбрать тип Dataset или проверить подозрительный результат.
+Шпаргалки не являются отдельными обязательными уроками. Они образуют справочный слой курса: помогают быстро вспомнить смысл полей Explore, выбрать способ расчёта и агрегацию, разобраться со временем и зерном данных, подобрать визуализацию, спроектировать Dashboard, настроить фильтрацию, проверить SQL, выбрать тип Dataset, оформить значения и понять границы применения Superset.
 
 ## Учебные данные
 
