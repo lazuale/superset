@@ -173,9 +173,9 @@ MAX(date)
 
 Но `MAX(date)` не означает автоматически «взять всю последнюю строку». Для последней записи целиком может понадобиться отдельный SQL.
 
-## 7. Dimension меняет группы, а не формулу Metric
+## 7. Измерение меняет группы, а не формулу метрики
 
-Без Dimension:
+Без измерения (`Dimension`):
 
 ```text
 SUM(revenue) = 4005.00
@@ -223,7 +223,7 @@ COUNT(*) = 1200
 
 может выглядеть как «1200 автомобилей», хотя это 1200 строк по 137 автомобилям.
 
-Поэтому всегда проговаривайте Metric словами.
+Поэтому всегда проговаривайте смысл метрики словами.
 
 ## Контрольные значения курса
 
@@ -265,4 +265,4 @@ MIN / MAX        → крайние значения
 ## Источники Superset 6.1.0
 
 - список агрегирований Explore: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/constants.ts>
-- редактор ad hoc Metric: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/controls/MetricControl/AdhocMetricEditPopover/index.tsx>
+- редактор разовой метрики (`ad hoc metric`): <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/controls/MetricControl/AdhocMetricEditPopover/index.tsx>
