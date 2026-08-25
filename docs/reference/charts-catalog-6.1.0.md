@@ -8,134 +8,160 @@
 
 → [Как выбрать визуализацию](../07a-choose-visualization.md)
 
-## Обозначения
+## Как читать этот каталог
+
+В колонке `UI name` используются **пользовательские названия из `metadata.name` исходного кода Superset 6.1.0**.
+
+Это важно, потому что внутреннее имя класса и название в chart picker могут различаться. Например:
+
+```text
+EchartsTimeseriesBarChartPlugin
+→ UI name: Bar Chart
+
+BigNumberTotalChartPlugin
+→ UI name: Big Number
+```
+
+Не используйте имя класса как инструкцию пользователю, если `metadata.name` отличается.
+
+Обозначения:
 
 - **база** — полезно большинству авторов Dashboard;
 - **аналитика** — полезно BI-аналитику;
 - **спец.** — изучать под конкретную задачу;
 - **осторожно** — применять осознанно;
+- **deprecated** — плагин явно помечен в metadata как deprecated;
 - **feature flag** — регистрация зависит от настройки Superset.
 
-## KPI и таблицы
+## Основные Chart: MainPreset
 
-| Chart | Уровень | Для чего |
+Ниже перечислены 45 visualization plugins, постоянно регистрируемых `MainPreset` Superset 6.1.0. Filter plugins и chart customizations в этот счёт не входят.
+
+### KPI и таблицы
+
+| UI name | Уровень | Для чего / примечание |
 |---|---|---|
-| Big Number | база | KPI одним числом |
-| Big Number Total | база | итоговое значение |
-| Big Number Period over Period | feature flag | сравнение значения с периодом |
-| Table | база | точные строки и агрегаты |
-| Pivot Table | база | сводная матрица |
-| Time Table | спец. | временные показатели в таблице |
-| AG Grid Table | feature flag | альтернативная табличная визуализация |
-| Handlebars | спец. | собственное шаблонное представление |
+| `Big Number` | база | одно итоговое значение |
+| `Big Number with Trendline` | аналитика | KPI вместе с небольшой динамикой |
+| `Table` | база | точные строки и агрегаты |
+| `Pivot Table` | база | сводная матрица |
+| `Time-series Table` | спец. | несколько временных показателей и sparklines в таблице |
+| `Handlebars` | спец. | собственное шаблонное представление данных |
 
-## Временные ряды
+### Время и изменение показателей
 
-| Chart | Уровень |
-|---|---|
-| Time-series Chart | аналитика |
-| Time-series Line Chart | база |
-| Time-series Smooth Line Chart | спец. |
-| Time-series Step Chart | спец. |
-| Time-series Area Chart | база |
-| Time-series Bar Chart | база |
-| Time-series Scatter Plot | аналитика |
-| Mixed Time-series | аналитика |
-| Compare | спец. |
-| Time Pivot | спец. |
-| Horizon Chart | спец. |
+| UI name | Уровень | Для чего / примечание |
+|---|---|---|
+| `Generic Chart` | аналитика | универсальный ECharts-вариант с несколькими способами представления series |
+| `Area Chart` | база | временная динамика с акцентом на площадь / накопление |
+| `Bar Chart` | база | сравнение категорий или дискретных периодов |
+| `Line Chart` | база | динамика и тренд |
+| `Smooth Line` | спец. | сглаженное представление линии |
+| `Scatter Plot` | аналитика | связь показателей / точки, в том числе с временной осью |
+| `Stepped Line` | спец. | ступенчатое изменение значения |
+| `Mixed Chart` | аналитика | две серии на общей оси, например столбцы + линия |
+| `Time-series Percent Change` | deprecated | legacy NVD3; metadata помечает Chart как deprecated |
+| `Time-series Period Pivot` | спец. | сравнение временных периодов |
+| `Horizon Chart` | спец. | компактное сравнение временных рядов групп |
+| `Calendar Heatmap` | аналитика | интенсивность показателя по дням календаря |
+| `Gantt Chart` | спец. | события / интервалы на временной шкале |
+| `Waterfall Chart` | аналитика | вклад последовательных положительных и отрицательных изменений в итог |
 
-## Сравнение, структура и категории
+### Сравнение, структура и KPI
 
-| Chart | Уровень |
-|---|---|
-| Pie Chart | база, осторожно |
-| Bubble Chart | аналитика |
-| Bubble Chart (legacy) | спец. |
-| Radar Chart | спец. |
-| Rose Chart | осторожно |
-| Funnel Chart | аналитика |
-| Waterfall Chart | аналитика |
-| Bullet Chart | спец. |
-| Treemap | база |
+| UI name | Уровень | Для чего / примечание |
+|---|---|---|
+| `Pie Chart` | база, осторожно | небольшое число частей целого; Donut — настройка этого Chart, не отдельный plugin |
+| `Treemap` | база | вклад категорий / иерархия через площадь |
+| `Funnel Chart` | аналитика | изменение показателя по последовательным стадиям |
+| `Radar Chart` | спец. | сравнение нескольких показателей по нескольким осям |
+| `Nightingale Rose Chart` | осторожно | полярное сравнение категорий |
+| `Bullet Chart` | спец. | показатель относительно целевого значения |
+| `Gauge Chart` | спец. | прогресс показателя относительно диапазона / цели |
 
-## Распределения и исследование данных
+### Распределения, связи и иерархии
 
-| Chart | Уровень |
-|---|---|
-| Histogram | аналитика |
-| Box Plot | аналитика |
-| Heatmap | база |
-| Paired t-test | спец. |
-| Parallel Coordinates | спец. |
+| UI name | Уровень | Для чего / примечание |
+|---|---|---|
+| `Box Plot` | аналитика | распределение, медиана, квартили, диапазон |
+| `Histogram` | аналитика | распределение значений по интервалам |
+| `Heatmap` | база | интенсивность показателя на пересечении двух групп |
+| `Bubble Chart` | аналитика | три измерения через X, Y и размер пузыря |
+| `Bubble Chart (legacy)` | deprecated | legacy NVD3; явно помечен как deprecated |
+| `Paired t-test Table` | спец. | таблица результатов парных t-тестов |
+| `Parallel Coordinates` | спец. | сравнение множества показателей по строкам / объектам |
+| `Partition Chart` | спец. | сравнение агрегированного показателя по иерархическим группам |
+| `Graph Chart` | спец. | сеть связей между сущностями |
+| `Sankey Chart` | аналитика | потоки значений между стадиями / узлами |
+| `Chord Diagram` | спец. | связи между категориями через хорды |
+| `Tree Chart` | спец. | древовидная иерархия |
+| `Sunburst Chart` | спец. | круговая многоуровневая иерархия |
+| `Word Cloud` | осторожно | частота слов; обычно не лучший выбор для точного сравнения |
 
-## Иерархии и связи
+### География вне deck.gl preset
 
-| Chart | Уровень |
-|---|---|
-| Sunburst | спец. |
-| Tree | спец. |
-| Partition | спец. |
-| Sankey Diagram | аналитика |
-| Chord Diagram | спец. |
-| Graph Chart | спец. |
+| UI name | Уровень | Для чего / примечание |
+|---|---|---|
+| `Country Map` | спец. | choropleth по административным подразделениям страны |
+| `World Map` | спец. | показатели по странам мира |
+| `MapBox` | спец. | legacy MapBox-визуализация |
+| `Cartodiagram` | спец. | размещение других Chart на карте |
 
-## Время, календарь и индикаторы
+## deck.gl preset
 
-| Chart | Уровень |
-|---|---|
-| Calendar Heatmap | аналитика |
-| Gantt Chart | спец. |
-| Gauge Chart | спец. |
+Отдельный `DeckGLChartPreset` Superset 6.1.0 регистрирует 11 visualization plugins.
 
-## Текст
+| UI name | Registration key | Уровень |
+|---|---|---|
+| `deck.gl Arc` | `deck_arc` | спец. |
+| `deck.gl Geojson` | `deck_geojson` | спец. |
+| `deck.gl Grid` | `deck_grid` | спец. |
+| `deck.gl 3D Hexagon` | `deck_hex` | спец. |
+| `deck.gl Heatmap` | `deck_heatmap` | спец. |
+| `deck.gl Multiple Layers` | `deck_multi` | спец. |
+| `deck.gl Path` | `deck_path` | спец. |
+| `deck.gl Polygon` | `deck_polygon` | спец. |
+| `deck.gl Scatterplot` | `deck_scatter` | спец. |
+| `deck.gl Screen Grid` | `deck_screengrid` | спец. |
+| `deck.gl Contour` | `deck_contour` | спец. |
 
-| Chart | Уровень |
-|---|---|
-| Word Cloud | осторожно |
+Написание `Geojson`, `Scatterplot` и `3D Hexagon` здесь сохранено именно таким, как оно задано в `metadata.name` Superset 6.1.0.
 
-## География
+## Chart под feature flags
 
-| Chart | Уровень |
-|---|---|
-| Country Map | спец. |
-| World Map | спец. |
-| MapBox | спец. |
-| Cartodiagram | спец. |
-| deck.gl Scatterplot | спец. |
-| deck.gl Arc | спец. |
-| deck.gl Path | спец. |
-| deck.gl Polygon | спец. |
-| deck.gl GeoJSON | спец. |
-| deck.gl Grid | спец. |
-| deck.gl Hexagon | спец. |
-| deck.gl Heatmap | спец. |
-| deck.gl Screen Grid | спец. |
-| deck.gl Contour | спец. |
-| deck.gl Multiple Layers | спец. |
+Кроме 56 постоянно зарегистрированных visualization plugins, `MainPreset` условно регистрирует ещё два типа.
+
+| UI name | Feature flag | Примечание |
+|---|---|---|
+| `Big Number with Time Period Comparison` | `ChartPluginsExperimental` | сравнение KPI между временными периодами |
+| `Table V2` | `AgGridTableEnabled` | AG Grid-based табличная визуализация |
+
+Внутренние названия классов этих типов — `BigNumberPeriodOverPeriodChartPlugin` и `AgGridTableChartPlugin`, но это **не** их пользовательские названия в chart picker.
 
 ## Сколько их
 
-В `MainPreset` Superset 6.1.0 постоянно регистрируются 45 основных visualization plugins.
-
-Отдельный preset `deck.gl` регистрирует ещё 11 геовизуализаций.
-
-Итого по регистрации исходного кода:
+В исходном коде Superset 6.1.0:
 
 ```text
-45 основных
-+ 11 deck.gl
+45 MainPreset visualization plugins
++ 11 deck.gl visualization plugins
 = 56 постоянно зарегистрированных visualization plugins
 ```
 
-Дополнительно два типа зависят от feature flags:
+Дополнительно:
 
 ```text
-Big Number Period over Period
-AG Grid Table
++ Big Number with Time Period Comparison
++ Table V2
 ```
 
-Поэтому технически может быть зарегистрировано до 58 типов.
+могут быть зарегистрированы при соответствующих feature flags.
+
+То есть технический максимум из этих preset:
+
+```text
+58 visualization plugins
+```
 
 Важно:
 
@@ -145,23 +171,32 @@ registered plugin
 обязательно видимый каждому пользователю пункт chart picker
 ```
 
-Конкретная установка может отличаться из-за feature flags, конфигурации, metadata Chart и других настроек.
+Конкретная установка может отличаться из-за feature flags, конфигурации, metadata/labels Chart и других настроек.
 
-## Что означает `legacy`
+## `legacy` и `deprecated` — не одно и то же
 
-В Superset 6.1.0 часть визуализаций импортируется из пакетов с `legacy` в названии.
+Часть Chart импортируется из пакетов с `legacy` в имени. Само по себе это **не доказывает**, что конкретный Chart помечен как deprecated.
 
-Это не означает автоматически:
+В этом каталоге `deprecated` ставится только там, где исходный код Superset 6.1.0 делает это явно через metadata / `ChartLabel.Deprecated`.
+
+На проверенных источниках это, в частности:
 
 ```text
-сломано
-запрещено
-нельзя использовать
+Bubble Chart (legacy)
+Time-series Percent Change
 ```
 
-Для нового Dashboard используйте простое правило:
+Поэтому правило такое:
 
-> Если современная и более простая визуализация решает тот же аналитический вопрос, начинайте с неё. Legacy-вариант выбирайте только ради конкретной возможности.
+```text
+legacy package
+→ старая реализация / исторический путь
+
+explicit deprecated label
+→ Chart действительно помечен deprecated
+```
+
+Не смешивайте эти понятия.
 
 ## Какие Chart изучать сначала
 
@@ -173,11 +208,10 @@ registered plugin
 Big Number
 Table
 Pivot Table
-Bar
-Line
-Time-series Bar
-Area
-Pie / Donut
+Bar Chart
+Line Chart
+Area Chart
+Pie Chart
 Heatmap
 Treemap
 ```
@@ -187,13 +221,14 @@ Treemap
 После базы:
 
 ```text
-Mixed Time-series
-Scatter
+Big Number with Trendline
+Mixed Chart
+Scatter Plot
 Histogram
 Box Plot
-Waterfall
-Funnel
-Sankey
+Waterfall Chart
+Funnel Chart
+Sankey Chart
 Calendar Heatmap
 ```
 
@@ -203,6 +238,37 @@ Calendar Heatmap
 
 ## Источники Superset 6.1.0
 
-- регистрация основных Chart и feature flags: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/visualizations/presets/MainPreset.ts>
-- preset `deck.gl`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/legacy-preset-chart-deckgl/src/preset.ts>
-- Introduction 6.1.0: <https://superset.apache.org/user-docs/6.1.0/intro/>
+Основная регистрация и feature flags:
+
+- <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/visualizations/presets/MainPreset.ts>
+
+Точные UI names ECharts:
+
+- `Generic Chart`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/index.ts>
+- `Bar Chart`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/Regular/Bar/index.ts>
+- `Line Chart`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/Timeseries/Regular/Line/index.ts>
+- `Big Number with Trendline`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/BigNumber/BigNumberWithTrendline/index.ts>
+- `Big Number`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/BigNumber/BigNumberTotal/index.ts>
+- `Big Number with Time Period Comparison`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-echarts/src/BigNumber/BigNumberPeriodOverPeriod/index.ts>
+
+Таблицы и отдельные plugins:
+
+- `Table`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/index.ts>
+- `Pivot Table`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-pivot-table/src/plugin/index.ts>
+- `Time-series Table`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/visualizations/TimeTable/index.ts>
+- `Table V2`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-ag-grid-table/src/index.ts>
+
+Explicit deprecated examples:
+
+- `Bubble Chart (legacy)`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/legacy-preset-chart-nvd3/src/Bubble/index.ts>
+- `Time-series Percent Change`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/legacy-preset-chart-nvd3/src/Compare/index.ts>
+
+`deck.gl`:
+
+- preset: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/legacy-preset-chart-deckgl/src/preset.ts>
+- `deck.gl 3D Hexagon`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/legacy-preset-chart-deckgl/src/layers/Hex/index.ts>
+- `deck.gl Geojson`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/legacy-preset-chart-deckgl/src/layers/Geojson/index.ts>
+
+Introduction 6.1.0:
+
+- <https://superset.apache.org/user-docs/6.1.0/intro/>
