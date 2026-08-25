@@ -2,12 +2,12 @@
 
 ## Результат урока
 
-На Dashboard `Учебные продажи` должны появиться три Native Filter:
+На Dashboard `Учебные продажи` должны появиться три фильтра Native Filter:
 
 | Имя | Type | Dataset / Column | Scoping |
 |---|---|---|---|
-| Период | `Time range` | временной диапазон | все 4 Chart |
-| Регион | `Value` | `sales / region` | все 4 Chart |
+| Период | `Time range` | временной диапазон | все 4 графика |
+| Регион | `Value` | `sales / region` | все 4 графика |
 | Менеджер | `Value` | `sales / manager` | таблица и Big Number |
 
 После урока вы должны уметь применять фильтры, очищать их и ограничивать область действия через `Scoping`.
@@ -69,7 +69,7 @@ Settings
 Scoping
 ```
 
-В `Settings` задаётся сам фильтр. В `Scoping` выбираются Chart, на которые он действует.
+В `Settings` задаётся сам фильтр. В `Scoping` выбираются графики, на которые он действует.
 
 ## Фильтр Период
 
@@ -92,7 +92,7 @@ Filter type: Time range
 Scoping
 ```
 
-Включите все четыре Chart:
+Включите все четыре графика:
 
 ```text
 Продажи по регионам — таблица
@@ -136,7 +136,7 @@ End (exclusive):   2026-03-01
 Apply filters
 ```
 
-В горизонтальной ориентации Filter Bar эта же кнопка имеет короткую подпись `Apply`, но в курсе ориентацию Filter Bar не меняем.
+В горизонтальной ориентации `Filter Bar` эта же кнопка имеет короткую подпись `Apply`, но в курсе ориентацию панели фильтров не меняем.
 
 Ожидается:
 
@@ -157,7 +157,7 @@ Apply filters
 450.00 + 730.00 = 1180.00
 ```
 
-Bar Chart должен показать те же две суммы по регионам, а временной Chart:
+Bar Chart должен показать те же две суммы по регионам, а временной график:
 
 ```text
 2026-02 = 1180.00
@@ -194,7 +194,7 @@ Dataset:     sales
 Column:      region
 ```
 
-В `Scoping` включите все четыре Chart.
+В `Scoping` включите все четыре графика.
 
 Нажмите `Save`.
 
@@ -308,7 +308,7 @@ Column:      manager
 
 Нажмите `Apply filters`.
 
-Chart внутри Scoping должны измениться.
+Графики, включённые в `Scoping`, должны измениться.
 
 Таблица:
 
@@ -322,7 +322,7 @@ Big Number:
 285.00
 ```
 
-Chart вне Scoping должны остаться без фильтра `Менеджер`:
+Графики вне `Scoping` должны остаться без фильтра `Менеджер`:
 
 ```text
 Bar Chart:
@@ -391,7 +391,7 @@ Big Number:
 70.00
 ```
 
-Bar Chart и Line Chart не входят в Scoping фильтра `Менеджер`, поэтому продолжают учитывать только период и регион:
+Bar Chart и Line Chart не входят в `Scoping` фильтра `Менеджер`, поэтому продолжают учитывать только период и регион:
 
 ```text
 Bar Chart:
@@ -419,7 +419,7 @@ Apply filters
 
 ## Native Filter и права доступа
 
-Native Filter изменяет условия аналитического запроса для Chart в его Scoping.
+Native Filter изменяет условия аналитического запроса для графиков в своей области действия (`Scoping`).
 
 Например:
 
@@ -470,11 +470,11 @@ Big Number: 285.00
 прибыль = 465.00
 ```
 
-Bar Chart и Line Chart должны сохранить общие значения, потому что не входят в Scoping фильтра `Менеджер`.
+Bar Chart и Line Chart должны сохранить общие значения, потому что не входят в `Scoping` фильтра `Менеджер`.
 
 ## Типовые ошибки
 
-### Фильтр не меняет Chart
+### Фильтр не меняет график
 
 Проверьте:
 
@@ -517,7 +517,7 @@ Start (inclusive): 2026-02-01
 End (exclusive):   2026-03-01
 ```
 
-### После Менеджер = Анна изменились все четыре Chart
+### После Менеджер = Анна изменились все четыре графика
 
 Откройте `Scoping` фильтра `Менеджер` и оставьте только таблицу и Big Number.
 
@@ -526,8 +526,8 @@ End (exclusive):   2026-03-01
 На Dashboard должны существовать:
 
 ```text
-Период   → Time range → все 4 Chart
-Регион   → Value / sales.region → все 4 Chart
+Период   → Time range → все 4 графика
+Регион   → Value / sales.region → все 4 графика
 Менеджер → Value / sales.manager → таблица + Big Number
 ```
 
@@ -551,7 +551,7 @@ End (exclusive):   2026-03-01
 
 ## Справочник к уроку
 
-Если нужно выбрать тип Native Filter для другого Dashboard, продумать Scoping или понять, почему один Filter не должен влиять на все Chart:
+Если нужно выбрать тип Native Filter для другого Dashboard, продумать `Scoping` или понять, почему один фильтр не должен влиять на все графики:
 
 → [Как выбрать Native Filter](09a-choose-native-filter.md)
 
@@ -561,7 +561,7 @@ End (exclusive):   2026-03-01
 
 ## Источники Superset 6.1.0
 
-- меню Filter Bar `Add or edit filters and controls`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/nativeFilters/FilterBar/FilterBarSettings/index.tsx>
+- меню `Filter Bar` → `Add or edit filters and controls`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/nativeFilters/FilterBar/FilterBarSettings/index.tsx>
 - добавление `Add filter`, типы `Value` и `Time range`, выбор Dataset и Column: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/cypress-base/cypress/e2e/dashboard/utils.ts>
 - конфигуратор Native Filters: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/nativeFilters/FiltersConfigModal/FiltersConfigModal.tsx>
 - `Settings` / `Scoping`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/dashboard/components/nativeFilters/FiltersConfigModal/FiltersConfigForm/FiltersConfigForm.tsx>
