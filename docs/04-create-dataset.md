@@ -2,7 +2,7 @@
 
 ## Результат урока
 
-После урока в Superset должен существовать Physical Dataset:
+После урока в Superset должен существовать физический Dataset типа `Physical`:
 
 ```text
 sales
@@ -16,7 +16,7 @@ Schema:   training
 Table:    sales
 ```
 
-В Dataset должны быть видны все девять физических столбцов, а `sale_date` должен быть отмечен как temporal.
+В Dataset должны быть видны все девять физических столбцов, а `sale_date` должен быть отмечен как временной.
 
 ## Перед началом
 
@@ -46,9 +46,9 @@ password: admin
 training.sales
 ```
 
-Physical Dataset Superset хранит описание этого источника: Database, Schema, Table, список столбцов, temporal-признаки, Calculated Columns, Metrics и настройки Dataset.
+Физический Dataset хранит в Superset описание этого источника: Database, Schema, Table, список столбцов, признаки временных полей, Calculated Columns, Metrics и настройки Dataset.
 
-Создание Dataset не копирует 12 строк продаж в metadata database Superset.
+Создание Dataset не копирует 12 строк продаж в служебную базу метаданных Superset.
 
 ## Создаём Dataset
 
@@ -115,9 +115,9 @@ Schema:   training
 
 Нажмите `Edit`.
 
-## Dataset Editor
+## Редактор Dataset
 
-Для Physical Dataset `sales` в редакторе Superset 6.1.0 используются вкладки:
+Для физического Dataset `sales` в редакторе Superset 6.1.0 используются вкладки:
 
 ```text
 Source
@@ -147,7 +147,7 @@ Table:    sales
 Click the lock to make changes.
 ```
 
-Замок относится к полям Source. Он защищает от случайной смены типа Dataset, Database, Schema и Table.
+Замок относится к полям `Source`. Он защищает от случайной смены типа Dataset, Database, Schema и Table.
 
 В этом курсе источник уже выбран правильно, поэтому замок не открываем.
 
@@ -195,11 +195,11 @@ Is temporal
 
 должна стоять галка.
 
-Это обязательная проверка для следующих уроков: временные фильтры и `Time grain` будут опираться на temporal-столбец `sale_date`.
+Это обязательная проверка для следующих уроков: временные фильтры и `Time grain` будут опираться на временной столбец `sale_date`.
 
 ## Sync columns from source
 
-Над таблицей Columns находится кнопка:
+Над таблицей `Columns` находится кнопка:
 
 ```text
 Sync columns from source
@@ -225,7 +225,7 @@ Settings
 Description
 ```
 
-редактируется без открытия замка Source.
+редактируется без открытия замка `Source`.
 
 Введите:
 
@@ -275,15 +275,15 @@ sales
 
 Имя Dataset открывает `Explore`.
 
-В левой панели источника должны быть видны девять физических столбцов. У `sale_date` отображается temporal-значок; числовые поля `sale_id`, `quantity`, `revenue`, `cost` отмечены как числовые.
+В левой панели источника должны быть видны девять физических столбцов. У `sale_date` отображается значок временного поля; числовые поля `sale_id`, `quantity`, `revenue`, `cost` отмечены как числовые.
 
-На этом этапе Chart не настраиваем и не сохраняем.
+На этом этапе график (`Chart`) не настраиваем и не сохраняем.
 
-## Source lock и редактирование Dataset
+## Блокировка Source и редактирование Dataset
 
-Замок на вкладке `Source` не переводит весь Dataset Editor в read-only.
+Замок на вкладке `Source` не переводит весь редактор Dataset в режим только для чтения.
 
-Без открытия Source lock доступны, в частности:
+Без открытия замка `Source` доступны, в частности:
 
 ```text
 Metrics
@@ -292,7 +292,7 @@ Calculated columns
 Settings
 ```
 
-Поэтому для изменения `Description`, добавления Metric или Calculated Column разблокировать Source не требуется.
+Поэтому для изменения `Description`, добавления Metric или Calculated Column разблокировать `Source` не требуется.
 
 ## Типовые ошибки
 
@@ -300,7 +300,7 @@ Settings
 
 Вернитесь к [уроку 03](03-connect-postgresql.md). Подключение должно быть сохранено с `Display Name = Training PostgreSQL`.
 
-### Нет schema training или table sales
+### Нет схемы training или таблицы sales
 
 Проверьте подключение и права `superset_reader`.
 
@@ -319,7 +319,7 @@ docker compose exec -T db bash -lc \
 
 ### sale_date не отмечен как Is temporal
 
-Сначала проверьте, что источник — именно `training.sales` и Data type столбца — `DATE`.
+Сначала проверьте, что источник — именно `training.sales` и значение `Data type` столбца — `DATE`.
 
 Если структура PostgreSQL действительно была изменена после создания Dataset, используйте `Sync columns from source`, затем снова проверьте `sale_date`.
 
@@ -349,6 +349,6 @@ Description = Учебные продажи из PostgreSQL: training.sales
 ## Источники Superset 6.1.0
 
 - создание Dataset и переходы после создания: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/features/datasets/AddDataset/Footer/index.tsx>
-- Dataset Editor, вкладки, Source lock и `Sync columns from source`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/components/Datasource/components/DatasourceEditor/DatasourceEditor.tsx>
-- официальный tutorial по созданию Dataset: <https://github.com/apache/superset/blob/6.1.0/docs/docs/using-superset/creating-your-first-dashboard.mdx>
+- редактор Dataset, вкладки, блокировка `Source` и `Sync columns from source`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/components/Datasource/components/DatasourceEditor/DatasourceEditor.tsx>
+- официальное руководство по созданию Dataset: <https://github.com/apache/superset/blob/6.1.0/docs/docs/using-superset/creating-your-first-dashboard.mdx>
 - структура учебной таблицы: [`../training/schema.sql`](../training/schema.sql)
