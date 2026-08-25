@@ -30,7 +30,7 @@ SUM(revenue) - SUM(cost)
 → затем проверить, имеет ли выбранная агрегация бизнес-смысл
 ```
 
-Chart в этом уроке не сохраняем.
+График (`Chart`) в этом уроке не сохраняем.
 
 ## Перед началом
 
@@ -54,7 +54,7 @@ Filters:       sale_date (No filter)
 
 ---
 
-## Перед любой Metric: что означает одна строка?
+## Перед любой метрикой: что означает одна строка?
 
 У учебного Dataset:
 
@@ -62,7 +62,7 @@ Filters:       sale_date (No filter)
 1 строка = 1 продажа
 ```
 
-Это его зерно (`grain`).
+Это его зерно данных.
 
 Поэтому в этом конкретном Dataset:
 
@@ -160,11 +160,11 @@ COUNT_DISTINCT(manager)
 
 ---
 
-## Ad hoc metric
+## Разовая метрика
 
-Расчёт, созданный непосредственно в `Metrics` панели Explore, является `ad hoc metric`. Он относится к текущей конфигурации Explore или сохранённому Chart.
+Расчёт, созданный непосредственно в поле `Metrics` панели Explore, в терминологии Superset называется **разовой метрикой (`ad hoc metric`)**. Он относится к текущей конфигурации Explore или сохранённому графику.
 
-Сохранённая Metric создаётся в Dataset Editor и затем доступна во всех Chart на этом Dataset.
+Сохранённая метрика создаётся в редакторе Dataset и затем доступна во всех графиках на этом Dataset.
 
 ## SUM
 
@@ -208,7 +208,7 @@ quantity
 
 ## COUNT
 
-У нового Table в списке Metrics доступна стандартная метрика:
+У нового Table в списке `Metrics` доступна стандартная метрика:
 
 ```text
 COUNT(*)
@@ -220,7 +220,7 @@ COUNT(*)
 12
 ```
 
-Для проверки поведения `COUNT(column)` создайте ad hoc metric:
+Для проверки поведения `COUNT(column)` создайте разовую метрику:
 
 ```text
 Column:      sale_id
@@ -306,7 +306,7 @@ AVG
 
 ---
 
-## Создаём Calculated column profit
+## Создаём Calculated Column profit
 
 Перейдите:
 
@@ -445,7 +445,7 @@ Save
 
 `Metric Key` — технический идентификатор. `Label` — отображаемое имя метрики в Explore.
 
-## Используем сохранённую Metric
+## Используем сохранённую метрику
 
 Откройте:
 
@@ -459,7 +459,7 @@ Datasets → sales
 Прибыль
 ```
 
-В интерфейсе Explore Superset 6.1.0 сохранённая Metric отображается по `Label`, если он заполнен. Для нашей метрики это `Прибыль`; её технический ключ остаётся `total_profit`.
+В интерфейсе Explore Superset 6.1.0 сохранённая метрика отображается по `Label`, если он заполнен. Для нашей метрики это `Прибыль`; её технический ключ остаётся `total_profit`.
 
 При:
 
@@ -491,7 +491,7 @@ Dimensions = region
 | Север | 520.00 |
 | Юг | 1010.00 |
 
-Одна сохранённая Metric применяется к каждой группе, созданной `Dimensions`.
+Одна сохранённая метрика применяется к каждой группе, созданной `Dimensions`.
 
 ---
 
@@ -579,7 +579,7 @@ Calculated Column
 
 ### AVG(cost)
 
-Создайте ad hoc metric:
+Создайте разовую метрику:
 
 ```text
 AVG(cost)
@@ -608,7 +608,7 @@ Aggregation: COUNT_DISTINCT
 
 ### Прибыль по продуктам
 
-Выберите сохранённую Metric:
+Выберите сохранённую метрику:
 
 ```text
 Прибыль
@@ -633,7 +633,7 @@ Dimensions = product
 Ответьте словами без интерфейса:
 
 ```text
-Почему SUM(sale_id) не становится полезной Metric только потому,
+Почему SUM(sale_id) не становится полезной метрикой только потому,
 что sale_id имеет числовой тип?
 ```
 
@@ -668,7 +668,7 @@ Data type:      NUMERIC
 
 После изменения нажмите `Save` и заново откройте Explore.
 
-### Calculated column выдаёт ошибку
+### Calculated Column выдаёт ошибку
 
 Для `profit` выражение должно быть построчным:
 
@@ -789,9 +789,9 @@ Calculated Column и Metric работают на разных уровнях
 
 ## Источники Superset 6.1.0
 
-- Dataset Editor: `Metrics`, `Calculated columns`, `Metric Key`, `Label`, `SQL expression`, `Data type`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/components/Datasource/components/DatasourceEditor/DatasourceEditor.tsx>
-- отображение сохранённой Metric по `verbose_name` / Label: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-chart-controls/src/components/MetricOption.tsx>
+- редактор Dataset: `Metrics`, `Calculated columns`, `Metric Key`, `Label`, `SQL expression`, `Data type`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/components/Datasource/components/DatasourceEditor/DatasourceEditor.tsx>
+- отображение сохранённой метрики по `verbose_name` / `Label`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-chart-controls/src/components/MetricOption.tsx>
 - список агрегирований Explore: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/constants.ts>
-- редактор ad hoc metric: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/controls/MetricControl/AdhocMetricEditPopover/index.tsx>
-- Table control panel: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/controlPanel.tsx>
+- редактор разовой метрики (`ad hoc metric`): <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/explore/components/controls/MetricControl/AdhocMetricEditPopover/index.tsx>
+- панель управления Table: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/plugins/plugin-chart-table/src/controlPanel.tsx>
 - схема учебной таблицы и `NOT NULL` для `revenue` / `cost`: [`../training/schema.sql`](../training/schema.sql)
