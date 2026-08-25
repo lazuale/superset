@@ -11,7 +11,7 @@
 нужно локально преобразовать данные SQL внутри Superset
 → Virtual Dataset
 
-SQL тяжёлый, общий или production-critical
+SQL тяжёлый, общий или критичен для рабочей системы
 → лучше слой БД / DWH / ETL
 ```
 
@@ -29,7 +29,7 @@ Superset
 └── Physical Dataset sales
 ```
 
-Superset не копирует бизнес-строки в metadata database. Он хранит описание Dataset и выполняет запросы к подключённому источнику.
+Superset не копирует бизнес-строки в служебную базу метаданных. Он хранит описание Dataset и выполняет запросы к подключённому источнику.
 
 ## 2. Когда Physical — выбор по умолчанию
 
@@ -47,7 +47,7 @@ Superset не копирует бизнес-строки в metadata database. �
 ```text
 готовая таблица
 VIEW
-materialized view
+материализованное представление (MATERIALIZED VIEW)
 таблица-витрина
 ```
 
@@ -123,7 +123,7 @@ Virtual Dataset
 → SQL выполняется снова при запросах
 ```
 
-Это не materialized snapshot.
+Это не материализованный снимок данных.
 
 Если исходные данные изменились, результат SQL тоже может измениться.
 
@@ -131,13 +131,13 @@ Virtual Dataset
 
 Если SQL сам по себе дорогой, сохранение как Virtual Dataset не делает его мгновенным.
 
-Концептуально Chart строит свой запрос поверх SQL Virtual Dataset.
+График (`Chart`) формирует свой запрос поверх SQL, определяющего Virtual Dataset.
 
 Если одна и та же тяжёлая подготовка нужна постоянно, рассмотрите:
 
 ```text
 VIEW
-Materialized View
+MATERIALIZED VIEW
 таблицу-витрину
 ETL / ELT
 ```
@@ -210,7 +210,7 @@ JOIN может размножить строки и изменить `SUM`, `AV
 
 Если одно определение используется многими Dashboard и системами, отдельная копия внутри одного Virtual Dataset создаёт риск расхождения.
 
-## 12. Не создавайте Dataset на каждый Chart
+## 12. Не создавайте Dataset на каждый график
 
 Лучше:
 
@@ -238,13 +238,13 @@ sales_chart_3
 ├─ да
 │  ├─ структура подходит?
 │  │   └─ да → Physical
-│  └─ нужна только простая row-level формула?
+│  └─ нужна только простая построчная формула?
 │      └─ да → Physical + Calculated Column
 │
 └─ нужен слой SQL-преобразования
    ├─ локальный и достаточно лёгкий?
    │   └─ Virtual Dataset
-   └─ тяжёлый / общий / critical?
+   └─ тяжёлый / общий / критичный для рабочей системы?
        └─ слой БД → Physical Dataset
 ```
 
@@ -272,6 +272,6 @@ Virtual
 
 ## Источники Superset 6.1.0
 
-- SQLAlchemy Dataset model: <https://github.com/apache/superset/blob/6.1.0/superset/connectors/sqla/models.py>
+- модель Dataset SQLAlchemy: <https://github.com/apache/superset/blob/6.1.0/superset/connectors/sqla/models.py>
 - SQL Lab: <https://github.com/apache/superset/tree/6.1.0/superset-frontend/src/SqlLab>
 - Explore: <https://github.com/apache/superset/tree/6.1.0/superset-frontend/src/explore>
