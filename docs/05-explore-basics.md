@@ -486,6 +486,16 @@ Dimensions = sale_date
 2026-03 = 1665.00
 ```
 
+## Шпаргалки к уроку
+
+Если путаются роли полей Explore:
+
+→ [Dimension, Metric и Filter без путаницы](05a-dimension-metric-filter.md)
+
+Если путаются настройки времени:
+
+→ [Time column, Time range и Time grain](05b-time-range-and-grain.md)
+
 Следующий урок — Calculated Column и сохранённая Metric.
 
 → [Урок 06. Метрики и расчёты](06-metrics-and-calculations.md)
