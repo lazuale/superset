@@ -560,6 +560,20 @@ SQL expression: SUM(revenue) - SUM(cost)
 Юг            = 1010.00
 ```
 
+## Шпаргалки к уроку
+
+Если непонятно, какое агрегирование выбрать:
+
+→ [SUM, COUNT, COUNT DISTINCT, AVG, MIN и MAX](06a-aggregations.md)
+
+Если непонятно, где должен жить расчёт:
+
+→ [Calculated Column, Metric или SQL?](06b-calculated-column-metric-or-sql.md)
+
+Если `COUNT(*)` или `SUM` имеют неясный смысл:
+
+→ [Зерно Dataset: что означает одна строка](06c-data-grain.md)
+
 Следующий урок — создание и сохранение Chart.
 
 → [Урок 07. Строим и сохраняем Chart](07-create-charts.md)
