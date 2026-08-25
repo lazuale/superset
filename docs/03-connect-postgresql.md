@@ -32,7 +32,7 @@ docker compose ps -a
 
 ```text
 db             running / healthy
-superset       running
+superset       running / healthy
 superset-init  exited (0)
 ```
 
