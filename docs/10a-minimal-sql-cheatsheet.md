@@ -2,7 +2,7 @@
 
 Эта страница не заменяет учебник SQL.
 
-Она нужна, чтобы быстро вспомнить конструкции, которые уже используются в базовом уроке 10 и при контрольной проверке Chart.
+Она нужна, чтобы быстро вспомнить конструкции, которые уже используются в базовом уроке 10 и при контрольной проверке графиков.
 
 ## Самый короткий каркас
 
@@ -243,7 +243,7 @@ ORDER BY region;
 Юг    = 2645.00
 ```
 
-Если Chart и SQL не совпадают, сравнивайте одинаковые:
+Если график и SQL не совпадают, сравнивайте одинаковые роли:
 
 ```text
 Dataset / FROM
@@ -301,7 +301,7 @@ SQL Lab полезен не только для сложных запросов,
 
 ## Источники Superset 6.1.0
 
-- SQL Editor: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/SqlEditor/index.tsx>
+- `SQL Editor`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/SqlEditor/index.tsx>
 - `Run` / `Run selection`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/RunQueryActionButton/index.tsx>
 - результаты SQL Lab: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/src/SqlLab/components/ResultSet/index.tsx>
 
