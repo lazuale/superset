@@ -6,7 +6,7 @@
 
 > **Что означает одна строка Dataset?**
 
-Это и есть зерно данных (`grain`).
+Это и есть зерно данных. В англоязычных материалах также используется термин `grain`.
 
 ```text
 1 строка = что?
@@ -104,7 +104,7 @@ SUM(revenue)
 можно ли складывать эти значения между строками?
 ```
 
-## 4. Dimension не меняет исходное зерно Dataset
+## 4. Измерение не меняет исходное зерно Dataset
 
 Если:
 
@@ -119,7 +119,7 @@ Dimension = region
 Metric    = SUM(revenue)
 ```
 
-Superset группирует продажи по регионам и считает Metric внутри каждой группы.
+Superset группирует продажи по регионам и считает метрику внутри каждой группы.
 
 Исходный Dataset всё равно остаётся построчным набором продаж.
 
@@ -187,7 +187,7 @@ JOIN может изменить фактическое зерно резуль�
 ```text
 сначала зерно
 → потом агрегирование
-→ потом Chart
+→ потом визуализация
 ```
 
 Красивый Dashboard не исправит ошибку в смысле одной строки.
@@ -202,7 +202,7 @@ JOIN может изменить фактическое зерно резуль�
 
 ## Источники Superset 6.1.0
 
-- SQLAlchemy Dataset model: <https://github.com/apache/superset/blob/6.1.0/superset/connectors/sqla/models.py>
-- Explore controls `Dimensions` и `Metrics`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-chart-controls/src/shared-controls/dndControls.tsx>
+- модель Dataset SQLAlchemy: <https://github.com/apache/superset/blob/6.1.0/superset/connectors/sqla/models.py>
+- элементы Explore `Dimensions` и `Metrics`: <https://github.com/apache/superset/blob/6.1.0/superset-frontend/packages/superset-ui-chart-controls/src/shared-controls/dndControls.tsx>
 
 Понятие зерна относится к аналитическому моделированию данных в целом: Superset выполняет запрос к Dataset, но бизнес-смысл одной строки должен быть определён автором модели.
