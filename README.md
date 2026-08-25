@@ -2,7 +2,7 @@
 
 Практический курс для человека, который раньше не работал с Apache Superset.
 
-Цель первой версии простая: пройти уроки по порядку и самостоятельно освоить базовый рабочий сценарий — от запуска учебного стенда до Dashboard и Virtual Dataset.
+Цель первой версии: пройти уроки по порядку и самостоятельно освоить базовый рабочий сценарий — от запуска учебного стенда до Dashboard и Virtual Dataset.
 
 ## Для кого курс
 
@@ -27,9 +27,7 @@
 
 ## Получаем файлы курса
 
-Перед началом нужна локальная копия этого репозитория.
-
-Если Git уже установлен, в терминале выполните:
+Если Git уже установлен:
 
 ```bash
 git clone https://github.com/lazuale/superset.git
@@ -42,7 +40,7 @@ cd superset
 Code → Download ZIP
 ```
 
-Распакуйте архив и откройте терминал в корневом каталоге распакованного репозитория — там, где находятся `README.md`, `docs/` и `training/`.
+Распакуйте архив и откройте терминал в корневом каталоге репозитория — там, где находятся `README.md`, `docs/` и `training/`.
 
 Во всех уроках команды `docker compose ...` выполняются из каталога:
 
@@ -70,37 +68,67 @@ training/
 
 Английские названия оставляются там, где это официальные названия сущностей, экранов и элементов интерфейса Superset. При первом появлении термин объясняется по-русски.
 
+## Как устроены дополнительные материалы
+
+У курса теперь два разных типа дополнительных страниц.
+
+### Шпаргалка
+
+Короткая памятка к уже изученной теме:
+
+```text
+вопрос
+→ правило
+→ короткий алгоритм
+→ контрольный пример
+```
+
+Она не должна заменять урок и не должна заранее вводить большой новый блок функций.
+
+### Справочник
+
+Более подробный необязательный материал:
+
+```text
+можно открыть после соответствующего урока
+можно использовать позже в работе
+не требуется проходить для завершения базового маршрута
+```
+
+Это разделение сделано специально, чтобы основной курс оставался линейным.
+
 ## Учебный маршрут
 
-Проходите уроки строго по порядку:
+Проходите **уроки** строго по порядку. Шпаргалки и справочники открывайте после соответствующей практики или когда возник вопрос.
 
 1. [Что такое Apache Superset](docs/01-what-is-superset.md)
 2. [Запускаем учебный Superset](docs/02-start-training-superset.md)
 3. [Подключаем PostgreSQL](docs/03-connect-postgresql.md)
 4. [Создаём первый Dataset](docs/04-create-dataset.md)
 5. [Осваиваем Explore](docs/05-explore-basics.md)
-   - [Шпаргалка: Dimension, Metric и Filter без путаницы](docs/05a-dimension-metric-filter.md)
-   - [Шпаргалка: Time column, Time range и Time grain](docs/05b-time-range-and-grain.md)
+   - Шпаргалка: [Dimension, Metric и Filter без путаницы](docs/05a-dimension-metric-filter.md)
+   - Шпаргалка: [Time column, Time range и Time grain](docs/05b-time-range-and-grain.md)
 6. [Метрики и расчёты](docs/06-metrics-and-calculations.md)
-   - [Шпаргалка: как выбрать SUM, COUNT, COUNT DISTINCT, AVG, MIN и MAX](docs/06a-aggregations.md)
-   - [Шпаргалка: Calculated Column, Metric или SQL?](docs/06b-calculated-column-metric-or-sql.md)
-   - [Шпаргалка: JOIN и зерно данных](docs/06c-join-and-data-grain.md)
+   - Шпаргалка: [SUM, COUNT, COUNT DISTINCT, AVG, MIN и MAX](docs/06a-aggregations.md)
+   - Шпаргалка: [Calculated Column, Metric или SQL?](docs/06b-calculated-column-metric-or-sql.md)
+   - Шпаргалка: [зерно Dataset — что означает одна строка](docs/06c-data-grain.md)
 7. [Строим и сохраняем Chart](docs/07-create-charts.md)
-   - [Шпаргалка: как выбрать визуализацию и зачем она нужна](docs/07a-choose-visualization.md)
-   - [Шпаргалка: почему цифры в Superset не сходятся](docs/07b-troubleshoot-wrong-numbers.md)
+   - Шпаргалка: [как выбрать визуализацию](docs/07a-choose-visualization.md)
+   - Шпаргалка: [почему цифры в Superset не сходятся](docs/07b-troubleshoot-wrong-numbers.md)
+   - Шпаргалка: [форматы чисел, процентов и дат](docs/07c-formatting.md)
+   - Справочник: [каталог Chart Apache Superset 6.1.0](docs/reference/charts-catalog-6.1.0.md)
 8. [Собираем Dashboard](docs/08-build-dashboard.md)
-   - [Шпаргалка: как собрать нормальный Dashboard](docs/08a-dashboard-design.md)
+   - Справочник: [как спроектировать нормальный Dashboard](docs/08a-dashboard-design.md)
 9. [Добавляем Native Filters](docs/09-native-filters.md)
-   - [Шпаргалка: как выбрать Native Filter и настроить Scoping](docs/09a-choose-native-filter.md)
+   - Справочник: [как выбрать Native Filter и настроить Scoping](docs/09a-choose-native-filter.md)
 10. [SQL Lab с нуля](docs/10-sql-lab.md)
-    - [Шпаргалка: минимальный SQL для Superset](docs/10a-minimal-sql-cheatsheet.md)
+    - Шпаргалка: [минимальный SQL для Superset](docs/10a-minimal-sql-cheatsheet.md)
+    - Шпаргалка: [JOIN без размножения данных](docs/10b-join-without-duplication.md)
+    - Справочник: [следующий уровень SQL](docs/reference/sql-next-level.md)
 11. [Создаём Virtual Dataset](docs/11-create-virtual-dataset.md)
-    - [Шпаргалка: Physical Dataset или Virtual Dataset?](docs/11a-physical-vs-virtual-dataset.md)
+    - Справочник: [Physical Dataset или Virtual Dataset?](docs/11a-physical-vs-virtual-dataset.md)
 12. [Итоговая проверка и что изучать дальше](docs/12-next-steps.md)
-    - [Шпаргалка: что делать в Superset, а что вне него](docs/12a-what-belongs-in-superset.md)
-    - [Шпаргалка: форматы чисел, процентов и дат](docs/12b-format-numbers-percent-dates.md)
-
-Шпаргалки не являются отдельными обязательными уроками. Они образуют справочный слой курса: помогают быстро вспомнить смысл полей Explore, выбрать способ расчёта и агрегацию, разобраться со временем и зерном данных, подобрать визуализацию, спроектировать Dashboard, настроить фильтрацию, проверить SQL, выбрать тип Dataset, оформить значения и понять границы применения Superset.
+    - Шпаргалка: [где заканчивается Superset](docs/12a-what-belongs-in-superset.md)
 
 ## Учебные данные
 
@@ -116,7 +144,9 @@ training.sales
 
 ## Версия курса
 
-Курс зафиксирован для **Apache Superset 6.1.0**. Инструкции v1 должны соответствовать этой версии и сверяться с официальной документацией и исходным кодом Apache Superset 6.1.0.
+Курс зафиксирован для **Apache Superset 6.1.0**.
+
+Инструкции v1 должны соответствовать этой версии и сверяться с официальной документацией и исходным кодом Apache Superset 6.1.0.
 
 ## Когда базовый курс считается пройденным
 
@@ -148,4 +178,4 @@ training.sales
 создать Virtual Dataset
 ```
 
-Если это получается — базовый навык работы с Superset получен.
+Если это получается и контрольные значения совпадают — базовый навык работы с Superset получен.
