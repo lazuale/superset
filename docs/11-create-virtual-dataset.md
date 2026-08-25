@@ -649,6 +649,12 @@ Chart Source = sales_virtual
 Юг    = 1010.00
 ```
 
+## Справочник к уроку
+
+Если после упражнения нужно решить, **когда вообще выбирать Physical или Virtual Dataset**, когда достаточно Calculated Column и когда SQL лучше вынести в VIEW/витрину:
+
+→ [Physical Dataset или Virtual Dataset?](11a-physical-vs-virtual-dataset.md)
+
 Следующий урок — самостоятельная итоговая проверка всего маршрута.
 
 → [Урок 12. Итоговая проверка и что изучать дальше](12-next-steps.md)
